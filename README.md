@@ -23,7 +23,7 @@
   code [ class "lang-elm" ] [ text "Signal Float" ] -- expands to this
   ```
 
-Shorthand does not attempt to create a template for every concievable use case. In fact, we encourage you to look for common patterns in your html and factor out your own! We only intended to provide defaults for the most common uses.
+Shorthand does not attempt to create a template for every concievable use case. In fact, we encourage you to look for patterns in your html and factor out your own! We only intend to provide defaults for extremely common, single element patterns.
 
 A quick comparison!
 
