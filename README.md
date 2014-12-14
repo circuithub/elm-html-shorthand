@@ -1,41 +1,26 @@
 # Html shorthand
 
-[elm-html-shorthand][shorthand] is a modest, lightweight shorthand for working with [Html][elm-html] using three forms of notation:
+[elm-html-shorthand][shorthand] is a modest, lightweight shorthand for supplementing [Html][elm-html] using three forms of notation:
 
 * A single argument form...
 
   ```elm
-  span_
-  ```
-  
-  is the same as
-  
-  ```elm
-  span []
+  span_     -- No attributes
+  span []   -- expands to this
   ```
 
 * A canonical form...
 
   ```elm
-  img' "http://elm-lang.org/logo.png" "The Elm logo"
-  ```
-  
-  is the same as
-  
-  ```elm
-  img [ src "http://elm-lang.org/logo.png", alt "The Elm logo" ]
+  img' "http://elm-lang.org/logo.png" "The Elm logo"             -- takes a common sense list of arguments
+  img [ src "http://elm-lang.org/logo.png", alt "The Elm logo" ] -- expands to this
   ```
 
 * A classy (-canonical) form...
 
   ```elm
-  codec "lang-elm" "Signal Float"
-  ```
-  
-  is the same as 
-  
-  ```elm
-  code [ class "lang-elm" ] [ text "Signal Float" ]
+  codec "lang-elm" "Signal Float"                   -- takes a css class string + common sense arguments
+  code [ class "lang-elm" ] [ text "Signal Float" ] -- expands to this
   ```
 
 Shorthand does not attempt to create a template for every concievable use case. In fact, we encourage you to look for common patterns in your html and factor out your own! We only intended to provide defaults for the most common uses.
