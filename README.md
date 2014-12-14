@@ -3,13 +3,38 @@
 [elm-html-shorthand][shorthand] is a modest, lightweight shorthand for working with [Html][elm-html] using three forms of notation:
 
 * A single argument form...
-  `span_` means the same as `span []`
+
+  ```
+  span_
+  ```
+  is the same
+  ```
+  span []
+  ```
 
 * A canonical form...
-  `img' "http://elm-lang.org/logo.png" "The Eml blogo"` means the same as `img [ src "http://elm-lang.org/logo.png", alt "The Elm logo" ]`
+
+  ```
+  img' "http://elm-lang.org/logo.png" "The Elm logo"
+  ```
+  
+  is the same as
+  
+  ```
+  img [ src "http://elm-lang.org/logo.png", alt "The Elm logo" ]
+  ```
 
 * A classy (-canonical) form...
-  `codec "lang-elm" "Signal Float"` means the same as `code [ class "lang-elm" ] [ text "Signal Float" ]`
+
+  ```
+  codec "lang-elm" "Signal Float"
+  ```
+  
+  is the same as 
+  
+  ```
+  code [ class "lang-elm" ] [ text "Signal Float" ]
+  ```
 
 Shorthand does not attempt to create a template for every concievable use case. In fact, we encourage you to look for common patterns in your html and factor out your own! We only intended to provide defaults for the most common uses.
 
@@ -17,7 +42,7 @@ A quick comparison!
 
 In [elm-html-shorthand][shorthand]:
 
-```
+```elm
 let container = divc "container"
     row = divc "row"
     col = divc "col-md-9"
