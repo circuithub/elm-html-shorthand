@@ -8,7 +8,7 @@
   span_
   ```
   
-  is the same
+  is the same as
   
   ```elm
   span []
