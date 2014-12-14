@@ -1,0 +1,16 @@
+{
+    "version": "1.0.0",
+    "summary": "Shorthand for working with Html",
+    "repository": "https://github.com/circuithub/elm-html-shorthand.git",
+    "license": "MIT",
+    "source-directories": [
+        "src"
+    ],
+    "exposed-modules": [
+        "Html.Shorthand"
+    ],
+    "dependencies": {
+        "elm-lang/core": "1.0.0 <= v < 2.0.0",
+        "evancz/elm-html": "1.0.0 <= v < 2.0.0"
+    }
+}
