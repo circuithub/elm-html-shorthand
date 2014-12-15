@@ -30,6 +30,9 @@ A quick comparison!
 In [elm-html-shorthand][shorthand]:
 
 ```elm
+import Html
+import Html.Shorthand (..)
+
 let container = divc "container"
     row = divc "row"
     col = divc "col-md-9"
@@ -73,6 +76,42 @@ In [elm-html][elm-html]:
 
 Please note that this API is highly experimental and very likely to change! Use this package at your own risk.
 
+## Features
+
+### Reduced namespace pollution
+
+Shorthand can help you deal with namespace pollution. Since the suffixed names used in `Html.Shorthand` are unlikely to clash with names in your application logic it may make sense to import `Html.Shorthand` unqualified, while using a qualified import for `Html`. 
+
+```elm
+import Html                  -- you can use your own short u, i, b, p variable names!
+import Html.Shorthand (..)   -- bringing u',i',b',p',em' etc...
+import Html (blockquote)     -- if you really want something unqualified, just do it individually...
+```
+
+### Correct use of semantic tags
+
+Notice that the definition of `h2'` doesn't allow for an id string to be supplied to it.
+
+```elm
+h2' : TextString -> Html
+```
+
+How then do I target my headings in URLs, you ask? Well, this is a job better suited to `section'` and `article'`! Notice that these *do* take ids in their canonical forms.
+
+```elm
+section' : IdString -> List Html -> Html
+```
+
+This encourages you to use `&lt;section id="..."&gt; and &lt;article id="..."&lt;` in order to add url-targetable ids to your page.
+
+```elm
+section' "ch-5"
+[ h2' "Chapter 5"
+]
+```
+
+This adherence to the HTML 5 spec is a theme we've tried to encourage in both the design of and the documentation accompanying this API.
+
 ## Future work
 
 The approach of lightly constraining the Html API to reinforce pleasant patterns, seems like an interesting idea... Who wants to dig through gobs of Html with a linter when you can just get it right from the get go? One might argue that Html.Shorthand doesn't take this nearly far enough though.
@@ -97,15 +136,11 @@ The approach of lightly constraining the Html API to reinforce pleasant patterns
 
     Sorry, this package doesn't use any sort of restricted URL scheme to prevent broken links.
 
-* ***Deal with namespace pollution***
-
-    Importing `Html.Shorthand (..)` causes quite a lot of contamination, especially since most tags also have the classy `c` suffix. I don't currently have a good idea on what advice to offer here, except perhaps a mini version of this package as I mention below.
-
-* ***A mini version!***
+* ***Namespace pollution A mini version!***
 
     It would be nice to explore a `-mini` versions of [this library][shorthand] as well as [elm-html][elm-html] that excludes elements like &lt;b&gt;, &lt;i&gt; and &lt;u&gt; that are rarely used correctly anyway.
     
-    This would help battle the namespace pollution as well.
+    This would further assist the battle against namespace pollution as well.
 
 ### Comparison to other libraries
 
