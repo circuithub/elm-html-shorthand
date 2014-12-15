@@ -40,8 +40,8 @@ These 'c'-postfixed shorthands are similar to the canonical form, but also take 
 import Html (..)
 import Html.Attributes as A
 import String
-import String (String)
 import Char
+import List
 
 type alias IdString = String
 type alias ClassString = String
@@ -51,7 +51,7 @@ type alias TextString = String
 -- ENCODERS
 
 {-| A simplistic way of encoding `id` attributes into a [sane format](http://stackoverflow.com/a/72577).
-This is used internally by all of the shorthands that take an `IdString` or a `ClassString`.
+This is used internally by all of the shorthands that take an `IdString`.
 
 * Everything is turned into lowercase
 * Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
@@ -60,24 +60,27 @@ This is used internally by all of the shorthands that take an `IdString` or a `C
 
 -}
 encodeId : IdString -> IdString
-encodeId  = 
+encodeId =
   let isAlpha c = let cc = Char.toCode <| Char.toLower c 
-                  in c >= Char.toCode 'a' && c <= Char.toCode 'z'
+                  in cc >= Char.toCode 'a' && cc <= Char.toCode 'z'
       -- Note that : and . are also allowed in HTML 4, but since these need to be escaped in selectors we exclude them
       -- HTML 5 includes many more characters, but we'll exclude these for now
       isIdChar c = Char.isDigit c 
-                  || isAlpha c
-                  || (c `List.member` String.toList "-_")
-      startWithAlpha s = 
+                    || isAlpha c
+                    || (c `List.member` String.toList "-_")
+      startWithAlpha s = case String.uncons s of
+                          Just (c, s') -> if not (isAlpha c) then 'x' `String.cons` s else s
+                          Nothing      -> s
   in  String.words
       >> String.join "-"
       -- TODO: trim '-' around the id?
       >> String.toLower
       >> String.filter isIdChar
       >> startWithAlpha
+          
 
 {-| A simplistic way of encoding of `class` attributes into a [sane format](http://stackoverflow.com/a/72577).
-This is used internally by all of the shorthands that take an `IdString` or a `ClassString`.
+This is used internally by all of the shorthands that take a `ClassString`.
 
 * Everything is turned into lowercase
 * Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
@@ -86,25 +89,30 @@ This is used internally by all of the shorthands that take an `IdString` or a `C
 
 -}
 encodeClass : ClassString -> ClassString
-  let isAlpha c = let cc = Char.toCode <| Char.toLower c 
-                  in c >= Char.toCode 'a' && c <= Char.toCode 'z'
+encodeClass =
+  let isAlpha c = let cc = Char.toCode <| Char.toLower c
+                  in cc >= Char.toCode 'a' && cc <= Char.toCode 'z'
       -- Note that : and . are also allowed in HTML 4, but since these need to be escaped in selectors we exclude them
       -- HTML 5 includes many more characters, but we'll exclude these for now
       isClassChar c = Char.isDigit c 
-                     || isAlpha c
-                     || (c `List.member` String.toList "-_")
+                      || isAlpha c
+                      || (c `List.member` String.toList "-_")
+      startWithAlpha s = case String.uncons s of
+                          Just (c, s') -> if not (isAlpha c) then 'x' `String.cons` s else s
+                          Nothing      -> s
   in  String.words
       >> String.join " "
       >> String.toLower
       >> String.filter isClassChar
+      >> startWithAlpha
 
 -- CANONICAL ATTRIBUTES
 
-id' IdString -> Attribute
-id' = id << encodeId
+id' : IdString -> Attribute
+id' = A.id << encodeId
 
-class' ClassString -> Attribute
-class' = class << encodeClass
+class' : ClassString -> Attribute
+class' = A.class << encodeClass
 
 -- SECTIONS
 
@@ -127,7 +135,7 @@ Don't:
 * [use section as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)
 
 -}
-section' i : IdString -> List Html -> Html
+section' : IdString -> List Html -> Html
 section' i = section [id' i]
 
 sectionc : ClassString -> IdString -> List Html -> Html
@@ -193,34 +201,34 @@ h1c : ClassString -> TextString -> Html
 h1c c t = h1 [class' c] [text t]
 
 h2' : TextString -> Html
-h2' = h2 []
+h2' t = h2 [] [text t]
 
-h2c : ClassString -> List Html -> Html
-h2c c = h2 [class' c]
+h2c : ClassString -> TextString -> Html
+h2c c t = h2 [class' c] [text t]
 
 h3' : TextString -> Html
-h3' = h3 []
+h3' t = h3 [] [text t]
 
-h3c : ClassString -> List Html -> Html
-h3c c = h3 [class' c]
+h3c : ClassString -> TextString -> Html
+h3c c t = h3 [class' c] [text t]
 
 h4' : TextString -> Html
-h4' = h4 []
+h4' t = h4 [] [text t]
 
-h4c : ClassString -> List Html -> Html
-h4c c = h4 [class' c]
+h4c : ClassString -> TextString -> Html
+h4c c t = h4 [class' c] [text t]
 
 h5' : TextString -> Html
-h5' = h5 []
+h5' t = h5 [] [text t]
 
-h5c : ClassString -> List Html -> Html
-h5c c = h5 [class' c]
+h5c : ClassString -> TextString -> Html
+h5c c t = h5 [class' c] [text t]
 
 h6' : TextString -> Html
-h6' = h6 []
+h6' t = h6 [] [text t]
 
-h6c : ClassString -> List Html -> Html
-h6c c = h6 [class' c]
+h6c : ClassString -> TextString -> Html
+h6c c t = h6 [class' c] [text t]
 
 {-| [&lt;header&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header) defines the header of a page or section. It often contains a logo, the
 title of the web site, and a navigational table of content.
@@ -312,8 +320,8 @@ Don't:
 * use blockquote for short, inline quotations, we have &lt;`q'`&gt; for that
 
 -}
-blockquote' : UrlString -> List Html -> Html
-blockquote' url = blockquote [A.cite url]
+blockquote_ : List Html -> Html
+blockquote_ = blockquote []
 
 blockquote' : UrlString -> List Html -> Html
 blockquote' url = blockquote [A.cite url]
@@ -347,8 +355,8 @@ li_ = li []
 li' : TextString -> Html
 li' t = li [] [text t]
 
-lic : ClassString -> TextStrings -> Html
-lic c = li [class' c] [text t]
+lic : ClassString -> TextString -> Html
+lic c t = li [class' c] [text t]
 
 {-| [&lt;dl&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl) defines a definition list, that is, a list of terms and their associated
 definitions.
@@ -387,7 +395,7 @@ Don't:
 
 -}
 figure' : IdString -> List Html -> Html
-figure' i = figure [id' c]
+figure' i = figure [id' i]
 
 figurec : ClassString -> IdString -> List Html -> Html
 figurec c i = figure [class' c, id' i]
@@ -427,10 +435,10 @@ divc c = div [class' c]
 -- TODO: etc...
 
 a' : UrlString -> String -> TextString -> Html
-a' url al t = a [href url, alt al] [text t]
+a' url alt t = a [A.href url, A.alt alt] [text t]
 
 ac : ClassString -> UrlString -> String -> TextString -> Html
-ac c url al t = a [class' c, href url, alt al] [text t]
+ac c url alt t = a [class' c, A.href url, A.alt alt] [text t]
 
 {-| [&lt;em&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em) represents emphasized text, like a stress accent.
 -}
@@ -441,7 +449,7 @@ em' : TextString -> Html
 em' t = em [] [text t]
 
 emc : ClassString -> TextString -> Html
-emc c = em [class' c] [text t]
+emc c t = em [class' c] [text t]
 
 {-| [&lt;strong&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) represents especially important text.
 -}
@@ -505,13 +513,13 @@ citec c = cite [class' c]
 The canonical form uses a cite url, but the single argument is also provided.
 -}
 q_ : List Html -> Html
-q_ t = q [] [text t]
+q_ = q []
 
 q' : UrlString -> TextString -> Html
-q' url = q [A.cite url] [text t]
+q' url t = q [A.cite url] [text t]
 
 qc : ClassString -> UrlString -> TextString -> Html
-qc c url = q [class' c, A.cite url] [text t]
+qc c url t = q [class' c, A.cite url] [text t]
 
 {-| [&lt;dfn&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn) represents a term whose definition is contained in its nearest ancestor
 content.
@@ -519,7 +527,7 @@ content.
 dfn' : IdString -> List Html -> Html
 dfn' i = dfn [id' i]
 
-dfnc : ClassString -> List Html -> Html
+dfnc : ClassString -> IdString -> List Html -> Html
 dfnc c i = dfn [class' c, id' i]
 
 {-| [&lt;abbr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr) represents an abbreviation or an acronym ; the expansion of the
@@ -609,7 +617,7 @@ sub_ = sub []
 sub' : TextString -> Html
 sub' t = sub [] [text t]
 
-subc : ClassString -> List Html -> Html
+subc : ClassString -> TextString -> Html
 subc c t = sub [class' c] [text t]
 
 {-| [&lt;sup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sup) represent a superscript.
@@ -644,7 +652,7 @@ b_ : List Html -> Html
 b_ = b []
 
 b' : TextString -> Html
-b' = b [] [text t]
+b' t = b [] [text t]
 
 bc : ClassString -> TextString -> Html
 bc c t = b [class' c] [text t]
@@ -783,63 +791,62 @@ wbr' = wbr [] []
 {-| [&lt;img&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) represents an image.
 -}
 img' : UrlString -> Int -> Int -> String -> Html
-img' url w h al = img [src url, width <| toString w, height <| toString h, alt al] []
+img' url w h alt = img [A.src url, A.width w, A.height h, A.alt alt] []
 
-imgc : ClassString -> Int -> Int -> String -> Html
-imgc c url w h al = img [class' c, src url, width <| toString w, height <| toString h, alt al] []
+imgc : ClassString -> UrlString -> Int -> Int -> String -> Html
+imgc c url w h alt = img [class' c, A.src url, A.width w, A.height h, A.alt alt] []
 
 {-| [&lt;iframe&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) embedded an HTML document.
 -}
 iframe' : UrlString -> Int -> Int -> Html
-iframe' url w h = iframe [src url, width <| toString w, height <| toString h] []
+iframe' url w h = iframe [A.src url, A.width w, A.height h] []
 
-iframec : ClassString -> List Html -> Html
-iframec c url w h = iframe [class' c, src url, width <| toString w, height <| toString h] []
+iframec : ClassString -> UrlString -> Int -> Int -> Html
+iframec c url w h = iframe [class' c, A.src url, A.width w, A.height h] []
 
 {-| [&lt;embed&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/embed) represents a integration point for an external, often non-HTML,
 application or interactive content.
 -}
 embed' : String -> UrlString -> Int -> Int -> Html
-embed' typ url w h = embed [type' typ, src url, width <| toString w, height <| toString h] []
+embed' typ url w h = embed [A.type' typ, A.src url, A.width w, A.height h] []
 
-embedc : ClassString -> List Html -> Html
-embedc c = embed [class' c, type' typ, src url, width <| toString w, height <| toString h] []
+embedc : ClassString -> String -> UrlString -> Int -> Int -> Html
+embedc c typ url w h = embed [class' c, A.type' typ, A.src url, A.width w, A.height h] []
 
 {-| [&lt;object&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object) represents an external resource , which is treated as an image, an HTML
 sub-document, or an external resource to be processed by a plug-in.
 -}
 -- TODO: data attribute doesn't appear to be implemented yet
 --object' : ... -> List Html -> Html
---object' dat typ = object [data' dat, type' typ]
+--object' dat typ = object [data' dat, A.type' typ]
 
 --objectc : ClassString -> ... -> List Html -> Html
---objectc c = object [class' c, data' dat, type' typ]
+--objectc c = object [class' c, data' dat, A.type' typ]
 
 {-| [&lt;param&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/param) defines parameters for use by plug-ins invoked by `object` elements.
 -}
 param' : String -> String -> Html
-param' n v = param [name n, value v] []
+param' n v = param [A.name n, A.value v] []
 
 {-| [&lt;video&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video) represents a video, the associated audio and captions, and controls.
 
 Doesn't allow for &lt;track&rt;s &lt;source&rt;s, please use `video` for that.
 -}
-video' : UrlString -> List Html -> Html
-video' url = video [src url] []
+video' : UrlString -> Html
+video' url = video [A.src url] []
 
-videoc : ClassString -> UrlString -> List Html -> Html
-videoc c url = video [class' c, src url] []
+videoc : ClassString -> UrlString -> Html
+videoc c url = video [class' c, A.src url] []
 
 {-| [&lt;audio&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio) represents a sound or audio stream.
 
 Doesn't allow for &lt;track&rt;s &lt;source&rt;s, please use `audio` for that.
 -}
-audio' : UrlString -> List Html -> Html
-audio' url = audio [src url] []
+audio' : UrlString -> Html
+audio' url = audio [A.src url] []
 
-audioc : ClassString -> UrlString -> List Html -> Html
-audioc c url = audio [class' c, src url] []
-
+audioc : ClassString -> UrlString -> Html
+audioc c url = audio [class' c, A.src url] []
 
 {-| [&lt;source&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source) allows authors to specify alternative media resources for media elements
 like `video` or `audio`.
@@ -983,7 +990,7 @@ td_ = td []
 td' : TextString -> Html
 td' t = td [] [text t]
 
-tdc : ClassString -> List Html -> Html
+tdc : ClassString -> TextString -> Html
 tdc c t = td [class' c] [text t]
 
 {-| [&lt;th&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th) represents a header cell in a table.
@@ -992,7 +999,7 @@ th_ : List Html -> Html
 th_ = th []
 
 th' : TextString -> Html
-th' = th [] [text t]
+th' t = th [] [text t]
 
 thc : ClassString -> TextString -> Html
 thc c t = th [class' c] [text t]
@@ -1007,10 +1014,10 @@ form_ : List Html -> Html
 form_ = form []
 
 form' : String -> String -> List Html -> Html
-form' a m = form [action a, method m]
+form' a m = form [A.action a, A.method m]
 
-formc : ClassString -> List Html -> Html
-formc c a m = form [class' c, action a, method m]
+formc : ClassString ->  String -> String -> List Html -> Html
+formc c a m = form [class' c, A.action a, A.method m]
 
 {-| [&lt;fieldset&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset) represents a set of controls.
 -}
@@ -1026,7 +1033,7 @@ legend' : TextString -> Html
 legend' t = legend [] [text t]
 
 legendc : ClassString -> TextString -> Html
-legendc c = legend [class' c] [text t]
+legendc c t = legend [class' c] [text t]
 
 {-| [&lt;label&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) represents the caption of a form control.
 -}
@@ -1034,16 +1041,16 @@ label_ : List Html -> Html
 label_ = label []
 
 label' : IdString -> TextString -> Html
-label' ifor t = label [for ifor] [text t]
+label' for t = label [A.for for] [text t]
 
 labelc : ClassString -> IdString -> TextString -> Html
-labelc c ifor t = label [class' c, for ifor] [text t]
+labelc c for t = label [class' c, A.for for] [text t]
 
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 -}
 -- TODO: It is not clear what the defaults should be given the variation that is possible with this element (also, can we simply use Elm's inputs most of the time?)
 --input' : String -> IdString -> String -> TextString -> Html
---input' typ i n p = input [type' typ, id' i, name n, placeholder p] []
+--input' typ i n p = input [A.type' typ, id' i, name n, placeholder p] []
 
 --inputc : ClassString -> List Html -> Html
 --inputc c = input [class' c]
