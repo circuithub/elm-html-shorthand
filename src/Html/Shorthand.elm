@@ -1117,9 +1117,8 @@ resetButtonc c t = button [class' c, A.type' "reset"] [text t]
 --optgroupc : ClassString -> List Html -> Html
 --optgroupc c = optgroup [class' c]
 
---{-| [&lt;option&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option) represents an option in a `select` element or a suggestion of a `datalist`
---element.
--}
+--{-| [&lt;option&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option) represents an option in a `select` element or a suggestion of a `datalist` element.
+---}
 -- TODO
 --option_ : List Html -> Html
 --option_ = option []
