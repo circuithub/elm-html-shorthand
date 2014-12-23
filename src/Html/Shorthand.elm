@@ -1081,8 +1081,8 @@ resetButton' t = button [A.type' "reset"] [text t]
 resetButtonc : ClassString -> TextString -> Html
 resetButtonc c t = button [class' c, A.type' "reset"] [text t]
 
-{-| [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.
--}
+--{-| [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.
+---}
 -- TODO
 --select_ : List Html -> Html
 --select_ = select []
@@ -1093,8 +1093,8 @@ resetButtonc c t = button [class' c, A.type' "reset"] [text t]
 --selectc : ClassString -> List Html -> Html
 --selectc c = select [class' c]
 
-{-| [&lt;datalist&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist) represents a set of predefined options for other controls.
--}
+--{-| [&lt;datalist&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist) represents a set of predefined options for other controls.
+---}
 -- TODO
 --datalist_ : List Html -> Html
 --datalist_ = datalist []
@@ -1105,8 +1105,8 @@ resetButtonc c t = button [class' c, A.type' "reset"] [text t]
 --datalistc : ClassString -> List Html -> Html
 --datalistc c = datalist [class' c]
 
-{-| [&lt;optgroup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup) represents a set of options , logically grouped.
--}
+--{-| [&lt;optgroup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup) represents a set of options , logically grouped.
+---}
 -- TODO
 --optgroup_ : List Html -> Html
 --optgroup_ = optgroup []
@@ -1117,8 +1117,8 @@ resetButtonc c t = button [class' c, A.type' "reset"] [text t]
 --optgroupc : ClassString -> List Html -> Html
 --optgroupc c = optgroup [class' c]
 
-{-| [&lt;option&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option) represents an option in a `select` element or a suggestion of a `datalist`
-element.
+--{-| [&lt;option&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option) represents an option in a `select` element or a suggestion of a `datalist`
+--element.
 -}
 -- TODO
 --option_ : List Html -> Html
@@ -1130,8 +1130,8 @@ element.
 --optionc : ClassString -> List Html -> Html
 --optionc c = option [class' c]
 
-{-| [&lt;textarea&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) represents a multiline text edit control.
--}
+--{-| [&lt;textarea&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) represents a multiline text edit control.
+---}
 -- TODO
 --textarea_ : List Html -> Html
 --textarea_ = textarea []
@@ -1142,8 +1142,8 @@ element.
 --textareac : ClassString -> List Html -> Html
 --textareac c = textarea [class' c]
 
-{-| [&lt;keygen&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/keygen) represents a key-pair generator control.
--}
+--{-| [&lt;keygen&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/keygen) represents a key-pair generator control.
+---}
 -- TODO
 --keygen_ : List Html -> Htm
 --keygen_ = keygen []
@@ -1154,8 +1154,8 @@ element.
 --keygenc : ClassString -> List Html -> Html
 --keygenc c = keygen [class' c]
 
-{-| [&lt;output&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) represents the result of a calculation.
--}
+--{-| [&lt;output&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) represents the result of a calculation.
+---}
 -- TODO
 --output_ : List Html -> Html
 --output_ = output []
@@ -1166,8 +1166,8 @@ element.
 --outputc : ClassString -> List Html -> Html
 --outputc c = output [class' c]
 
-{-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
--}
+--{-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
+---}
 -- TODO
 --progress_ : List Html -> Html
 --progress_ = progress []
@@ -1178,9 +1178,8 @@ element.
 --progressc : ClassString -> List Html -> Html
 --progressc c = progress [class' c]
 
-{-| [&lt;meter&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter) represents a scalar measurement (or a fractional value), within a known
-range.
--}
+--{-| [&lt;meter&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter) represents a scalar measurement (or a fractional value), within a known range.
+---}
 -- TODO
 --meter_ : List Html -> Html
 --meter_ = meter []
@@ -1194,9 +1193,8 @@ range.
 
 -- INTERACTIVE ELEMENTS
 
-{-| [&lt;details&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) represents a widget from which the user can obtain additional information
-or controls.
--}
+--{-| [&lt;details&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) represents a widget from which the user can obtain additional information or controls.
+---}
 -- TODO
 --details_ : List Html -> Html
 --details_ = details []
@@ -1207,8 +1205,8 @@ or controls.
 --detailsc : ClassString -> List Html -> Html
 --detailsc c = details [class' c]
 
-{-| [&lt;summary&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary) represents a summary , caption , or legend for a given `details`.
--}
+--{-| [&lt;summary&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary) represents a summary , caption , or legend for a given `details`.
+---}
 -- TODO
 --summary_ : List Html -> Html
 --summary_ = summary []
@@ -1219,8 +1217,8 @@ or controls.
 --summaryc : ClassString -> List Html -> Html
 --summaryc c = summary [class' c]
 
-{-| [&lt;menuitem&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/menuitem) represents a command that the user can invoke.
--}
+--{-| [&lt;menuitem&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/menuitem) represents a command that the user can invoke.
+---}
 -- TODO
 --menuitem_ : List Html -> Html
 --menuitem_ = menuitem []
@@ -1231,8 +1229,8 @@ or controls.
 --menuitemc : ClassString -> List Html -> Html
 --menuitemc c = menuitem [class' c]
 
-{-| [&lt;menu&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/menu) represents a list of commands.
--}
+--{-| [&lt;menu&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/menu) represents a list of commands.
+---}
 -- TODO
 --menu_ : List Html -> Html
 --menu_ = menu []
