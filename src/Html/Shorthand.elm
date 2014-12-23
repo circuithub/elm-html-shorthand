@@ -741,11 +741,8 @@ often brought by global attributes like class', lang, or dir.
 span_ : List Html -> Html
 span_ = span []
 
-span' : TextString -> Html
-span' t = span [] [text t]
-
-spanc : ClassString -> TextString -> Html
-spanc c t = span [class' c] [text t]
+spanc : ClassString -> List Html -> Html
+spanc c = span [class' c]
 
 {-| [&lt;br&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/br) represents a line break.
 -}
@@ -1057,15 +1054,32 @@ labelc c for t = label [class' c, A.for for] [text t]
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
--- TODO
---button_ : List Html -> Html
---button_ = button []
+button_ : List Html -> Html
+button_ = button []
 
---button' :  -> List Html -> Html
---button' = button []
+button' : TextString -> Html
+button' t = button [] [text t]
 
---buttonc : ClassString -> List Html -> Html
---buttonc c = button [class' c]
+buttonc : ClassString -> TextString -> Html
+buttonc c t = button [class' c] [text t]
+
+submitButton_ : List Html -> Html
+submitButton_ = button [A.type' "submit"]
+
+submitButton' : TextString -> Html
+submitButton' t = button [A.type' "submit"] [text t]
+
+submitButtonc : ClassString -> TextString -> Html
+submitButtonc c t = button [class' c, A.type' "submit"] [text t]
+
+resetButton_ : List Html -> Html
+resetButton_ = button [A.type' "reset"]
+
+resetButton' : TextString -> Html
+resetButton' t = button [A.type' "reset"] [text t]
+
+resetButtonc : ClassString -> TextString -> Html
+resetButtonc c t = button [class' c, A.type' "reset"] [text t]
 
 {-| [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.
 -}
