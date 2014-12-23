@@ -31,6 +31,7 @@ In [elm-html-shorthand][shorthand]:
 
 ```elm
 import Html
+import Html (Html, text)
 import Html.Shorthand (..)
 
 let container = divc "container"
@@ -83,9 +84,10 @@ Please note that this API is highly experimental and very likely to change! Use 
 Shorthand can help you deal with namespace pollution. Since the suffixed names used in `Html.Shorthand` are unlikely to clash with names in your application logic it may make sense to import `Html.Shorthand` unqualified, while using a qualified import for `Html`. 
 
 ```elm
-import Html                  -- you can use your own short u, i, b, p variable names!
-import Html.Shorthand (..)   -- bringing u',i',b',p',em' etc...
-import Html (blockquote)     -- if you really want something unqualified, just do it individually...
+import Html                                      -- you can use your own short u, i, b, p variable names!
+import Html.Shorthand (..)                       -- bringing u',i',b',p',em' etc...
+import Html (blockquote)                         -- if you really want something unqualified, just import it individually...
+import Html (Html, text, toElement, fromElement) -- perhaps in future Html.Shorthand will re-export these automatically
 ```
 
 ### Correct use of semantic tags
