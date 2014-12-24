@@ -434,11 +434,11 @@ divc c = div [class' c]
 -- TODO: Also see https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types
 -- TODO: etc...
 
-a' : UrlString -> String -> TextString -> Html
-a' url alt t = a [A.href url, A.alt alt] [text t]
+a' : UrlString -> TextString -> Html
+a' url t = a [A.href url] [text t]
 
-ac : ClassString -> UrlString -> String -> TextString -> Html
-ac c url alt t = a [class' c, A.href url, A.alt alt] [text t]
+ac : ClassString -> UrlString -> TextString -> Html
+ac c url t = a [class' c, A.href url] [text t]
 
 {-| [&lt;em&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em) represents emphasized text, like a stress accent.
 -}
