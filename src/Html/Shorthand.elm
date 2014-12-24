@@ -292,7 +292,8 @@ pc c t = p [class' c] [text t]
 {-| [&lt;hr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/hr) represents a thematic break between paragraphs of a section or article or
 any longer content.
 
-No class'y form is provided to prevent abuse.
+No classy form is provided in order to prevent abuse.
+
 -}
 hr' : Html
 hr' = hr [] []
@@ -1057,11 +1058,11 @@ labelc c for t = label [class' c, A.for for] [text t]
 button_ : List Html -> Html
 button_ = button []
 
-button' : TextString -> Html
-button' t = button [] [text t]
+button' : TextString -> Signal.Message -> Html
+button' t click = button [onClick click] [text t]
 
-buttonc : ClassString -> TextString -> Html
-buttonc c t = button [class' c] [text t]
+buttonc : ClassString -> TextString -> Signal.Message -> Html
+buttonc c t click = button [class' c, onClick click] [text t]
 
 submitButton_ : List Html -> Html
 submitButton_ = button [A.type' "submit"]
