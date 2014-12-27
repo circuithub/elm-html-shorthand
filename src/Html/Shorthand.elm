@@ -11,7 +11,7 @@ Very rarely, when an idiomatic form is highly desirable, the elision form has no
 This is done in order to encourage more uniform use. For example:
 * An `img` tag will almost certainly benefit from having `src` and `alt` attributes.
 * Some structural elements such as `section`, `aside`, `article` and `figure` should quite likely list an `id` in order to help users target interesting portions of your website via a URL.
-* Other elements, such as `hr` are not included simply because it does not make sense to provide them with *any* child elements whatsoever. In this case the idiomatic form, `hr\'`, appropriate.
+* Other elements, such as `hr` are not included simply because it does not make sense to provide them with *any* child elements whatsoever. In this case the idiomatic form, `hr'`, appropriate.
 
 @docs div_
 
@@ -164,6 +164,8 @@ This is used internally by all of the shorthands that take an `IdString`.
 * If the first character is a number, 'x' will be prepended.
 * Empty strings are allowed
 
+E.g.
+
     encodeId "Elmo teaches Elm!" == "elmo-teaches-elm"
     encodeId "99 bottles of beer, 98 bottles..." == "x99-bottles-of-beer-98-bottles"
     encodeId "_internal- -<-identifier->-" == "internal-identifier"
@@ -207,6 +209,8 @@ This is used internally by all of the shorthands that take a `ClassString`.
 * Trim hyphens (-) and underscores (_) on the sides of each class.
 * If the first character is a number, 'x' will be prepended.
 * Empty strings are allowed
+
+E.g.
 
     encodeClass "Color.encoding: BLUE-GREEN" == "colorencoding blue-green"
     encodeClass "99-bottles... 98-bottles" == "x99-bottles x98-bottles"
@@ -268,12 +272,12 @@ bodyc c = body [class' c]
 
 {-| [&lt;section&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/section) defines a section in a document. Use sections to construct a document outline.
 
-Do:
+**Do:**
 * [use &lt;section&gt;s to define document outlines](http://html5doctor.com/outlines/)
-* [...but use &lt;h*n*&rt;s carefully](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
+* [...but use &lt;h*n*&gt;s carefully](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
 
-Don't:
-* [use &lt;section&rt; as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)
+**Don't:**
+* [use &lt;section&gt; as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)
 
 -}
 section' : IdString -> List Html -> Html
@@ -284,10 +288,10 @@ sectionc c i = section [class' c, id' i]
 
 {-| [&lt;nav&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav) defines a section that contains only navigation links.
 
-Do:
+**Do:**
 * [use nav for major navigation](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
 
-Don't:
+**Don't:**
 * [wrap all lists of links in &lt;nav&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
 
 -}
@@ -300,11 +304,11 @@ navc c = nav [class' c]
 {-| [&lt;article&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/article) defines self-contained content that could exist independently of the rest
 of the content.
 
-Do:
+**Do:**
 * [use &lt;article&gt; for self-contained components with informational content](http://html5doctor.com/the-article-element/)
 * [use &lt;article&gt; for blog entries, user-submitted comments, interactive educational gadgets](http://html5doctor.com/the-article-element/)
 
-Don't:
+**Don't:**
 * [confuse &lt;article&gt; with &lt;section&gt; which need not be self-contained](http://www.brucelawson.co.uk/2010/html5-articles-and-sections-whats-the-difference/)
 
 -}
@@ -323,16 +327,16 @@ aside' i = aside [id' i]
 asidec : ClassString -> IdString -> List Html -> Html
 asidec c i = aside [class' c, id' i]
 
-{-| [&lt;h*&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) provide titles for sections and subsections, describing the topic it introduces.
+{-| [&lt;h*n*&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) provide titles for sections and subsections, describing the topic it introduces.
 
-Do:
-* [use &lt;h*n*&lt; to define a document outline](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
-* [try to have only one first level &lt;h*n*&rt; on a page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
+**Do:**
+* [use &lt;h*n*&gt; to define a document outline](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
+* [try to have only one first level &lt;h*n*&gt; on a page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
 * [introduce &lt;section&gt;s with headings](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
 
-Don't:
-* [skip &lt;h*n*&rt; levels if you can help it](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
-* [style &lt;h*n*&rt;s using html5 &lt;section&gt;s](http://www.stubbornella.org/content/2011/09/06/style-headings-using-html5-sections/)
+**Don't:**
+* [skip &lt;h*n*&gt; levels if you can help it](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
+* [style &lt;h*n*&gt;s using html5 &lt;section&gt;s](http://www.stubbornella.org/content/2011/09/06/style-headings-using-html5-sections/)
 
 -}
 h1' : TextString -> Html
@@ -374,7 +378,7 @@ h6c c t = h6 [class' c] [text t]
 {-| [&lt;header&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header) defines the header of a page or section. It often contains a logo, the
 title of the web site, and a navigational table of content.
 
-Don't:
+**Don't:**
 * [overuse &lt;header&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#header-hgroup)
 
 -}
@@ -395,10 +399,10 @@ footerc c = footer [class' c]
 
 {-| [&lt;address&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address) defines a section containing contact information.
 
-Do:
+**Do:**
 * [place inside the &lt;footer&gt; where appropriate](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address#Summary)
 
-Don't:
+**Don't:**
 * [represent an arbitrary, unrelated address](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address#Summary)
 
 -}
@@ -445,7 +449,7 @@ hr' = hr [] []
 {-| [&lt;pre&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/pre) indicates that its content is preformatted and that this format must be
 preserved.
 
-Do:
+**Do:**
 * [use &lt;pre&gt; for blocks of whitespace sensitive text that must not wrap](http://stackoverflow.com/a/4611735)
 * use &lt;pre&gt; as a wrapper for blocks &lt;`code_`&gt;
 * use &lt;pre&gt; as a wrapper for blocks of &lt;`samp_`&gt; output from a computer program
@@ -461,7 +465,7 @@ prec c = pre [class' c]
 
 The idiomatic form uses a cite url, but an elision form is also provided.
 
-Don't:
+**Don't:**
 * use blockquote for short, inline quotations, we have &lt;`q'`&gt; for that
 
 -}
@@ -531,11 +535,11 @@ ddc c t = dd [class' c] [text t]
 
 {-| [&lt;figure&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure) represents a figure illustrated as part of the document.
 
-Do:
+**Do:**
 * [use figure for captioned content](http://html5doctor.com/the-figure-figcaption-elements/)
 * [use figure for things other than images: video, audio, a chart, a table etc](http://html5doctor.com/the-figure-figcaption-elements/)
 
-Don't:
+**Don't:**
 * [turn every image into a figure](http://html5doctor.com/avoiding-common-html5-mistakes/#figure)
 
 -}
@@ -610,10 +614,10 @@ strongc c t = strong [class' c] [text t]
 {-| [&lt;small&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small) represents a side comment , that is, text like a disclaimer or a
 copyright, which is not essential to the comprehension of the document.
 
-Don't:
+**Don't:**
   * [use small for pure styling](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small#Summary)
 
-Do:
+**Do:**
   * [use small for side-comments and small print, including copyright and legal text](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small#Summary)
 
 -}
@@ -628,7 +632,7 @@ smallc c t = small [class' c] [text t]
 
 {-| [&lt;s&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s) represents content that is no longer accurate or relevant.
 
-Don't:
+**Don't:**
 * [use &lt;s&gt; for indicating document edits, use &lt;del&gt; or &lt;ins&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s#Summary)
 
 -}
@@ -643,7 +647,7 @@ sc c t = s [class' c] [text t]
 
 {-| [&lt;cite&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/cite) represents the title of a work.
 
-Do:
+**Do:**
 * [consider using an anchor inside of the cite to link to the origin](http://html5doctor.com/cite-and-blockquote-reloaded/)
 
 -}
@@ -934,7 +938,7 @@ del_ = del []
 
 {-| [&lt;img&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) represents an image.
 
-There is no 'img_' function since it is expected that images will *always* have at least 'src' and 'alt' attributes.
+There is no `img_` function since it is expected that images will *always* have at least 'src' and 'alt' attributes.
 
 -}
 img' : UrlString -> Int -> Int -> String -> Html
@@ -977,7 +981,7 @@ param' n v = param [A.name n, A.value v] []
 
 {-| [&lt;video&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video) represents a video, the associated audio and captions, and controls.
 
-Doesn't allow for &lt;track&rt;s &lt;source&rt;s, please use `video` for that.
+Doesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `video` for that.
 -}
 video' : UrlString -> Html
 video' url = video [A.src url] []
@@ -987,7 +991,7 @@ videoc c url = video [class' c, A.src url] []
 
 {-| [&lt;audio&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio) represents a sound or audio stream.
 
-Doesn't allow for &lt;track&rt;s &lt;source&rt;s, please use `audio` for that.
+Doesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `audio` for that.
 -}
 audio' : UrlString -> Html
 audio' url = audio [A.src url] []
