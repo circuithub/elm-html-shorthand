@@ -4,14 +4,14 @@ module Html.Shorthand where
 # Conventions
 The following conventions are used for shorthands. One example is provided for each.
 
-## Ellision form
+## Elision form
 The attributes argument of the node is elided, with only the list of children remaining.
 
 Very rarely, when an idiomatic form is highly desirable, the elision form has not been provided.
 This is done in order to encourage more uniform use. For example:
-* An 'img' tag will almost certainly benefit from having 'src' and 'alt' attributes.
-* Some structural elements such as 'section', 'aside', 'article' and 'figure' should quite likely list an 'id' in order to help users target interesting portions of your website via a URL.
-* Other elements, such as 'hr' are not included simply because it does not make sense to provide them with *any* child elements whatsoever. In this case the idiomatic form, 'hr\'', appropriate.
+* An `img` tag will almost certainly benefit from having `src` and `alt` attributes.
+* Some structural elements such as `section`, `aside`, `article` and `figure` should quite likely list an `id` in order to help users target interesting portions of your website via a URL.
+* Other elements, such as `hr` are not included simply because it does not make sense to provide them with *any* child elements whatsoever. In this case the idiomatic form, `hr\'`, appropriate.
 
 @docs div_
 
@@ -160,62 +160,98 @@ This is used internally by all of the shorthands that take an `IdString`.
 
 * Everything is turned into lowercase
 * Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
-* If the first characters not a letter, 'x' will be prepended.
+* Trim hyphens (-) and underscores (_) off the sides.
+* If the first character is a number, 'x' will be prepended.
 * Empty strings are allowed
+
+    encodeId "Elmo teaches Elm!" == "elmo-teaches-elm"
+    encodeId "99 bottles of beer, 98 bottles..." == "x99-bottles-of-beer-98-bottles"
+    encodeId "_internal- -<-identifier->-" == "internal-identifier"
+    encodeId " \t \n" == ""
 
 -}
 encodeId : IdString -> IdString
 encodeId =
-  let isAlpha c = let cc = Char.toCode <| Char.toLower c 
+  let hu = ['-','_']
+      isAlpha c = let cc = Char.toCode <| Char.toLower c
                   in cc >= Char.toCode 'a' && cc <= Char.toCode 'z'
       -- Note that : and . are also allowed in HTML 4, but since these need to be escaped in selectors we exclude them
       -- HTML 5 includes many more characters, but we'll exclude these for now
       isIdChar c = Char.isDigit c 
                     || isAlpha c
-                    || (c `List.member` String.toList "-_")
+                    || (c `List.member` hu)
       startWithAlpha s = case String.uncons s of
                           Just (c, s') -> if not (isAlpha c) then 'x' `String.cons` s else s
                           Nothing      -> s
+      smartTrimLeft s = case String.uncons s of
+                          Just (c, s') -> if c `List.member` hu then s' else s
+                          Nothing      -> s
+      smartTrimRight s = case String.uncons (String.reverse s) of
+                          Just (c, s') -> if c `List.member` hu then String.reverse s' else s
+                          Nothing      -> s
+      smartTrim = smartTrimLeft >> smartTrimRight
   in  String.words
+      >> List.map
+        ( String.toLower
+        >> String.filter isIdChar
+        >> smartTrim
+        )
       >> String.join "-"
-      -- TODO: trim '-' around the id?
-      >> String.toLower
-      >> String.filter isIdChar
       >> startWithAlpha
-          
 
 {-| A simplistic way of encoding of `class` attributes into a [sane format](http://stackoverflow.com/a/72577).
 This is used internally by all of the shorthands that take a `ClassString`.
 
 * Everything is turned into lowercase
 * Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
-* If the first characters not a letter, 'x' will be prepended.
+* Trim hyphens (-) and underscores (_) on the sides of each class.
+* If the first character is a number, 'x' will be prepended.
 * Empty strings are allowed
+
+    encodeClass "Color.encoding: BLUE-GREEN" == "colorencoding blue-green"
+    encodeClass "99-bottles... 98-bottles" == "x99-bottles x98-bottles"
+    encodeClass "_internal-class-" == "internal-class"
+    encodeClass " \t \n" == ""
 
 -}
 encodeClass : ClassString -> ClassString
 encodeClass =
-  let isAlpha c = let cc = Char.toCode <| Char.toLower c
+  let hu = ['-','_']
+      isAlpha c = let cc = Char.toCode <| Char.toLower c
                   in cc >= Char.toCode 'a' && cc <= Char.toCode 'z'
       -- Note that : and . are also allowed in HTML 4, but since these need to be escaped in selectors we exclude them
       -- HTML 5 includes many more characters, but we'll exclude these for now
       isClassChar c = Char.isDigit c 
                       || isAlpha c
-                      || (c `List.member` String.toList "-_")
+                      || (c `List.member` hu)
       startWithAlpha s = case String.uncons s of
                           Just (c, s') -> if not (isAlpha c) then 'x' `String.cons` s else s
                           Nothing      -> s
+      smartTrimLeft s = case String.uncons s of
+                          Just (c, s') -> if c `List.member` hu then s' else s
+                          Nothing      -> s
+      smartTrimRight s = case String.uncons (String.reverse s) of
+                          Just (c, s') -> if c `List.member` hu then String.reverse s' else s
+                          Nothing      -> s
+      smartTrim = smartTrimLeft >> smartTrimRight
   in  String.words
+      >> List.map
+        ( String.toLower
+        >> String.filter isClassChar
+        >> smartTrim
+        >> startWithAlpha
+        )
       >> String.join " "
-      >> String.toLower
-      >> String.filter isClassChar
-      >> startWithAlpha
 
 -- IDIOMATIC ATTRIBUTES
 
+{-| Encoded id attribute. Uses `encodeId` to ensure that the id is nicely normalized.
+-}
 id' : IdString -> Attribute
 id' = A.id << encodeId
 
+{-| Encoded class attribute. Uses `encodeClass` to ensure that the classes are nicely normalized.
+-}
 class' : ClassString -> Attribute
 class' = A.class << encodeClass
 
@@ -234,10 +270,10 @@ bodyc c = body [class' c]
 
 Do:
 * [use &lt;section&gt;s to define document outlines](http://html5doctor.com/outlines/)
-* [...but use headings carefully](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
+* [...but use &lt;h*n*&rt;s carefully](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
 
 Don't:
-* [use section as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)
+* [use &lt;section&rt; as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)
 
 -}
 section' : IdString -> List Html -> Html
@@ -290,13 +326,13 @@ asidec c i = aside [class' c, id' i]
 {-| [&lt;h*&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) provide titles for sections and subsections, describing the topic it introduces.
 
 Do:
-* [use headings to define a document outline](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
-* [try to have only one first level heading on a page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
+* [use &lt;h*n*&lt; to define a document outline](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
+* [try to have only one first level &lt;h*n*&rt; on a page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
 * [introduce &lt;section&gt;s with headings](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
 
 Don't:
-* [skip heading levels if you can help it](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
-* [style headings using html5 &lt;section&gt;s](http://www.stubbornella.org/content/2011/09/06/style-headings-using-html5-sections/)
+* [skip &lt;h*n*&rt; levels if you can help it](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
+* [style &lt;h*n*&rt;s using html5 &lt;section&gt;s](http://www.stubbornella.org/content/2011/09/06/style-headings-using-html5-sections/)
 
 -}
 h1' : TextString -> Html
