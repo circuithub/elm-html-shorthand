@@ -2,28 +2,28 @@
 
 [elm-html-shorthand][shorthand] is a modest, lightweight shorthand for supplementing [Html][elm-html] using three forms of notation:
 
-* A single argument form...
+* An elision form...
 
   ```elm
   span_     -- No attributes
   span []   -- expands to this
   ```
 
-* A canonical form...
+* An idiomatic form...
 
   ```elm
   img' "http://elm-lang.org/logo.png" "The Elm logo"             -- takes a common sense list of arguments
   img [ src "http://elm-lang.org/logo.png", alt "The Elm logo" ] -- expands to this
   ```
 
-* A classy (-canonical) form...
+* A classy (-idiomatic) form...
 
   ```elm
   codec "lang-elm" "Signal Float"                   -- takes a css class string + common sense arguments
   code [ class "lang-elm" ] [ text "Signal Float" ] -- expands to this
   ```
 
-Shorthand does not attempt to create a template for every concievable use case. In fact, we encourage you to look for patterns in your html and factor out your own! We only intend to provide defaults for extremely common, single element patterns.
+Shorthand does not attempt to create a template for every concievable use case. In fact, we encourage you to look for patterns in your html and factor out your own! We only intend to provide defaults for extremely common patterns on individual elements.
 
 A quick comparison!
 
@@ -98,7 +98,7 @@ Notice that the definition of `h2'` doesn't allow for an id string to be supplie
 h2' : TextString -> Html
 ```
 
-How then do I target my headings in URLs, you ask? Well, this is a job better suited to `section'` and `article'`! Notice that these *do* take ids in their canonical forms.
+How then do I target my headings in URLs, you ask? Well, this is a job better suited to `section'` and `article'`! Notice that these *do* take ids in their idiomatic forms.
 
 ```elm
 section' : IdString -> List Html -> Html

@@ -4,41 +4,146 @@ module Html.Shorthand where
 # Conventions
 The following conventions are used for shorthands. One example is provided for each.
 
-## Single argument form
+## Ellision form
 The attributes argument of the node is elided, with only the list of children remaining.
-For certain elements where a canonical form is highly desirable, these functions have been left
-off in order to encourage more uniform use. For example, an `img` tag will almost certainly benefit
-from `src` and `alt` attributes. Some structural elements such as `section`, `aside`, `article`
-and `figure` should quite likely list an `id` in order to help users target interesting portions of
-your website via a URL. Other elements, such as `hr` are not included in this list simply because it
-does not make sense to provide them with *any* child elements. In this case the canonical form is
-also appropriate.
+
+Very rarely, when an idiomatic form is highly desirable, the elision form has not been provided.
+This is done in order to encourage more uniform use. For example:
+* An 'img' tag will almost certainly benefit from having 'src' and 'alt' attributes.
+* Some structural elements such as 'section', 'aside', 'article' and 'figure' should quite likely list an 'id' in order to help users target interesting portions of your website via a URL.
+* Other elements, such as 'hr' are not included simply because it does not make sense to provide them with *any* child elements whatsoever. In this case the idiomatic form, 'hr\'', appropriate.
 
 @docs div_
 
-## Canonical form
+## Idiomatic form
 
-This form attempts to take a common sense list of arguments. This is a limited form which
-will not satisfy every need, but takes care of the extremely common cases. Many of the elements
-excluded from single argument form is included here in a special form.
+This form attempts to take a common sense list of arguments. This is a limited shorthand which
+will not satisfy every need, but takes care of the extremely common case and encourages uniform use.
+When an element is missing the elision form, an idiomatic form will always be provided. 
 
 @docs img'
-
-Note that `main'` is provided by elm-html, not by this package which only provides `main_`.
 
 ## Classy form
 
 Another very common case is creating elements for mostly aesthetic reasons.
 For this it is frequently convenient to specify only a `class` attribute and not much else.
-These 'c'-postfixed shorthands are similar to the canonical form, but also take a class string
-(a space separated list of CSS classes).
+These 'c'-suffixed shorthands are identical to the idiomatic form with the addition of a class string
+(space separated string of CSS classes) argument.
 
 @docs divc
 
+# Encoders
+@docs encodeId, encodeClass
+
+# Idiomatic attributes
+@docs id', class'
+
+# Sections
+@docs body_, bodyc, section', sectionc, nav_, navc, article', articlec, aside', asidec
+@docs h1', h1c, h2', h2c, h3', h3c, h4', h4c, h5', h5c, h6', h6c, header_, headerc, footer_, footerc
+@docs address_, addressc, main_, mainc
+
+# Grouping content
+@docs p_, p', pc, pre_, prec, blockquote_, blockquote', blockquotec, ol_, olc, ul_, ulc, li_, li', lic, dl_, dlc, dt', dtc, dd', ddc
+@docs figure', figurec, figcaption_, figcaption', figcaptionc
+@docs div_, divc, a', ac, em_, em', emc, strong_, strong', strongc, small_, small', smallc, s_, s', sc
+@docs cite_, citec, q_, q', qc, dfn', dfnc, abbr', abbrc, time_
+-- time'
+-- timec
+@docs code_, code', codec, var', varc, samp_, samp', sampc, kbd_, kbd', kbdc
+@docs sub_, sub', subc, sup_, sup', supc, i_, i', ic, b_, b', bc, u_, u', uc, mark_, mark', markc
+@docs ruby_, rubyc, rt', rtc, rp', rpc, bdi_, bdi', bdic
+-- bdo'
+-- bdoc
+@docs span_, spanc
+
+# Edits
+@docs ins_
+-- ins'
+-- insc
+@docs del_
+-- del'
+-- delc
+
+# Embedded content
+@docs img', imgc, iframe', iframec, embed', embedc
+-- object'
+-- objectc
+@docs param', video', videoc, audio', audioc
+-- source'
+-- sourcec
+-- track'
+-- trackc
+@docs map_, area_
+-- svg_
+-- svg'
+-- svgc
+-- math_
+-- math'
+-- mathc
+
+# Tabular data
+@docs table_, tablec, caption_, captionc
+-- colgroup_
+-- colgroup'
+-- colgroupc
+-- col_
+-- col'
+-- colc
+@docs tbody_, tbodyc, thead_, theadc, tfoot_, tfootc, tr_, trc, td_, td', tdc, th_, th', thc
+
+# Forms
+@docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
+-- input'
+-- inputc
+@docs button_, button', buttonc, submitButton_, submitButton', submitButtonc, resetButton_, resetButton', resetButtonc
+-- select_
+-- select'
+-- selectc
+-- datalist_
+-- datalist'
+-- datalistc
+-- optgroup_
+-- optgroup'
+-- optgroupc
+-- option_
+-- option'
+-- optionc
+-- textarea_
+-- textarea'
+-- textareac
+-- keygen_
+-- keygen'
+-- keygenc
+-- output_
+-- output'
+-- outputc
+-- progress_
+-- progress'
+-- progressc
+-- meter_
+-- meter'
+-- meterc
+
+# Interactive elements
+-- details_
+-- details'
+-- detailsc
+-- summary_
+-- summary'
+-- summaryc
+-- menuitem_
+-- menuitem'
+-- menuitemc
+-- menu_
+-- menu'
+-- menuc
 -}
 
 import Html (..)
 import Html.Attributes as A
+import Html.Events (..)
+import Signal
 import String
 import Char
 import List
@@ -106,7 +211,7 @@ encodeClass =
       >> String.filter isClassChar
       >> startWithAlpha
 
--- CANONICAL ATTRIBUTES
+-- IDIOMATIC ATTRIBUTES
 
 id' : IdString -> Attribute
 id' = A.id << encodeId
@@ -269,6 +374,9 @@ addressc c = address [class' c]
 
 {-| [&lt;main&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/main) defines the main or important content in the document. There is only one
 `main` element in the document.
+
+Note that main' is provided by [elm-html](http://package.elm-lang.org/packages/evancz/elm-html/latest/Html#main'), not by this package which only provides `main_`.
+
 -}
 main_ : List Html -> Html
 main_ = main' []
@@ -315,7 +423,7 @@ prec c = pre [class' c]
 
 {-| [&lt;blockquote&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote) represents a content that is quoted from another source.
 
-The canonical form uses a cite url, but a single argument form is also provided
+The idiomatic form uses a cite url, but an elision form is also provided.
 
 Don't:
 * use blockquote for short, inline quotations, we have &lt;`q'`&gt; for that
@@ -511,7 +619,7 @@ citec c = cite [class' c]
 
 {-| [&lt;q&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q) represents an inline quotation.
 
-The canonical form uses a cite url, but the single argument is also provided.
+The idiomatic form uses a cite url, but the elision is also provided.
 -}
 q_ : List Html -> Html
 q_ = q []
@@ -725,9 +833,9 @@ bdi' t = bdi [] [text t]
 bdic : ClassString -> TextString -> Html
 bdic c t = bdi [class' c] [text t]
 
-{-| [&lt;bdo&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdo) represents the directionality of its children, in order to explicitly
-override the Unicode bidirectional algorithm.
--}
+--{-| [&lt;bdo&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdo) represents the directionality of its children, in order to explicitly
+--override the Unicode bidirectional algorithm.
+---}
 -- TODO: Probably want to use a tagged union type for this
 --bdo' : TextDirection -> List Html -> Html
 --bdo' dir = bdo []
@@ -761,9 +869,10 @@ wbr' = wbr [] []
 
 {-| [&lt;ins&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ins) defines an addition to the document.
 -}
+ins_ : List Html -> Html
+ins_ = ins []
+
 -- TODO: Consider the defaults for this one a bit more carefully (cite and datetime)
---ins_ : List Html -> Html
---ins_ = ins []
 
 --ins' :  -> List Html -> Html
 --ins' = ins []
@@ -773,9 +882,10 @@ wbr' = wbr [] []
 
 {-| [&lt;del&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/del) defines a removal from the document.
 -}
+del_ : List Html -> Html
+del_ = del []
+
 -- TODO: Consider the defaults for this one a bit more carefully (cite and datetime)
---del_ : List Html -> Html
---del_ = del []
 
 --del' :  -> List Html -> Html
 --del' = del []
@@ -787,6 +897,9 @@ wbr' = wbr [] []
 -- EMBEDDED CONTENT
 
 {-| [&lt;img&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) represents an image.
+
+There is no 'img_' function since it is expected that images will *always* have at least 'src' and 'alt' attributes.
+
 -}
 img' : UrlString -> Int -> Int -> String -> Html
 img' url w h alt = img [A.src url, A.width w, A.height h, A.alt alt] []
@@ -811,9 +924,9 @@ embed' typ url w h = embed [A.type' typ, A.src url, A.width w, A.height h] []
 embedc : ClassString -> String -> UrlString -> Int -> Int -> Html
 embedc c typ url w h = embed [class' c, A.type' typ, A.src url, A.width w, A.height h] []
 
-{-| [&lt;object&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object) represents an external resource , which is treated as an image, an HTML
-sub-document, or an external resource to be processed by a plug-in.
--}
+--{-| [&lt;object&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object) represents an external resource , which is treated as an image, an HTML
+--sub-document, or an external resource to be processed by a plug-in.
+---}
 -- TODO: data attribute doesn't appear to be implemented yet
 --object' : ... -> List Html -> Html
 --object' dat typ = object [data' dat, A.type' typ]
@@ -846,9 +959,9 @@ audio' url = audio [A.src url] []
 audioc : ClassString -> UrlString -> Html
 audioc c url = audio [class' c, A.src url] []
 
-{-| [&lt;source&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source) allows authors to specify alternative media resources for media elements
-like `video` or `audio`.
--}
+--{-| [&lt;source&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source) allows authors to specify alternative media resources for media elements
+--like `video` or `audio`.
+---}
 -- TODO
 --source' :  -> List Html -> Html
 --source' = source []
@@ -856,9 +969,9 @@ like `video` or `audio`.
 --sourcec : ClassString -> List Html -> Html
 --sourcec c = source [class' c]
 
-{-| [&lt;track&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track) allows authors to specify timed text track for media elements like `video`
-or `audio`.
--}
+--{-| [&lt;track&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track) allows authors to specify timed text track for media elements like `video`
+--or `audio`.
+---}
 -- TODO
 --track' :  -> List Html -> Html
 --track' = track []
@@ -872,17 +985,19 @@ No defaults provided since you're probably best off using Elm's `Graphics`!
 -}
 
 {-- TODO: elm-html hasn't exposed these functions
-{-| In conjunction with `area`, defines an image map.-}
+--{-| In conjunction with `area`, defines an image map.
+---}
 map_ : List Html -> Html
 map_ = map []
 
-{-| In conjunction with `map`, defines an image map.-}
+--{-| In conjunction with `map`, defines an image map.
+---}
 area_ : List Html -> Html
 area_ = area []
 --}
 
-{-| [&lt;svg&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/svg) defines an embedded vectorial image.
--}
+--{-| [&lt;svg&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/svg) defines an embedded vectorial image.
+---}
 -- TODO
 --svg_ : List Html -> Html
 --svg_ = svg []
@@ -893,8 +1008,8 @@ area_ = area []
 --svgc : ClassString -> List Html -> Html
 --svgc c = svg [class' c]
 
-{-| [&lt;math&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/math) defines a mathematical formula.
--}
+--{-| [&lt;math&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/math) defines a mathematical formula.
+---}
 -- TODO
 --math_ : List Html -> Html
 --math_ = math []
@@ -924,8 +1039,8 @@ caption_ = caption []
 captionc : ClassString -> List Html -> Html
 captionc c = caption [class' c]
 
-{-| [&lt;colgroup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup) represents a set of one or more columns of a table.
--}
+--{-| [&lt;colgroup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup) represents a set of one or more columns of a table.
+---}
 -- TODO
 --colgroup_ : List Html -> Html
 --colgroup_ = colgroup []
@@ -936,8 +1051,8 @@ captionc c = caption [class' c]
 --colgroupc : ClassString -> List Html -> Html
 --colgroupc c = colgroup [class' c]
 
-{-| [&lt;col&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col) represents a column of a table.
--}
+--{-| [&lt;col&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col) represents a column of a table.
+---}
 -- TODO
 --col_ : List Html -> Html
 --col_ = col []
@@ -1044,8 +1159,8 @@ label' for t = label [A.for for] [text t]
 labelc : ClassString -> IdString -> TextString -> Html
 labelc c for t = label [class' c, A.for for] [text t]
 
-{-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
--}
+--{-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
+---}
 -- TODO: It is not clear what the defaults should be given the variation that is possible with this element (also, can we simply use Elm's inputs most of the time?)
 --input' : String -> IdString -> String -> TextString -> Html
 --input' typ i n p = input [A.type' typ, id' i, name n, placeholder p] []
@@ -1084,7 +1199,6 @@ resetButtonc c t = button [class' c, A.type' "reset"] [text t]
 
 --{-| [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.
 ---}
--- TODO
 --select_ : List Html -> Html
 --select_ = select []
 
