@@ -289,7 +289,7 @@ sectionc c i = section [class' c, id' i]
 {-| [&lt;nav&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav) defines a section that contains only navigation links.
 
 **Do:**
-* [use nav for major navigation](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
+* [use &lt;nav&gt; for major navigation](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
 
 **Don't:**
 * [wrap all lists of links in &lt;nav&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
