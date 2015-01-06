@@ -1246,6 +1246,13 @@ button' t click = button [onClick click] [text t]
 buttonc : ClassString -> TextString -> Signal.Message -> Html
 buttonc c t click = button [class' c, onClick click] [text t]
 
+-- This is technically an anchor, but behaves more like a button
+linkButton' : TextString -> Signal.Message -> Html
+linkButton' t click = a [onClick click, A.href "#"] [text t]
+
+linkButtonc : ClassString -> TextString -> Signal.Message -> Html
+linkButtonc c t click = a [class' c, onClick click, A.href "#"] [text t]
+
 submitButton_ : List Html -> Html
 submitButton_ = button [A.type' "submit"]
 
