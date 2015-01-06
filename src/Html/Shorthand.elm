@@ -94,9 +94,13 @@ These 'c'-suffixed shorthands are identical to the idiomatic form with the addit
 
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
--- input'
--- inputc
-@docs button_, button', buttonc, submitButton_, submitButton', submitButtonc, resetButton_, resetButton', resetButtonc
+-- field'
+-- fieldc
+-- radio'
+-- radioc
+-- checkbox'
+-- checkboxc
+@docs button_, button', buttonc, linkButton', linkButtonc, submitButton_, submitButton', submitButtonc, resetButton_, resetButton', resetButtonc
 -- select_
 -- select'
 -- selectc
@@ -118,8 +122,7 @@ These 'c'-suffixed shorthands are identical to the idiomatic form with the addit
 -- output_
 -- output'
 -- outputc
--- progress_
--- progress'
+@docs progress_, progress'
 -- progressc
 -- meter_
 -- meter'
