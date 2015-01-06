@@ -122,8 +122,7 @@ These 'c'-suffixed shorthands are identical to the idiomatic form with the addit
 -- output_
 -- output'
 -- outputc
-@docs progress_, progress'
--- progressc
+@docs progress', progressc
 -- meter_
 -- meter'
 -- meterc
