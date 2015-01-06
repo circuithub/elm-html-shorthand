@@ -147,11 +147,14 @@ import Signal
 import String
 import Char
 import List
+import Graphics.Input.Field
 
 type alias IdString = String
 type alias ClassString = String
 type alias UrlString = String
 type alias TextString = String
+type alias Selection = Graphics.Input.Field.Selection
+type alias Direction = Graphics.Input.Field.Direction
 
 -- ENCODERS
 
@@ -337,6 +340,7 @@ asidec c i = aside [class' c, id' i]
 **Don't:**
 * [skip &lt;h*n*&gt; levels if you can help it](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
 * [style &lt;h*n*&gt;s using html5 &lt;section&gt;s](http://www.stubbornella.org/content/2011/09/06/style-headings-using-html5-sections/)
+* [use &lt;h*n*&gt; for subtitles, subheadings](http://html5doctor.com/howto-subheadings/)
 
 -}
 h1' : TextString -> Html
@@ -1199,14 +1203,37 @@ label' for t = label [A.for for] [text t]
 labelc : ClassString -> IdString -> TextString -> Html
 labelc c for t = label [class' c, A.for for] [text t]
 
---{-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
----}
--- TODO: It is not clear what the defaults should be given the variation that is possible with this element (also, can we simply use Elm's inputs most of the time?)
+{-| `FieldEvent` is similar to `Graphics.Input.Field.Content`.
+However, `FieldEvent` renames `string` to `targetValue` for consistency with regular `on` events using Json.Decoder.
+It also adds keyCode in order to record the last key press, as well as active key modifiers.
+-}
+--type KeyEvent = Modifier KeyModifier
+--              | Code KeyCode
+type alias FieldEvent =
+  { targetValue    : String
+  , selection      : Selection
+  -- , keyCombination : List KeyEvent
+  }
+
+{-| Update style for input fields.
+
+* *Continuous* - continuously update the field on any key event (`on "key"`)
+* *OnEnter* - update the field whenever 
+
+-}
+type FieldUpdate = Continuous (FieldEvent -> Signal.Message)
+                 | OnEnter (FieldEvent -> Signal.Message)
+
 --input' : String -> IdString -> String -> TextString -> Html
 --input' typ i n p = input [A.type' typ, id' i, name n, placeholder p] []
 
 --inputc : ClassString -> List Html -> Html
 --inputc c = input [class' c]
+
+{-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
+-}
+--field' : FieldUpdate -> Html
+--field' _ = -- TODO
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
