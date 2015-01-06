@@ -1354,17 +1354,13 @@ resetButtonc c t = button [class' c, A.type' "reset"] [text t]
 --outputc : ClassString -> List Html -> Html
 --outputc c = output [class' c]
 
---{-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
----}
--- TODO
---progress_ : List Html -> Html
---progress_ = progress []
+{-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
+-}
+progress' : number -> number -> String -> Html
+progress' value max t = progress [ A.value (toString value), A.max (toString max) ] [ text t ]
 
---progress' :  -> List Html -> Html
---progress' = progress []
-
---progressc : ClassString -> List Html -> Html
---progressc c = progress [class' c]
+progressc : ClassString -> number -> number -> String -> Html
+progressc c value max t = progress [class' c, A.value (toString value), A.max (toString max) ] [ text t ]
 
 --{-| [&lt;meter&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter) represents a scalar measurement (or a fractional value), within a known range.
 ---}
