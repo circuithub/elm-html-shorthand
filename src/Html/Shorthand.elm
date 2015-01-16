@@ -800,8 +800,7 @@ ic : ClassString -> TextString -> Html
 ic c t = i [class' c] [text t]
 
 {-| [&lt;b&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b) represents a text which to which attention is drawn for utilitarian
-purposes. It doesn't convey extra importance and doesn't imply an alternate
-voice.
+purposes. It doesn't convey extra importance and doesn't imply an alternate voice.
 -}
 b_ : List Html -> Html
 b_ = b []
@@ -1232,6 +1231,10 @@ type FieldUpdate = Continuous (FieldEvent -> Signal.Message)
 --inputc : ClassString -> List Html -> Html
 --inputc c = input [class' c]
 
+--inputText' : IdString -> String -> TextString -> Html
+--inputText' i n p = input [A.type' "text", id' i, name n, placeholder p] []
+
+
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 -}
 --field' : FieldUpdate -> Html
@@ -1240,38 +1243,38 @@ type FieldUpdate = Continuous (FieldEvent -> Signal.Message)
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
 button_ : List Html -> Html
-button_ = button []
+button_ = button [A.type' "button"]
 
 button' : TextString -> Signal.Message -> Html
-button' t click = button [onClick click] [text t]
+button' t click = button [A.type' "button", onClick click] [text t]
 
 buttonc : ClassString -> TextString -> Signal.Message -> Html
-buttonc c t click = button [class' c, onClick click] [text t]
+buttonc c t click = button [A.type' "button", class' c, onClick click] [text t]
 
 -- This is technically an anchor, but behaves more like a button
-linkButton' : TextString -> Signal.Message -> Html
-linkButton' t click = a [onClick click, A.href "#"] [text t]
+buttonLink' : TextString -> Signal.Message -> Html
+buttonLink' t click = a [onClick click, A.href "#"] [text t]
 
-linkButtonc : ClassString -> TextString -> Signal.Message -> Html
-linkButtonc c t click = a [class' c, onClick click, A.href "#"] [text t]
+buttonLinkc : ClassString -> TextString -> Signal.Message -> Html
+buttonLinkc c t click = a [class' c, onClick click, A.href "#"] [text t]
 
-submitButton_ : List Html -> Html
-submitButton_ = button [A.type' "submit"]
+buttonSubmit_ : List Html -> Html
+buttonSubmit_ = button [A.type' "submit"]
 
-submitButton' : TextString -> Html
-submitButton' t = button [A.type' "submit"] [text t]
+buttonSubmit' : TextString -> Html
+buttonSubmit' t = button [A.type' "submit"] [text t]
 
-submitButtonc : ClassString -> TextString -> Html
-submitButtonc c t = button [class' c, A.type' "submit"] [text t]
+buttonSubmitc : ClassString -> TextString -> Html
+buttonSubmitc c t = button [class' c, A.type' "submit"] [text t]
 
-resetButton_ : List Html -> Html
-resetButton_ = button [A.type' "reset"]
+buttonReset_ : List Html -> Html
+buttonReset_ = button [A.type' "reset"]
 
-resetButton' : TextString -> Html
-resetButton' t = button [A.type' "reset"] [text t]
+buttonReset' : TextString -> Html
+buttonReset' t = button [A.type' "reset"] [text t]
 
-resetButtonc : ClassString -> TextString -> Html
-resetButtonc c t = button [class' c, A.type' "reset"] [text t]
+buttonResetc : ClassString -> TextString -> Html
+buttonResetc c t = button [class' c, A.type' "reset"] [text t]
 
 --{-| [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.
 ---}
