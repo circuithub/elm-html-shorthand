@@ -94,8 +94,8 @@ These 'c'-suffixed shorthands are identical to the idiomatic form with the addit
 
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
--- field'
--- fieldc
+@docs FieldUpdate, fieldUpdate
+@docs inputText', inputTextc, inputNumber', inputNumberc
 -- radio'
 -- radioc
 -- checkbox'
@@ -147,7 +147,6 @@ import Html.Attributes as A
 import Html.Events (..)
 import Signal
 import String
-import Char
 import List
 import Maybe
 --import Graphics.Input.Field
@@ -181,33 +180,7 @@ E.g.
 
 -}
 encodeId : IdString -> IdString
-encodeId =
-  let hu = ['-','_']
-      isAlpha c = let cc = Char.toCode <| Char.toLower c
-                  in cc >= Char.toCode 'a' && cc <= Char.toCode 'z'
-      -- Note that : and . are also allowed in HTML 4, but since these need to be escaped in selectors we exclude them
-      -- HTML 5 includes many more characters, but we'll exclude these for now
-      isIdChar c = Char.isDigit c 
-                    || isAlpha c
-                    || (c `List.member` hu)
-      startWithAlpha s = case String.uncons s of
-                          Just (c, s') -> if not (isAlpha c) then 'x' `String.cons` s else s
-                          Nothing      -> s
-      smartTrimLeft s = case String.uncons s of
-                          Just (c, s') -> if c `List.member` hu then s' else s
-                          Nothing      -> s
-      smartTrimRight s = case String.uncons (String.reverse s) of
-                          Just (c, s') -> if c `List.member` hu then String.reverse s' else s
-                          Nothing      -> s
-      smartTrim = smartTrimLeft >> smartTrimRight
-  in  String.words
-      >> List.map
-        ( String.toLower
-        >> String.filter isIdChar
-        >> smartTrim
-        )
-      >> String.join "-"
-      >> startWithAlpha
+encodeId = Internal.encodeId
 
 {-| A simplistic way of encoding of `class` attributes into a [sane format](http://stackoverflow.com/a/72577).
 This is used internally by all of the shorthands that take a `ClassString`.
@@ -227,45 +200,19 @@ E.g.
 
 -}
 encodeClass : ClassString -> ClassString
-encodeClass =
-  let hu = ['-','_']
-      isAlpha c = let cc = Char.toCode <| Char.toLower c
-                  in cc >= Char.toCode 'a' && cc <= Char.toCode 'z'
-      -- Note that : and . are also allowed in HTML 4, but since these need to be escaped in selectors we exclude them
-      -- HTML 5 includes many more characters, but we'll exclude these for now
-      isClassChar c = Char.isDigit c 
-                      || isAlpha c
-                      || (c `List.member` hu)
-      startWithAlpha s = case String.uncons s of
-                          Just (c, s') -> if not (isAlpha c) then 'x' `String.cons` s else s
-                          Nothing      -> s
-      smartTrimLeft s = case String.uncons s of
-                          Just (c, s') -> if c `List.member` hu then s' else s
-                          Nothing      -> s
-      smartTrimRight s = case String.uncons (String.reverse s) of
-                          Just (c, s') -> if c `List.member` hu then String.reverse s' else s
-                          Nothing      -> s
-      smartTrim = smartTrimLeft >> smartTrimRight
-  in  String.words
-      >> List.map
-        ( String.toLower
-        >> String.filter isClassChar
-        >> smartTrim
-        >> startWithAlpha
-        )
-      >> String.join " "
+encodeClass = Internal.encodeClass
 
 -- IDIOMATIC ATTRIBUTES
 
 {-| Encoded id attribute. Uses `encodeId` to ensure that the id is nicely normalized.
 -}
 id' : IdString -> Attribute
-id' = A.id << encodeId
+id' = Internal.id'
 
 {-| Encoded class attribute. Uses `encodeClass` to ensure that the classes are nicely normalized.
 -}
 class' : ClassString -> Attribute
-class' = A.class << encodeClass
+class' = Internal.class'
 
 -- SECTIONS
 
@@ -1237,10 +1184,16 @@ fieldUpdate =
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 -}
 inputText' : IdString -> String -> String -> FieldUpdate -> Html
-inputText' name p v fu = Internal.inputField "text" name p v fu
+inputText' name p v fu = Internal.inputField "text" "" name p v fu
+
+inputTextc : ClassString -> IdString -> String -> String -> FieldUpdate -> Html
+inputTextc c name p v fu = Internal.inputField "text" c name p v fu
 
 inputNumber' : IdString -> String -> String -> FieldUpdate -> Html
-inputNumber' name p v fu =  Internal.inputField "number" name p v fu
+inputNumber' name p v fu =  Internal.inputField "number" "" name p v fu
+
+inputNumberc : ClassString -> IdString -> String -> String -> FieldUpdate -> Html
+inputNumberc c name p v fu =  Internal.inputField "number" c name p v fu
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
