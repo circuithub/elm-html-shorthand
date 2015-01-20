@@ -1,5 +1,5 @@
 {
-    "version": "3.0.0",
+    "version": "4.0.0",
     "summary": "An idiomatic shorthand for Html",
     "repository": "https://github.com/circuithub/elm-html-shorthand.git",
     "license": "MIT",
@@ -8,7 +8,8 @@
     ],
     "exposed-modules": [
         "Html.Shorthand",
-        "Html.Shorthand.Event"
+        "Html.Shorthand.Event",
+        "Html.Shorthand.Type"
     ],
     "dependencies": {
         "elm-lang/core": "1.0.0 <= v < 2.0.0",

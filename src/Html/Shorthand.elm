@@ -149,14 +149,17 @@ import Signal
 import String
 import Char
 import List
-import Graphics.Input.Field
+import Maybe
+--import Graphics.Input.Field
+import Html.Shorthand.Type as T
+import Html.Shorthand.Internal as Internal
 
-type alias IdString = String
-type alias ClassString = String
-type alias UrlString = String
-type alias TextString = String
-type alias Selection = Graphics.Input.Field.Selection
-type alias Direction = Graphics.Input.Field.Direction
+type alias IdString = T.IdString -- re-export
+type alias ClassString = T.ClassString -- re-export
+type alias UrlString = T.UrlString -- re-export
+type alias TextString = T.TextString -- re-export
+--type alias Selection = Graphics.Input.Field.Selection  -- re-export
+--type alias Direction = Graphics.Input.Field.Direction  -- re-export
 
 -- ENCODERS
 
@@ -1204,26 +1207,6 @@ label' for t = label [A.for for] [text t]
 labelc : ClassString -> IdString -> TextString -> Html
 labelc c for t = label [class' c, A.for for] [text t]
 
-{-| `FieldEvent` is similar to `Graphics.Input.Field.Content`.
-However, `FieldEvent` renames `string` to `targetValue` for consistency with regular `on` events using Json.Decoder.
-It also adds keyCode in order to record the last key press, as well as active key modifiers.
--}
---type KeyEvent = Modifier KeyModifier
---              | Code KeyCode
-type alias FieldEvent =
-  { targetValue    : String
-  , selection      : Selection
-  -- , keyCombination : List KeyEvent
-  }
-
-{-| Update style for input fields.
-
-* *Continuous* - continuously update the field on any key event (`on "key"`)
-* *OnEnter* - update the field whenever 
-
--}
-type FieldUpdate = Continuous (FieldEvent -> Signal.Message)
-                 | OnEnter (FieldEvent -> Signal.Message)
 
 --input' : String -> IdString -> String -> TextString -> Html
 --input' typ i n p = input [A.type' typ, id' i, name n, placeholder p] []
@@ -1231,14 +1214,33 @@ type FieldUpdate = Continuous (FieldEvent -> Signal.Message)
 --inputc : ClassString -> List Html -> Html
 --inputc c = input [class' c]
 
---inputText' : IdString -> String -> TextString -> Html
---inputText' i n p = input [A.type' "text", id' i, name n, placeholder p] []
+{-| Update style for input fields.
 
+* *continuous* - continuously send messages on any input event (`on "input"`)
+* *onEnter* - a message to send when whenever the enter key is hit
+
+-}
+type alias FieldUpdate = T.FieldUpdate
+
+{-| Default field update handlers. Use this to select only one or two handlers.
+
+    { fieldUpdate
+    | continuous <- Just (\val -> Signal.send updates (MyEvent val))
+    }
+-}
+fieldUpdate : FieldUpdate
+fieldUpdate =
+  { continuous = Nothing
+  , onEnter = Nothing
+  }
 
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 -}
---field' : FieldUpdate -> Html
---field' _ = -- TODO
+inputText' : IdString -> String -> String -> FieldUpdate -> Html
+inputText' name p v fu = Internal.inputField "text" name p v fu
+
+inputNumber' : IdString -> String -> String -> FieldUpdate -> Html
+inputNumber' name p v fu =  Internal.inputField "number" name p v fu
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
