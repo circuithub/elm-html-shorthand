@@ -2,6 +2,7 @@ module Html.Shorthand.Event where
 {-| Shorthands for common Html events
 
 # Events
+@docs targetValueFloat, targetValueInt
 @docs onEnter
 
 -}
@@ -9,6 +10,7 @@ module Html.Shorthand.Event where
 import Html (Attribute)
 import Html.Events (..)
 import Json.Decode as Json
+import String
 import Signal
 --import Graphics.Input.Field (Selection, Direction)
 
@@ -24,16 +26,20 @@ import Signal
 --   -- , keyCombination : List KeyEvent
 --   }
 
+{-| Numerically typed target value
+-}
+targetValueFloat : Json.Decoder Float
+targetValueFloat = Json.customDecoder targetValue String.toFloat
+
+{-| Numerically typed target value
+-}
+targetValueInt : Json.Decoder Int
+targetValueInt = Json.customDecoder targetValue String.toInt
+
 {-| Fires off the message when the `Enter` key is pressed (on keydown).
 -}
-keyCodeValue : Json.Decoder (Int, String)
-keyCodeValue =
-  Json.object2 (,)
-    keyCode
-    targetValue
-
 onEnter : Json.Decoder a -> (a -> Signal.Message) -> Attribute
-onEnter decoder f =
+onEnter dec f =
   on "keydown"
-    (Json.customDecoder (Json.object2 (,) keyCode decoder) (\(c, val) -> if c == 13 then Ok val else Err "expected key code 13"))
+    (Json.customDecoder (Json.object2 (,) keyCode dec) (\(c, val) -> if c == 13 then Ok val else Err "expected key code 13"))
     f

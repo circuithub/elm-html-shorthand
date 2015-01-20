@@ -6,9 +6,7 @@ import Char
 import String
 import Html (..)
 import Html.Attributes as A
-import Html.Events (..)
 import Html.Shorthand.Type (..)
-import Html.Shorthand.Event (..)
 
 encodeId : IdString -> IdString
 encodeId =
@@ -73,13 +71,3 @@ id' = A.id << encodeId
 
 class' : ClassString -> Attribute
 class' = A.class << encodeClass
-
-inputField : String -> ClassString -> IdString -> String -> String -> FieldUpdate -> Html
-inputField type' c i p v fu =
-  let filter = List.filterMap identity
-      attrs =
-        filter
-        <| Maybe.map class' (if c == "" then Nothing else Just c)
-        :: Maybe.map (on "input" targetValue) fu.continuous
-        :: [ Maybe.map (onEnter targetValue) fu.onEnter ]
-  in input ([A.type' type', id' i, A.name i, A.placeholder p, A.value v] ++ attrs) []

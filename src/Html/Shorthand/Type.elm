@@ -14,7 +14,7 @@ type alias TextString = String
 --  , onEnter : Maybe (FieldEvent -> Signal.Message)
 --  }
 
-type alias FieldUpdate =
-  { continuous : Maybe (String -> Signal.Message)
-  , onEnter : Maybe (String -> Signal.Message)
+type alias FieldUpdate a =
+  { continuous : Maybe (a -> Signal.Message)
+  , onEnter : Maybe (a -> Signal.Message)
   }

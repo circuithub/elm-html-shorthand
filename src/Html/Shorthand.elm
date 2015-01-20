@@ -95,7 +95,7 @@ These 'c'-suffixed shorthands are identical to the idiomatic form with the addit
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
 @docs FieldUpdate, fieldUpdate
-@docs inputText', inputTextc, inputNumber', inputNumberc
+@docs inputField', inputFieldc, inputText', inputTextc, inputFloat', inputFloatc, inputInt', inputIntc
 -- radio'
 -- radioc
 -- checkbox'
@@ -149,9 +149,11 @@ import Signal
 import String
 import List
 import Maybe
+import Json.Decode as Json
 --import Graphics.Input.Field
 import Html.Shorthand.Type as T
 import Html.Shorthand.Internal as Internal
+import Html.Shorthand.Event (..)
 
 type alias IdString = T.IdString -- re-export
 type alias ClassString = T.ClassString -- re-export
@@ -1167,7 +1169,7 @@ labelc c for t = label [class' c, A.for for] [text t]
 * *onEnter* - a message to send when whenever the enter key is hit
 
 -}
-type alias FieldUpdate = T.FieldUpdate
+type alias FieldUpdate a = T.FieldUpdate a
 
 {-| Default field update handlers. Use this to select only one or two handlers.
 
@@ -1175,7 +1177,7 @@ type alias FieldUpdate = T.FieldUpdate
     | continuous <- Just (\val -> Signal.send updates (MyEvent val))
     }
 -}
-fieldUpdate : FieldUpdate
+fieldUpdate : FieldUpdate a
 fieldUpdate =
   { continuous = Nothing
   , onEnter = Nothing
@@ -1183,17 +1185,36 @@ fieldUpdate =
 
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 -}
-inputText' : IdString -> String -> String -> FieldUpdate -> Html
-inputText' name p v fu = Internal.inputField "text" "" name p v fu
+inputFieldc : ClassString -> IdString -> String -> String -> String -> Json.Decoder a -> FieldUpdate a -> Html
+inputFieldc c i type' p v dec fu =
+  let filter = List.filterMap identity
+      attrs =
+        filter
+        <| Maybe.map class' (if c == "" then Nothing else Just c)
+        :: Maybe.map (on "input" dec) fu.continuous
+        :: [ Maybe.map (onEnter dec) fu.onEnter ]
+  in input ([A.type' type', id' i, A.name i, A.placeholder p, A.value v] ++ attrs) []
 
-inputTextc : ClassString -> IdString -> String -> String -> FieldUpdate -> Html
-inputTextc c name p v fu = Internal.inputField "text" c name p v fu
+inputField' : IdString -> String -> String -> String -> Json.Decoder a -> FieldUpdate a -> Html
+inputField' = inputFieldc ""
 
-inputNumber' : IdString -> String -> String -> FieldUpdate -> Html
-inputNumber' name p v fu =  Internal.inputField "number" "" name p v fu
+inputText' : IdString -> String -> String -> FieldUpdate String -> Html
+inputText' name p v fu = inputField' name "text" p v targetValue fu
 
-inputNumberc : ClassString -> IdString -> String -> String -> FieldUpdate -> Html
-inputNumberc c name p v fu =  Internal.inputField "number" c name p v fu
+inputTextc : ClassString -> IdString -> String -> String -> FieldUpdate String -> Html
+inputTextc c name p v fu = inputFieldc c name "text" p v targetValue fu
+
+inputFloat' : IdString -> String -> Float -> FieldUpdate Float -> Html
+inputFloat' name p v fu =  inputField' name "number" p (toString v) targetValueFloat fu
+
+inputFloatc : ClassString -> IdString -> String -> Float -> FieldUpdate Float -> Html
+inputFloatc c name p v fu =  inputFieldc c name "number" p (toString v) targetValueFloat fu
+
+inputInt' : IdString -> String -> Int -> FieldUpdate Int -> Html
+inputInt' name p v fu =  inputField' name "number" p (toString v) targetValueInt fu
+
+inputIntc : ClassString -> IdString -> String -> Int -> FieldUpdate Int -> Html
+inputIntc c name p v fu =  inputFieldc c name "number" p (toString v) targetValueInt fu
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
