@@ -111,7 +111,7 @@ How then do I target my headings in URLs, you ask? Well, this is a job better su
 section' : IdString -> List Html -> Html
 ```
 
-This encourages you to use &lt;`section id="..."`&gt; and &lt;`article id="..."`&lt; in order to add url-targetable ids to your page.
+This encourages you to use &lt;`section id="..."`&gt; and &lt;`article id="..."`&gt; in order to add url-targetable ids to your page.
 
 ```haskell
 section' "ch-5"
