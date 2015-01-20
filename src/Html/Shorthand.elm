@@ -32,6 +32,11 @@ These 'c'-suffixed shorthands are identical to the idiomatic form with the addit
 
 @docs divc
 
+# Basic type aliases
+The following types are all aliases for `String` and as such, only serve documentation purposes.
+
+@docs IdString, ClassString, UrlString, TextString
+
 # Encoders
 @docs encodeId, encodeClass
 
@@ -155,9 +160,20 @@ import Html.Shorthand.Type as T
 import Html.Shorthand.Internal as Internal
 import Html.Shorthand.Event (..)
 
-type alias IdString = T.IdString -- re-export
-type alias ClassString = T.ClassString -- re-export
+{-| Id parameters will automatically be encoded via `encodeId`
+-}
+type alias IdString = T.IdString
+
+{-| Class parameters will automatically be encoded via `encodeClass`
+-}
+type alias ClassString = T.ClassString
+
+{-| Only valid urls should be passed to functions taking this parameter
+-}
 type alias UrlString = T.UrlString -- re-export
+
+{-| The string passed to a function taking this parameter will be rendered as textual content via `text`.
+-}
 type alias TextString = T.TextString -- re-export
 --type alias Selection = Graphics.Input.Field.Selection  -- re-export
 --type alias Direction = Graphics.Input.Field.Direction  -- re-export
@@ -1193,28 +1209,29 @@ inputFieldc c i type' p v dec fu =
         <| Maybe.map class' (if c == "" then Nothing else Just c)
         :: Maybe.map (on "input" dec) fu.continuous
         :: [ Maybe.map (onEnter dec) fu.onEnter ]
-  in input ([A.type' type', id' i, A.name i, A.placeholder p, A.value v] ++ attrs) []
+      i' = encodeId i
+  in input ([A.type' type', A.id i', A.name i', A.placeholder p, A.value v] ++ attrs) []
 
 inputField' : IdString -> String -> String -> String -> Json.Decoder a -> FieldUpdate a -> Html
 inputField' = inputFieldc ""
 
 inputText' : IdString -> String -> String -> FieldUpdate String -> Html
-inputText' name p v fu = inputField' name "text" p v targetValue fu
+inputText' i p v fu = inputField' i "text" p v targetValue fu
 
 inputTextc : ClassString -> IdString -> String -> String -> FieldUpdate String -> Html
-inputTextc c name p v fu = inputFieldc c name "text" p v targetValue fu
+inputTextc c i p v fu = inputFieldc c i "text" p v targetValue fu
 
 inputFloat' : IdString -> String -> Float -> FieldUpdate Float -> Html
-inputFloat' name p v fu =  inputField' name "number" p (toString v) targetValueFloat fu
+inputFloat' i p v fu = inputField' i "number" p (toString v) targetValueFloat fu
 
 inputFloatc : ClassString -> IdString -> String -> Float -> FieldUpdate Float -> Html
-inputFloatc c name p v fu =  inputFieldc c name "number" p (toString v) targetValueFloat fu
+inputFloatc c i p v fu = inputFieldc c i "number" p (toString v) targetValueFloat fu
 
 inputInt' : IdString -> String -> Int -> FieldUpdate Int -> Html
-inputInt' name p v fu =  inputField' name "number" p (toString v) targetValueInt fu
+inputInt' i p v fu = inputField' i "number" p (toString v) targetValueInt fu
 
 inputIntc : ClassString -> IdString -> String -> Int -> FieldUpdate Int -> Html
-inputIntc c name p v fu =  inputFieldc c name "number" p (toString v) targetValueInt fu
+inputIntc c i p v fu = inputFieldc c i "number" p (toString v) targetValueInt fu
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}

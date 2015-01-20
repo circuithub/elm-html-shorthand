@@ -26,12 +26,12 @@ import Signal
 --   -- , keyCombination : List KeyEvent
 --   }
 
-{-| Numerically typed target value
+{-| Floating-point target value
 -}
 targetValueFloat : Json.Decoder Float
 targetValueFloat = Json.customDecoder targetValue String.toFloat
 
-{-| Numerically typed target value
+{-| Integer target value
 -}
 targetValueInt : Json.Decoder Int
 targetValueInt = Json.customDecoder targetValue String.toInt
