@@ -1,6 +1,9 @@
 module Html.Shorthand.Type where
 {-| Types used by the shorthand. All of these types are re-exported by `Html.Shorthand` so this module is only useful if
 you aren't already importing Html.Shorthand.
+
+@docs IdString, ClassString, UrlString, TextString
+@docs FieldUpdate
 -}
 
 import Signal

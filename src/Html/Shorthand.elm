@@ -105,7 +105,7 @@ The following types are all aliases for `String` and as such, only serve documen
 -- radioc
 -- checkbox'
 -- checkboxc
-@docs button_, button', buttonc, linkButton', linkButtonc, submitButton_, submitButton', submitButtonc, resetButton_, resetButton', resetButtonc
+@docs button_, button', buttonc, buttonLink', buttonLinkc, buttonSubmit_, buttonSubmit', buttonSubmitc, buttonReset_, buttonReset', buttonResetc
 -- select_
 -- select'
 -- selectc
