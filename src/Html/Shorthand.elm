@@ -1172,13 +1172,6 @@ label' for t = label [A.for for] [text t]
 labelc : ClassString -> IdString -> TextString -> Html
 labelc c for t = label [class' c, A.for for] [text t]
 
-
---input' : String -> IdString -> String -> TextString -> Html
---input' typ i n p = input [A.type' typ, id' i, name n, placeholder p] []
-
---inputc : ClassString -> List Html -> Html
---inputc c = input [class' c]
-
 {-| Update style for input fields.
 
 * *continuous* - continuously send messages on any input event (`on "input"`)
@@ -1201,36 +1194,38 @@ fieldUpdate =
 
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 -}
-inputFieldc : ClassString -> IdString -> String -> String -> String -> Json.Decoder a -> FieldUpdate a -> Html
+inputField' : IdString -> String -> Maybe String -> String -> Json.Decoder a -> FieldUpdate a -> Html
+inputField' = inputFieldc ""
+
+inputFieldc : ClassString -> IdString -> String -> Maybe String -> String -> Json.Decoder a -> FieldUpdate a -> Html
 inputFieldc c i type' p v dec fu =
   let filter = List.filterMap identity
       attrs =
         filter
-        <| Maybe.map class' (if c == "" then Nothing else Just c)
-        :: Maybe.map (on "input" dec) fu.continuous
-        :: [ Maybe.map (onEnter dec) fu.onEnter ]
+        [ Maybe.map class' (if c == "" then Nothing else Just c)
+        , Maybe.map (on "input" dec) fu.continuous
+        , Maybe.map (onEnter dec) fu.onEnter
+        , Maybe.map A.placeholder p
+        ]
       i' = encodeId i
-  in input ([A.type' type', A.id i', A.name i', A.placeholder p, A.value v] ++ attrs) []
+  in input ([A.type' type', A.id i', A.name i', A.value v] ++ attrs) []
 
-inputField' : IdString -> String -> String -> String -> Json.Decoder a -> FieldUpdate a -> Html
-inputField' = inputFieldc ""
-
-inputText' : IdString -> String -> String -> FieldUpdate String -> Html
+inputText' : IdString -> Maybe String -> String -> FieldUpdate String -> Html
 inputText' i p v fu = inputField' i "text" p v targetValue fu
 
-inputTextc : ClassString -> IdString -> String -> String -> FieldUpdate String -> Html
+inputTextc : ClassString -> IdString -> Maybe String -> String -> FieldUpdate String -> Html
 inputTextc c i p v fu = inputFieldc c i "text" p v targetValue fu
 
-inputFloat' : IdString -> String -> Float -> FieldUpdate Float -> Html
+inputFloat' : IdString -> Maybe String -> Float -> FieldUpdate Float -> Html
 inputFloat' i p v fu = inputField' i "number" p (toString v) targetValueFloat fu
 
-inputFloatc : ClassString -> IdString -> String -> Float -> FieldUpdate Float -> Html
+inputFloatc : ClassString -> IdString -> Maybe String -> Float -> FieldUpdate Float -> Html
 inputFloatc c i p v fu = inputFieldc c i "number" p (toString v) targetValueFloat fu
 
-inputInt' : IdString -> String -> Int -> FieldUpdate Int -> Html
+inputInt' : IdString -> Maybe String -> Int -> FieldUpdate Int -> Html
 inputInt' i p v fu = inputField' i "number" p (toString v) targetValueInt fu
 
-inputIntc : ClassString -> IdString -> String -> Int -> FieldUpdate Int -> Html
+inputIntc : ClassString -> IdString -> Maybe String -> Int -> FieldUpdate Int -> Html
 inputIntc c i p v fu = inputFieldc c i "number" p (toString v) targetValueInt fu
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
