@@ -2,7 +2,7 @@ module Html.Shorthand.Event where
 {-| Shorthands for common Html events
 
 # Events
-@docs targetValueFloat, targetValueInt
+@docs targetValueFloat, targetValueInt, targetValueMaybe, targetValueMaybeFloat, targetValueMaybeInt
 @docs onEnter
 
 -}
@@ -12,6 +12,8 @@ import Html.Events (..)
 import Json.Decode as Json
 import String
 import Signal
+import Maybe
+import Result
 --import Graphics.Input.Field (Selection, Direction)
 
 -- {-| `FieldEvent` is similar to `Graphics.Input.Field.Content`.
@@ -40,7 +42,36 @@ targetValueFloat =
 {-| Integer target value
 -}
 targetValueInt : Json.Decoder Int
-targetValueInt = Json.customDecoder targetValue String.toInt
+targetValueInt =
+  Json.customDecoder targetValue String.toInt
+
+{-| String or empty target value
+-}
+targetValueMaybe : Json.Decoder (Maybe String)
+targetValueMaybe = Json.customDecoder targetValue (\s -> Ok <| if s == "" then Nothing else Just s)
+
+{-| Floating-point or empty target value
+-}
+targetValueMaybeFloat : Json.Decoder (Maybe Float)
+targetValueMaybeFloat =
+  let toFloat s = if String.endsWith "." s
+                  then Err "number cannot end in period"
+                  else if String.startsWith "." s
+                  then Err "number cannot start with period"
+                  else String.toFloat s
+      traverse f mx = case mx of
+                        Nothing -> Ok Nothing
+                        Just x  -> Result.map Just (f x)
+  in Json.customDecoder targetValueMaybe (traverse toFloat)
+
+{-| Integer or empty target value
+-}
+targetValueMaybeInt : Json.Decoder (Maybe Int)
+targetValueMaybeInt =
+  let traverse f mx = case mx of
+                        Nothing -> Ok Nothing
+                        Just x  -> Result.map Just (f x)
+  in Json.customDecoder targetValueMaybe (traverse String.toInt)
 
 {-| Fires off the message when the `Enter` key is pressed (on keydown).
 -}

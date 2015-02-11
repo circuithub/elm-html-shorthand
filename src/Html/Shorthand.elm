@@ -19,7 +19,7 @@ This is done in order to encourage more uniform use. For example:
 
 This form attempts to take a common sense list of arguments. This is a limited shorthand which
 will not satisfy every need, but takes care of the extremely common case and encourages uniform use.
-When an element is missing the elision form, an idiomatic form will always be provided. 
+When an element is missing the elision form, an idiomatic form will always be provided.
 
 @docs img'
 
@@ -100,7 +100,7 @@ The following types are all aliases for `String` and as such, only serve documen
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
 @docs FieldUpdate, fieldUpdate
-@docs inputField', inputFieldc, inputText', inputTextc, inputFloat', inputFloatc, inputInt', inputIntc
+@docs inputField', inputFieldc, inputText', inputTextc, inputMaybeText', inputMaybeTextc, inputFloat', inputFloatc, inputMaybeFloat', inputMaybeFloatc, inputInt', inputIntc, inputMaybeInt', inputMaybeIntc
 -- radio'
 -- radioc
 -- checkbox'
@@ -1209,17 +1209,35 @@ inputText' i p v fu = inputField' i "text" p v targetValue fu
 inputTextc : ClassString -> IdString -> Maybe String -> String -> FieldUpdate String -> Html
 inputTextc c i p v fu = inputFieldc c i "text" p v targetValue fu
 
+inputMaybeText' : IdString -> Maybe String -> Maybe String -> FieldUpdate (Maybe String) -> Html
+inputMaybeText' i p v fu = inputField' i "text" p (Maybe.withDefault "" v) targetValueMaybe fu
+
+inputMaybeTextc : ClassString -> IdString -> Maybe String -> Maybe String -> FieldUpdate (Maybe String) -> Html
+inputMaybeTextc c i p v fu = inputFieldc c i "text" p (Maybe.withDefault "" v) targetValueMaybe fu
+
 inputFloat' : IdString -> Maybe String -> Float -> FieldUpdate Float -> Html
 inputFloat' i p v fu = inputField' i "number" p (toString v) targetValueFloat fu
 
 inputFloatc : ClassString -> IdString -> Maybe String -> Float -> FieldUpdate Float -> Html
 inputFloatc c i p v fu = inputFieldc c i "number" p (toString v) targetValueFloat fu
 
+inputMaybeFloat' : IdString -> Maybe String -> Maybe Float -> FieldUpdate (Maybe Float) -> Html
+inputMaybeFloat' i p v fu = inputField' i "number" p (Maybe.withDefault "" <| Maybe.map toString v) targetValueMaybeFloat fu
+
+inputMaybeFloatc : ClassString -> IdString -> Maybe String -> Maybe Float -> FieldUpdate (Maybe Float) -> Html
+inputMaybeFloatc c i p v fu = inputFieldc c i "number" p (Maybe.withDefault "" <| Maybe.map toString v) targetValueMaybeFloat fu
+
 inputInt' : IdString -> Maybe String -> Int -> FieldUpdate Int -> Html
 inputInt' i p v fu = inputField' i "number" p (toString v) targetValueInt fu
 
 inputIntc : ClassString -> IdString -> Maybe String -> Int -> FieldUpdate Int -> Html
 inputIntc c i p v fu = inputFieldc c i "number" p (toString v) targetValueInt fu
+
+inputMaybeInt' : IdString -> Maybe String -> Maybe Int -> FieldUpdate (Maybe Int) -> Html
+inputMaybeInt' i p v fu = inputField' i "number" p (Maybe.withDefault "" <| Maybe.map toString v) targetValueMaybeInt fu
+
+inputMaybeIntc : ClassString -> IdString -> Maybe String -> Maybe Int -> FieldUpdate (Maybe Int) -> Html
+inputMaybeIntc c i p v fu = inputFieldc c i "number" p (Maybe.withDefault "" <| Maybe.map toString v) targetValueMaybeInt fu
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
