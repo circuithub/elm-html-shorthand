@@ -132,19 +132,12 @@ The following types are all aliases for `String` and as such, only serve documen
 -- meter'
 -- meterc
 
-# Interactive elements
--- details_
--- details'
--- detailsc
--- summary_
--- summary'
--- summaryc
--- menuitem_
--- menuitem'
--- menuitemc
--- menu_
--- menu'
--- menuc
+# Interactive elements (Unsupported)
+The following elements are not currently well supported and do not have shorthands:
+
+* [&lt;details&gt;, &lt;summary&gt;](http://caniuse.com/#feat=details)
+* [&lt;menu&gt;, &lt;menuitem&gt;](http://caniuse.com/#feat=menu)
+
 -}
 
 import Html (..)
@@ -1371,6 +1364,9 @@ progressc c value max t = progress [class' c, A.value (toString value), A.max (t
 -- INTERACTIVE ELEMENTS
 
 --{-| [&lt;details&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) represents a widget from which the user can obtain additional information or controls.
+--
+-- Warning: Details & summary is not widely supported at this time. http://caniuse.com/#feat=details
+--
 ---}
 -- TODO
 --details_ : List Html -> Html
@@ -1379,10 +1375,10 @@ progressc c value max t = progress [class' c, A.value (toString value), A.max (t
 --details' :  -> List Html -> Html
 --details' = details []
 
---detailsc : ClassString -> List Html -> Html
---detailsc c = details [class' c]
-
 --{-| [&lt;summary&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary) represents a summary , caption , or legend for a given `details`.
+--
+-- Warning: Details & summary is not widely supported at this time. http://caniuse.com/#feat=details
+--
 ---}
 -- TODO
 --summary_ : List Html -> Html
@@ -1391,10 +1387,10 @@ progressc c value max t = progress [class' c, A.value (toString value), A.max (t
 --summary' :  -> List Html -> Html
 --summary' = summary []
 
---summaryc : ClassString -> List Html -> Html
---summaryc c = summary [class' c]
-
 --{-| [&lt;menuitem&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/menuitem) represents a command that the user can invoke.
+--
+-- Warning: Menu is not widely supported at this time. http://caniuse.com/#feat=menu
+--
 ---}
 -- TODO
 --menuitem_ : List Html -> Html
@@ -1403,10 +1399,10 @@ progressc c value max t = progress [class' c, A.value (toString value), A.max (t
 --menuitem' :  -> List Html -> Html
 --menuitem' = menuitem []
 
---menuitemc : ClassString -> List Html -> Html
---menuitemc c = menuitem [class' c]
-
 --{-| [&lt;menu&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/menu) represents a list of commands.
+--
+-- Warning: Menu is not widely supported at this time. http://caniuse.com/#feat=menu
+--
 ---}
 -- TODO
 --menu_ : List Html -> Html
