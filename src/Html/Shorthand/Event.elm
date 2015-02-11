@@ -29,7 +29,13 @@ import Signal
 {-| Floating-point target value
 -}
 targetValueFloat : Json.Decoder Float
-targetValueFloat = Json.customDecoder targetValue String.toFloat
+targetValueFloat =
+  let toFloat s = if String.endsWith "." s
+                  then Err "number cannot end in period"
+                  else if String.startsWith "." s
+                  then Err "number cannot start with period"
+                  else String.toFloat s
+  in Json.customDecoder targetValue toFloat
 
 {-| Integer target value
 -}
