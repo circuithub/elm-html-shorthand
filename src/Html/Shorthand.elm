@@ -99,7 +99,7 @@ The following types are all aliases for `String` and as such, only serve documen
 
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
-@docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateFocusFallback, fieldUpdateContinuousFallback
+@docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 @docs inputField', inputFieldc, inputText', inputTextc, inputMaybeText', inputMaybeTextc, inputFloat', inputFloatc, inputMaybeFloat', inputMaybeFloatc, inputInt', inputIntc, inputMaybeInt', inputMaybeIntc
 -- radio'
 -- radioc
@@ -1214,27 +1214,29 @@ This function takes an explicit fallback function that can usually be set to the
 
     inputFloat'
       { value  = currentTemperature
-      , update = fieldUpdateFocusFallback
-                    -- Reset the input to the current temperature
-                    (\_ -> Channel.send action <| SetTemperature currentTemperature)
-                    -- Update the temperature if it parsed correctly
-                    (\t -> Channel.send action <| SetTemperature t)
+      , update = fieldUpdateFallbackFocusLost
+                  { -- Reset the input to the current temperature
+                    onFallback _ = Channel.send action <| SetTemperature currentTemperature
+                  , -- Update the temperature if it parsed correctly
+                    onInput v = Channel.send action <| SetTemperature v
+                  }
       , ...
       }
 
 -}
-fieldUpdateFocusFallback  : (String -> Signal.Message)
-                          -> (a -> Signal.Message)
+fieldUpdateFallbackFocusLost  : { onFallback : String -> Signal.Message
+                            , onInput    : a -> Signal.Message
+                            }
                           -> FieldUpdate a
-fieldUpdateFocusFallback fallback update =
+fieldUpdateFallbackFocusLost handler =
   let doOk r =  case r of
-                  Ok x  -> Just (update x)
+                  Ok x  -> Just (handler.onInput x)
                   Err _ -> Nothing
       doErr r = case r of
                   Ok _        -> Nothing
                   Err {event} ->
                     case Json.decodeValue targetValue event of
-                      Ok s -> Just (fallback s)
+                      Ok s -> Just (handler.onFallback s)
                       Err s -> Nothing
   in  { onInput = Just doOk
       , onEnter = Just doErr
@@ -1248,28 +1250,29 @@ happen immediately when typing "1." since it is expected that this will be follo
 
     inputFloat'
       { value  = currentTemperature
-      , update = fieldUpdateFocusFallback
-                    -- Show an error notification (e.g. highlight the input field)
-                    (\_ -> Channel.send action InvalidTemperature)
-                    -- Update the temperature if it parsed correctly
-                    (\t -> Channel.send action <| SetTemperature t)
+      , update = fieldUpdateFallbackContinuous
+                  { -- Show an error notification (e.g. highlight the input field)
+                    onFallback _ = Channel.send action InvalidTemperature
+                  , -- Update the temperature if it parsed correctly
+                    onInput v = Channel.send action <| SetTemperature v
+                  }
       , ...
       }
 
 -}
-fieldUpdateContinuousFallback  : (String -> Signal.Message)
-                               -> (a -> Signal.Message)
-                               -> FieldUpdate a
-fieldUpdateContinuousFallback fallback update =
+fieldUpdateFallbackContinuous : { onFallback : String -> Signal.Message
+                                , onInput    : a -> Signal.Message
+                                }
+                              -> FieldUpdate a
+fieldUpdateFallbackContinuous handler =
   let doOkErr r = case r of
-                    Ok x  -> Just (update x)
+                    Ok x  -> Just (handler.onInput x)
                     Err {event} ->
                       case Json.decodeValue targetValue event of
-                        Ok s -> Just (fallback s)
+                        Ok s -> Just (handler.onFallback s)
                         Err s -> Nothing
-  in  { onInput = Just doOkErr
-      , onEnter = Nothing
-      , onKeyboardLost = Nothing
+  in  { fieldUpdate
+      | onInput <- Just doOkErr
       }
 
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
