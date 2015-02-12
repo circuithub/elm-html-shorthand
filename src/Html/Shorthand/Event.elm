@@ -3,7 +3,7 @@ module Html.Shorthand.Event where
 
 # Events
 @docs targetValueFloat, targetValueInt, targetValueMaybe, targetValueMaybeFloat, targetValueMaybeInt
-@docs onEnter
+@docs onEnter, onInput
 
 -}
 
@@ -72,6 +72,11 @@ targetValueMaybeInt =
                         Nothing -> Ok Nothing
                         Just x  -> Result.map Just (f x)
   in Json.customDecoder targetValueMaybe (traverse String.toInt)
+
+{-| Fires off the message when an "input" event is triggered
+-}
+onInput : Json.Decoder a -> (a -> Signal.Message) -> Attribute
+onInput = on "input"
 
 {-| Fires off the message when the `Enter` key is pressed (on keydown).
 -}
