@@ -99,7 +99,7 @@ The following types are all aliases for `String` and as such, only serve documen
 
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
-@docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
+@docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 @docs inputField', inputFieldc, inputText', inputTextc, inputMaybeText', inputMaybeTextc, inputFloat', inputFloatc, inputMaybeFloat', inputMaybeFloatc, inputInt', inputIntc, inputMaybeInt', inputMaybeIntc
 -- radio'
 -- radioc
@@ -1199,6 +1199,19 @@ fieldUpdate =
   , onEnter        = Nothing
   , onKeyboardLost = Nothing
   }
+
+{-| Good configuration for continuously updating fields that don't have any invalid states.
+-}
+fieldUpdateContinuous : { onInput : a -> Signal.Message
+                        }
+                      -> FieldUpdate a
+fieldUpdateContinuous handler =
+  let doOk r =  case r of
+                  Ok x  -> Just (handler.onInput x)
+                  Err _ -> Nothing
+  in  { fieldUpdate
+      | onInput <- Just doOk
+      }
 
 {-| Good default configuration for continuously updating fields, handling invalid states only when the focus is lost.
 The input element will try to consolidate the field with its value in all of these scenarios:
