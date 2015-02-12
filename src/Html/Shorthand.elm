@@ -124,10 +124,7 @@ The following types are all aliases for `String` and as such, only serve documen
 -- keygen_
 -- keygen'
 -- keygenc
--- output_
--- output'
--- outputc
-@docs progress', progressc
+@docs output', outputc, progress', progressc
 -- meter_
 -- meter'
 -- meterc
@@ -1450,25 +1447,25 @@ buttonResetc c t = button [class' c, A.type' "reset"] [text t]
 --keygenc : ClassString -> List Html -> Html
 --keygenc c = keygen [class' c]
 
---{-| [&lt;output&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) represents the result of a calculation.
----}
--- TODO
---output_ : List Html -> Html
---output_ = output []
+{-| [&lt;output&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) represents the result of a calculation.
+-}
+output' : IdString -> List IdString -> List Html -> Html
+output' name ids =
+  let name' = encodeId name
+  in output [A.id name', A.name name', A.for (String.join " " <| List.map encodeId ids)]
 
---output' :  -> List Html -> Html
---output' = output []
-
---outputc : ClassString -> List Html -> Html
---outputc c = output [class' c]
+outputc : ClassString -> IdString -> List IdString -> List Html -> Html
+outputc c name ids =
+  let name' = encodeId name
+  in output [class' c, A.id name', A.name name', A.for (String.join " " <| List.map encodeId ids)]
 
 {-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
 -}
 progress' : number -> number -> String -> Html
-progress' value max t = progress [ A.value (toString value), A.max (toString max) ] [ text t ]
+progress' value max t = progress [A.value (toString value), A.max (toString max)] [text t]
 
 progressc : ClassString -> number -> number -> String -> Html
-progressc c value max t = progress [class' c, A.value (toString value), A.max (toString max) ] [ text t ]
+progressc c value max t = progress [class' c, A.value (toString value), A.max (toString max)] [text t]
 
 --{-| [&lt;meter&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter) represents a scalar measurement (or a fractional value), within a known range.
 ---}
