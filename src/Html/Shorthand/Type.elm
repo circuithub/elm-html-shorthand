@@ -3,20 +3,21 @@ module Html.Shorthand.Type where
 you aren't already importing Html.Shorthand.
 
 @docs IdString, ClassString, UrlString, TextString
-@docs FieldUpdate
+@docs EventDecodeError, FieldUpdate
 -}
 
 import Signal
+import Json.Decode as Json
 
 type alias IdString = String
 type alias ClassString = String
 type alias UrlString = String
 type alias TextString = String
 
---type alias FieldUpdate =
---  { continuous : Maybe (FieldEvent -> Signal.Message)
---  , onEnter : Maybe (FieldEvent -> Signal.Message)
---  }
+type alias EventDecodeError a =
+  { event  : Json.Value
+  , reason : String
+  }
 
 type alias FieldUpdate a =
   { continuous : Maybe (a -> Signal.Message)

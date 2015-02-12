@@ -5,10 +5,14 @@ module Html.Shorthand.Event where
 @docs targetValueFloat, targetValueInt, targetValueMaybe, targetValueMaybeFloat, targetValueMaybeInt
 @docs onEnter, onInput, onKeyboardLost, onMouseLost
 
+# Special decoders
+@docs messageDecoder
+
 -}
 
 import Html (Attribute)
 import Html.Events (..)
+import Html.Shorthand.Type as T
 import Json.Decode as Json
 import String
 import Signal
@@ -96,3 +100,33 @@ onKeyboardLost = on "blur"
 onMouseLost : Json.Decoder a -> (a -> Signal.Message) -> Attribute
 onMouseLost = on "mouseleave"
 
+{-| A special decoder that allows you to mix event decoding logic with message generation.
+This function takes an existing event decoder and passes the result of the parser along in order to produce an optional message directly.
+This provides a mechanism for altering messages if parse errors occur in the decoder.
+
+    messageDecoder targetValueFloat <| \r ->
+      case r of
+        Ok temp -> Just <| Channel.send action (SetTemperature temp)
+        Err _   -> Just <| Channel.send action (SetError "Please enter a valid temperature")
+
+Alternatively one could also send to a different channel entirely, although this splitting should be done only after some delibiration.
+It may not be desirable to split channels if the signals derived from these channels need to be remerged in future.
+
+    messageDecoder targetValueFloat <| \r ->
+      case r of
+        Ok temp -> Just <| Channel.send action SetTemperature temp
+        Err e   -> Just <| Channel.send errorLog <|
+                    "Invalid temperature: "
+                    ++ toString (targetValue e.event)
+                    ++ "(" ++ e.reason ++ ")."
+
+-}
+messageDecoder : Json.Decoder a -> (Result (T.EventDecodeError a) a -> Maybe Signal.Message) -> Json.Decoder Signal.Message
+messageDecoder dec f =
+  Json.customDecoder Json.value <| \event ->
+    let r  = Json.decodeValue dec event
+        r' = Result.formatError (T.EventDecodeError event) r
+    in case (f r', r) of
+      (Nothing , Err e) -> Err e
+      (Nothing , Ok _ ) -> Err "no message in response to event"
+      (Just msg, _    ) -> Ok msg

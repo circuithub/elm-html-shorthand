@@ -99,7 +99,7 @@ The following types are all aliases for `String` and as such, only serve documen
 
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
-@docs FieldUpdate, fieldUpdate
+@docs EventDecodeError, FieldUpdate, fieldUpdate
 @docs inputField', inputFieldc, inputText', inputTextc, inputMaybeText', inputMaybeTextc, inputFloat', inputFloatc, inputMaybeFloat', inputMaybeFloatc, inputInt', inputIntc, inputMaybeInt', inputMaybeIntc
 -- radio'
 -- radioc
@@ -1164,6 +1164,15 @@ label' for t = label [A.for for] [text t]
 
 labelc : ClassString -> IdString -> TextString -> Html
 labelc c for t = label [class' c, A.for for] [text t]
+
+{-| A field error is generated when an input fails to parse its input string during an attempt to produce the output value.
+This gives the user an opportunity to specify a fallback behaviour or simply ignore the error, leaving the input in an intermediate state.
+
+* *event* - json event that generated this error
+* *reason* - error string describing the parse error
+
+-}
+type alias EventDecodeError a = T.EventDecodeError a
 
 {-| Update style for input fields.
 
