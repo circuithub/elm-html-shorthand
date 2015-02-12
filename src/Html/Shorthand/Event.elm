@@ -3,7 +3,7 @@ module Html.Shorthand.Event where
 
 # Events
 @docs targetValueFloat, targetValueInt, targetValueMaybe, targetValueMaybeFloat, targetValueMaybeInt
-@docs onEnter, onInput
+@docs onEnter, onInput, onKeyboardLost, onMouseLost
 
 -}
 
@@ -85,3 +85,14 @@ onEnter dec f =
   on "keydown"
     (Json.customDecoder (Json.object2 (,) keyCode dec) (\(c, val) -> if c == 13 then Ok val else Err "expected key code 13"))
     f
+
+{-| Similar to onBlur, but uses a decoder to return the internal state of an input field.
+-}
+onKeyboardLost : Json.Decoder a -> (a -> Signal.Message) -> Attribute
+onKeyboardLost = on "blur"
+
+{-| Similar to onMouseLeave, but uses a decoder to return the internal state of an input field.
+-}
+onMouseLost : Json.Decoder a -> (a -> Signal.Message) -> Attribute
+onMouseLost = on "mouseleave"
+
