@@ -20,6 +20,7 @@ type alias EventDecodeError a =
   }
 
 type alias FieldUpdate a =
-  { continuous : Maybe (a -> Signal.Message)
-  , onEnter : Maybe (a -> Signal.Message)
+  { onInput        : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
+  , onEnter        : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
+  , onKeyboardLost : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   }

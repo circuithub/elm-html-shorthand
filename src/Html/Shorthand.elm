@@ -99,7 +99,7 @@ The following types are all aliases for `String` and as such, only serve documen
 
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
-@docs EventDecodeError, FieldUpdate, fieldUpdate
+@docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateFocusFallback, fieldUpdateContinuousFallback
 @docs inputField', inputFieldc, inputText', inputTextc, inputMaybeText', inputMaybeTextc, inputFloat', inputFloatc, inputMaybeFloat', inputMaybeFloatc, inputInt', inputIntc, inputMaybeInt', inputMaybeIntc
 -- radio'
 -- radioc
@@ -709,11 +709,11 @@ may represent other input, like transcribed voice commands.
 
     instructions : Html
     instructions =
-        p_ 
+      p_
         [ text "Press "
         , kbd_ [ kbd' "Ctrl", text "+", kbd' "S" ]
         , text " to save this document."
-        ] 
+        ]
 
 -}
 kbd_ : List Html -> Html
@@ -1174,10 +1174,15 @@ This gives the user an opportunity to specify a fallback behaviour or simply ign
 -}
 type alias EventDecodeError a = T.EventDecodeError a
 
-{-| Update style for input fields.
+{-| Update configuration for input fields.
 
-* *continuous* - continuously send messages on any input event (`on "input"`)
-* *onEnter* - a message to send when whenever the enter key is hit
+* *onInput* - continuously send messages on any input event (`onInput`)
+* *onEnter* - a message to send whenever the enter key is hit
+* *onKeyboardLost* - a message to send whenever the input field loses the keyboard cursor
+
+In the future, if this can be made efficient, this may also support:
+
+* *onMouseMove* - a message to send whenever the mouse moves while the input field has keyboard focus
 
 -}
 type alias FieldUpdate a = T.FieldUpdate a
@@ -1185,14 +1190,87 @@ type alias FieldUpdate a = T.FieldUpdate a
 {-| Default field update handlers. Use this to select only one or two handlers.
 
     { fieldUpdate
-    | continuous <- Just (\val -> Signal.send updates (MyEvent val))
+    | onInput <- Just (\val -> Signal.send updates (MyEvent val))
     }
 -}
 fieldUpdate : FieldUpdate a
 fieldUpdate =
-  { continuous = Nothing
-  , onEnter = Nothing
+  { onInput        = Nothing
+  , onEnter        = Nothing
+  , onKeyboardLost = Nothing
   }
+
+{-| Good default configuration for continuously updating fields, handling invalid states only when the focus is lost.
+The input element will try to consolidate the field with its value in all of these scenarios:
+
+* During input event, if and only if the input parses correctly
+* When the return key (ENTER) is hit; resets to the last known value if it couldn't parse
+* When the keyboard cursor is moved to a different element; resets to the last known value if it couldn't parse
+
+In the future, if this can be made efficient, it will also support:
+* When the element has keyboard focus and the mouse cursor is moved ; resets to the last known value if it couldn't parse
+
+This function takes an explicit fallback function that can usually be set to the previous value in order to have the field simply reset.
+
+    inputFloat'
+      { value  = currentTemperature
+      , update = fieldUpdateFocusFallback
+                    -- Reset the input to the current temperature
+                    (\_ -> Channel.send action <| SetTemperature currentTemperature)
+                    -- Update the temperature if it parsed correctly
+                    (\t -> Channel.send action <| SetTemperature t)
+      , ...
+      }
+
+-}
+fieldUpdateFocusFallback  : (String -> Signal.Message)
+                          -> (a -> Signal.Message)
+                          -> FieldUpdate a
+fieldUpdateFocusFallback fallback update =
+  let doOk r =  case r of
+                  Ok x  -> Just (update x)
+                  Err _ -> Nothing
+      doErr r = case r of
+                  Ok _        -> Nothing
+                  Err {event} ->
+                    case Json.decodeValue targetValue event of
+                      Ok s -> Just (fallback s)
+                      Err s -> Nothing
+  in  { onInput = Just doOk
+      , onEnter = Just doErr
+      , onKeyboardLost = Just doErr
+      }
+
+{-| A configuration for continuously updating fields, handling invalid states on any input event.
+It is not always recommended to use this configuration since it may generate errors too rapidly.
+For example, when typing a floating point number, one might not want an error notification or a field reset to
+happen immediately when typing "1." since it is expected that this will be followed by typing another number.
+
+    inputFloat'
+      { value  = currentTemperature
+      , update = fieldUpdateFocusFallback
+                    -- Show an error notification (e.g. highlight the input field)
+                    (\_ -> Channel.send action InvalidTemperature)
+                    -- Update the temperature if it parsed correctly
+                    (\t -> Channel.send action <| SetTemperature t)
+      , ...
+      }
+
+-}
+fieldUpdateContinuousFallback  : (String -> Signal.Message)
+                               -> (a -> Signal.Message)
+                               -> FieldUpdate a
+fieldUpdateContinuousFallback fallback update =
+  let doOkErr r = case r of
+                    Ok x  -> Just (update x)
+                    Err {event} ->
+                      case Json.decodeValue targetValue event of
+                        Ok s -> Just (fallback s)
+                        Err s -> Nothing
+  in  { onInput = Just doOkErr
+      , onEnter = Nothing
+      , onKeyboardLost = Nothing
+      }
 
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 -}
@@ -1205,8 +1283,9 @@ inputFieldc c i type' p v dec fu =
       attrs =
         filter
         [ Maybe.map class' (if c == "" then Nothing else Just c)
-        , Maybe.map (on "input" dec) fu.continuous
-        , Maybe.map (onEnter dec) fu.onEnter
+        , Maybe.map (\onEvent -> onInput        (messageDecoder dec onEvent) identity) fu.onInput
+        , Maybe.map (\onEvent -> onEnter        (messageDecoder dec onEvent) identity) fu.onEnter
+        , Maybe.map (\onEvent -> onKeyboardLost (messageDecoder dec onEvent) identity) fu.onKeyboardLost
         , Maybe.map A.placeholder p
         ]
       i' = encodeId i
