@@ -100,7 +100,8 @@ The following types are all aliases for `String` and as such, only serve documen
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
 @docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
-@docs inputField', inputFieldc, inputText', inputTextc, inputMaybeText', inputMaybeTextc, inputFloat', inputFloatc, inputMaybeFloat', inputMaybeFloatc, inputInt', inputIntc, inputMaybeInt', inputMaybeIntc
+@docs InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
+@docs inputField', inputText', inputMaybeText', inputFloat', inputMaybeFloat', inputInt', inputMaybeInt'
 -- radio'
 -- radioc
 -- checkbox'
@@ -139,7 +140,9 @@ The following elements are not currently well supported and do not have shorthan
 
 import Html (..)
 import Html.Attributes as A
+import Html.Attributes.Extra as A
 import Html.Events (..)
+import Html.Events.Extra (..)
 import Signal
 import String
 import List
@@ -1168,6 +1171,8 @@ This gives the user an opportunity to specify a fallback behaviour or simply ign
 * *event* - json event that generated this error
 * *reason* - error string describing the parse error
 
+See also [EventDecodeError](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#EventDecodeError)
+
 -}
 type alias EventDecodeError a = T.EventDecodeError a
 
@@ -1181,6 +1186,8 @@ In the future, if this can be made efficient, this may also support:
 
 * *onMouseMove* - a message to send whenever the mouse moves while the input field has keyboard focus
 
+See also [FieldUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FieldUpdate)
+
 -}
 type alias FieldUpdate a = T.FieldUpdate a
 
@@ -1189,6 +1196,7 @@ type alias FieldUpdate a = T.FieldUpdate a
     { fieldUpdate
     | onInput <- Just (\val -> Signal.send updates (MyEvent val))
     }
+
 -}
 fieldUpdate : FieldUpdate a
 fieldUpdate =
@@ -1197,7 +1205,7 @@ fieldUpdate =
   , onKeyboardLost = Nothing
   }
 
-{-| Good configuration for continuously updating fields that don't have any invalid states.
+{-| Good configuration for continuously updating fields that don't have any invalid states, or are restricted by a pattern.
 -}
 fieldUpdateContinuous : { onInput : a -> Signal.Message
                         }
@@ -1210,7 +1218,21 @@ fieldUpdateContinuous handler =
       | onInput <- Just doOk
       }
 
-{-| Good default configuration for continuously updating fields, handling invalid states only when the focus is lost.
+{-| Use with fields that should consolidate their value when the focus moved.
+-}
+fieldUpdateFocusLost : { onInput : a -> Signal.Message
+                       }
+                      -> FieldUpdate a
+fieldUpdateFocusLost handler =
+  let doOk r =  case r of
+                  Ok x  -> Just (handler.onInput x)
+                  Err _ -> Nothing
+  in  { fieldUpdate
+      | onEnter <- Just doOk
+      , onKeyboardLost <- Just doOk
+      }
+
+{-| Continuously update the field, handling invalid states only when the focus is lost.
 The input element will try to consolidate the field with its value in all of these scenarios:
 
 * During input event, if and only if the input parses correctly
@@ -1222,9 +1244,8 @@ In the future, if this can be made efficient, it will also support:
 
 This function takes an explicit fallback function that can usually be set to the previous value in order to have the field simply reset.
 
-    inputFloat'
-      { value  = currentTemperature
-      , update = fieldUpdateFallbackFocusLost
+    inputField'
+      { update = fieldUpdateFallbackFocusLost
                   { -- Reset the input to the current temperature
                     onFallback _ = Channel.send action <| SetTemperature currentTemperature
                   , -- Update the temperature if it parsed correctly
@@ -1232,6 +1253,9 @@ This function takes an explicit fallback function that can usually be set to the
                   }
       , ...
       }
+
+Note that this configuration does not work well with `inputFloat'`/`inputMaybeFloat'` and `inputInt'`/`inputMaybeInt'` fields due to
+the strange way that browsers treat numeric inputs. This update method can be used to implement custom field types however.
 
 -}
 fieldUpdateFallbackFocusLost  : { onFallback : String -> Signal.Message
@@ -1253,14 +1277,11 @@ fieldUpdateFallbackFocusLost handler =
       , onKeyboardLost = Just doErr
       }
 
-{-| A configuration for continuously updating fields, handling invalid states on any input event.
-It is not always recommended to use this configuration since it may generate errors too rapidly.
-For example, when typing a floating point number, one might not want an error notification or a field reset to
-happen immediately when typing "1." since it is expected that this will be followed by typing another number.
+{-| Continuously update the field, handling invalid states on any input event.
+Use this configuration to generate error notifications rapidly.
 
-    inputFloat'
-      { value  = currentTemperature
-      , update = fieldUpdateFallbackContinuous
+    inputField'
+      { update = fieldUpdateFallbackContinuous
                   { -- Show an error notification (e.g. highlight the input field)
                     onFallback _ = Channel.send action InvalidTemperature
                   , -- Update the temperature if it parsed correctly
@@ -1268,6 +1289,9 @@ happen immediately when typing "1." since it is expected that this will be follo
                   }
       , ...
       }
+
+Note that this configuration does not work well with `inputFloat'`/`inputMaybeFloat'` and `inputInt'`/`inputMaybeInt'` fields due to
+the strange way that browsers treat numeric inputs. This update method can be used to implement custom field types however.
 
 -}
 fieldUpdateFallbackContinuous : { onFallback : String -> Signal.Message
@@ -1285,60 +1309,200 @@ fieldUpdateFallbackContinuous handler =
       | onInput <- Just doOkErr
       }
 
+{-| See [InputFieldParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFieldParam)
+-}
+type alias InputFieldParam a = T.InputFieldParam a
+
+{-| See [InputTextParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputTextParam)
+-}
+type alias InputTextParam = T.InputTextParam
+
+{-| See [InputMaybeTextParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeTextParam)
+-}
+type alias InputMaybeTextParam = T.InputMaybeTextParam
+
+{-| See [InputFloatParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFloatParam)
+-}
+type alias InputFloatParam = T.InputFloatParam
+
+{-| See [InputMaybeFloatParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeFloatParam)
+-}
+type alias InputMaybeFloatParam = T.InputMaybeFloatParam
+
+{-| See [InputIntParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputIntParam)
+-}
+type alias InputIntParam = T.InputIntParam
+
+{-| See [InputMaybeIntParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeIntParam)
+-}
+type alias InputMaybeIntParam = T.InputMaybeIntParam
+
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 -}
-inputField' : IdString -> String -> Maybe String -> String -> Json.Decoder a -> FieldUpdate a -> Html
-inputField' = inputFieldc ""
-
-inputFieldc : ClassString -> IdString -> String -> Maybe String -> String -> Json.Decoder a -> FieldUpdate a -> Html
-inputFieldc c i type' p v dec fu =
+inputField' : InputFieldParam a -> List Attribute -> Html
+inputField' p attrs =
   let filter = List.filterMap identity
-      attrs =
-        filter
-        [ Maybe.map class' (if c == "" then Nothing else Just c)
-        , Maybe.map (\onEvent -> onInput        (messageDecoder dec onEvent) identity) fu.onInput
-        , Maybe.map (\onEvent -> onEnter        (messageDecoder dec onEvent) identity) fu.onEnter
-        , Maybe.map (\onEvent -> onKeyboardLost (messageDecoder dec onEvent) identity) fu.onKeyboardLost
-        , Maybe.map A.placeholder p
+      i' = encodeId p.name
+      pattrs =
+        [ A.type' p.type'
+        , A.id i'
+        , A.name i'
         ]
-      i' = encodeId i
-  in input ([A.type' type', A.id i', A.name i', A.value v] ++ attrs) []
+        ++ filter
+            [ Maybe.map class' (if p.class == "" then Nothing else Just p.class)
+            , Maybe.map (\onEvent -> onInput        (messageDecoder p.decoder onEvent) identity) p.update.onInput
+            , Maybe.map (\onEvent -> onEnter        (messageDecoder p.decoder onEvent) identity) p.update.onEnter
+            , Maybe.map (\onEvent -> onKeyboardLost (messageDecoder p.decoder onEvent) identity) p.update.onKeyboardLost
+            , Maybe.map A.placeholder p.placeholder
+            , Maybe.map A.pattern p.pattern
+            ]
+  in input (pattrs ++ attrs) []
 
-inputText' : IdString -> Maybe String -> String -> FieldUpdate String -> Html
-inputText' i p v fu = inputField' i "text" p v targetValue fu
+inputText' : InputTextParam -> Html
+inputText' p =
+  inputField'
+    { class       = p.class
+    , name        = p.name
+    , placeholder = p.placeholder
+    , update      = p.update
+    , type'       = "text"
+    , pattern     = Nothing
+    , decoder     = targetValue
+    }
+    [ A.value p.value
+    ]
 
-inputTextc : ClassString -> IdString -> Maybe String -> String -> FieldUpdate String -> Html
-inputTextc c i p v fu = inputFieldc c i "text" p v targetValue fu
+inputMaybeText' : InputMaybeTextParam -> Html
+inputMaybeText' p =
+  inputField'
+    { class       = p.class
+    , name        = p.name
+    , placeholder = p.placeholder
+    , update      = p.update
+    , type'       = "text"
+    , pattern     = Nothing
+    , decoder     = targetValueMaybe
+    }
+    [ A.value (Maybe.withDefault "" p.value)
+    ]
 
-inputMaybeText' : IdString -> Maybe String -> Maybe String -> FieldUpdate (Maybe String) -> Html
-inputMaybeText' i p v fu = inputField' i "text" p (Maybe.withDefault "" v) targetValueMaybe fu
+inputFloat' : InputFloatParam -> Html
+inputFloat' p =
+  let filter = List.filterMap identity
+  in inputField'
+      { class       = p.class
+      , name        = p.name
+      , placeholder = p.placeholder
+      , update      = p.update
+      , type'       = "number"
+      , pattern     = Nothing
+      , decoder     =
+          case (p.min, p.max) of
+            (Nothing, Nothing) -> targetValueFloat
+            _                  ->
+              Json.customDecoder targetValueFloat <| \v ->
+                if v < Maybe.withDefault (-1/0) p.min || v > Maybe.withDefault (1/0) p.max
+                then Err "out of bounds"
+                else Ok v
+      }
+      <| A.valueAsFloat p.value
+      :: filter
+          [ Maybe.map (A.min << toString) p.min
+          , Maybe.map (A.max << toString) p.max
+          ]
 
-inputMaybeTextc : ClassString -> IdString -> Maybe String -> Maybe String -> FieldUpdate (Maybe String) -> Html
-inputMaybeTextc c i p v fu = inputFieldc c i "text" p (Maybe.withDefault "" v) targetValueMaybe fu
+inputMaybeFloat' : InputMaybeFloatParam -> Html
+inputMaybeFloat' p =
+  let filter = List.filterMap identity
+  in inputField'
+      { class       = p.class
+      , name        = p.name
+      , placeholder = p.placeholder
+      , update      = p.update
+      , type'       = "number"
+      , pattern     = Nothing
+      , decoder     =
+          case (p.min, p.max) of
+            (Nothing, Nothing) -> targetValueMaybeFloat
+            _                  ->
+              Json.customDecoder targetValueMaybeFloat <| \mv ->
+                case mv of
+                  Nothing -> Ok Nothing
+                  Just v -> if v < Maybe.withDefault (-1/0) p.min || v > Maybe.withDefault (1/0) p.max
+                            then Err "out of bounds"
+                            else Ok mv
+      }
+      <|  ( case p.value of
+              Nothing -> A.value ""
+              Just v  -> A.valueAsFloat v
+          )
+      :: filter
+          [ Maybe.map (A.min << toString) p.min
+          , Maybe.map (A.max << toString) p.max
+          ]
 
-inputFloat' : IdString -> Maybe String -> Float -> FieldUpdate Float -> Html
-inputFloat' i p v fu = inputField' i "number" p (toString v) targetValueFloat fu
+inputInt' : InputIntParam -> Html
+inputInt' p =
+  let filter = List.filterMap identity
+  in inputField'
+      { class       = p.class
+      , name        = p.name
+      , placeholder = p.placeholder
+      , update      = p.update
+      , type'       = "number"
+      , pattern     = if Maybe.withDefault -1 p.min >= 0
+                      then Just "\\d+"
+                      else if Maybe.withDefault 1 p.max <= 0
+                      then Just "-\\d+"
+                      else Just "-?\\d+"
+      , decoder     =
+          case (p.min, p.max) of
+            (Nothing, Nothing) -> targetValueInt
+            _                  ->
+              Json.customDecoder targetValueInt <| \v ->
+                if v < Maybe.withDefault (floor <| -1/0) p.min || v > Maybe.withDefault (ceiling <| 1/0) p.max
+                then Err "out of bounds"
+                else Ok v
+      }
+      <| A.valueAsInt p.value
+      :: filter
+          [ Maybe.map (A.min << toString) p.min
+          , Maybe.map (A.max << toString) p.max
+          ]
 
-inputFloatc : ClassString -> IdString -> Maybe String -> Float -> FieldUpdate Float -> Html
-inputFloatc c i p v fu = inputFieldc c i "number" p (toString v) targetValueFloat fu
-
-inputMaybeFloat' : IdString -> Maybe String -> Maybe Float -> FieldUpdate (Maybe Float) -> Html
-inputMaybeFloat' i p v fu = inputField' i "number" p (Maybe.withDefault "" <| Maybe.map toString v) targetValueMaybeFloat fu
-
-inputMaybeFloatc : ClassString -> IdString -> Maybe String -> Maybe Float -> FieldUpdate (Maybe Float) -> Html
-inputMaybeFloatc c i p v fu = inputFieldc c i "number" p (Maybe.withDefault "" <| Maybe.map toString v) targetValueMaybeFloat fu
-
-inputInt' : IdString -> Maybe String -> Int -> FieldUpdate Int -> Html
-inputInt' i p v fu = inputField' i "number" p (toString v) targetValueInt fu
-
-inputIntc : ClassString -> IdString -> Maybe String -> Int -> FieldUpdate Int -> Html
-inputIntc c i p v fu = inputFieldc c i "number" p (toString v) targetValueInt fu
-
-inputMaybeInt' : IdString -> Maybe String -> Maybe Int -> FieldUpdate (Maybe Int) -> Html
-inputMaybeInt' i p v fu = inputField' i "number" p (Maybe.withDefault "" <| Maybe.map toString v) targetValueMaybeInt fu
-
-inputMaybeIntc : ClassString -> IdString -> Maybe String -> Maybe Int -> FieldUpdate (Maybe Int) -> Html
-inputMaybeIntc c i p v fu = inputFieldc c i "number" p (Maybe.withDefault "" <| Maybe.map toString v) targetValueMaybeInt fu
+inputMaybeInt' : InputMaybeIntParam -> Html
+inputMaybeInt' p =
+  let filter = List.filterMap identity
+  in inputField'
+      { class       = p.class
+      , name        = p.name
+      , placeholder = p.placeholder
+      , update      = p.update
+      , type'       = "number"
+      , pattern     = if Maybe.withDefault -1 p.min >= 0
+                      then Just "\\d*"
+                      else if Maybe.withDefault 1 p.max <= 0
+                      then Just "(-\\d+)?"
+                      else Just "(-?\\d+)?"
+      , decoder     =
+          case (p.min, p.max) of
+            (Nothing, Nothing) -> targetValueMaybeInt
+            _                  ->
+              Json.customDecoder targetValueMaybeInt <| \mv ->
+                case mv of
+                  Nothing -> Ok Nothing
+                  Just v -> if v < Maybe.withDefault (floor <| -1/0) p.min || v > Maybe.withDefault (ceiling <| 1/0) p.max
+                            then Err "out of bounds"
+                            else Ok mv
+      }
+      <|  ( case p.value of
+              Nothing -> A.value ""
+              Just v  -> A.valueAsInt v
+          )
+      :: filter
+          [ Maybe.map (A.min << toString) p.min
+          , Maybe.map (A.max << toString) p.max
+          ]
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}

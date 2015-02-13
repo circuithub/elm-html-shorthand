@@ -2,8 +2,15 @@ module Html.Shorthand.Type where
 {-| Types used by the shorthand. All of these types are re-exported by `Html.Shorthand` so this module is only useful if
 you aren't already importing Html.Shorthand.
 
+# Common types
 @docs IdString, ClassString, UrlString, TextString
+
+# Event types
 @docs EventDecodeError, FieldUpdate
+
+# Element parameters
+@docs InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
+
 -}
 
 import Signal
@@ -23,4 +30,70 @@ type alias FieldUpdate a =
   { onInput        : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   , onEnter        : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   , onKeyboardLost : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
+  }
+
+type alias InputFieldParam a =
+  { class       : ClassString
+  , name        : IdString
+  , placeholder : Maybe String
+  , update      : FieldUpdate a
+  , type'       : String
+  , pattern     : Maybe String
+  , decoder     : Json.Decoder a
+  }
+
+type alias InputTextParam =
+  { class       : ClassString
+  , name        : IdString
+  , placeholder : Maybe String
+  , value       : String
+  , update      : FieldUpdate String
+  }
+
+type alias InputMaybeTextParam =
+  { class       : ClassString
+  , name        : IdString
+  , placeholder : Maybe String
+  , value       : Maybe String
+  , update      : FieldUpdate (Maybe String)
+  }
+
+type alias InputFloatParam =
+  { class       : ClassString
+  , name        : IdString
+  , placeholder : Maybe String
+  , value       : Float
+  , min         : Maybe Float
+  , max         : Maybe Float
+  , update      : FieldUpdate Float
+  }
+
+type alias InputMaybeFloatParam =
+  { class       : ClassString
+  , name        : IdString
+  , placeholder : Maybe String
+  , value       : Maybe Float
+  , min         : Maybe Float
+  , max         : Maybe Float
+  , update      : FieldUpdate (Maybe Float)
+  }
+
+type alias InputIntParam =
+  { class       : ClassString
+  , name        : IdString
+  , placeholder : Maybe String
+  , value       : Int
+  , min         : Maybe Int
+  , max         : Maybe Int
+  , update      : FieldUpdate Int
+  }
+
+type alias InputMaybeIntParam =
+  { class       : ClassString
+  , name        : IdString
+  , placeholder : Maybe String
+  , value       : Maybe Int
+  , min         : Maybe Int
+  , max         : Maybe Int
+  , update      : FieldUpdate (Maybe Int)
   }

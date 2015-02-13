@@ -7,6 +7,7 @@ import String
 import Html (..)
 import Html.Attributes as A
 import Html.Shorthand.Type (..)
+import Html.Shorthand.Event (..)
 
 encodeId : IdString -> IdString
 encodeId =
