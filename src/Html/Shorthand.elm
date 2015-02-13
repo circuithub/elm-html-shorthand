@@ -31,7 +31,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -60,7 +60,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs ins_, ins', del_, del'
 
 # Embedded content
-@docs img', imgc, iframe', iframec, embed', object'
+@docs img', iframe', iframec, embed', object'
 @docs param', video', videoc, audio', audioc
 -- source'
 -- sourcec
@@ -335,6 +335,10 @@ type alias AnchorParam = T.AnchorParam
 {-| See [ModParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ModParam)
 -}
 type alias ModParam = T.ModParam
+
+{-| See [ImgParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ImgParam)
+-}
+type alias ImgParam = T.ImgParam
 
 {-| See [EmbedParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#EmbedParam)
 -}
@@ -1018,11 +1022,8 @@ del' p = del [class' p.class, A.cite p.cite, A.datetime p.datetime]
 There is no `img_` function since it is expected that images will *always* have at least 'src' and 'alt' attributes.
 
 -}
-img' : UrlString -> Int -> Int -> String -> Html
-img' url w h alt = img [A.src url, A.width w, A.height h, A.alt alt] []
-
-imgc : ClassString -> UrlString -> Int -> Int -> String -> Html
-imgc c url w h alt = img [class' c, A.src url, A.width w, A.height h, A.alt alt] []
+img' : ImgParam -> Html
+img' p = img [class' p.class, A.src p.src, A.width p.width, A.height p.height, A.alt p.alt] []
 
 {-| [&lt;iframe&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) embedded an HTML document.
 -}
