@@ -74,6 +74,17 @@ type alias AnchorParam =
   , href        : UrlString
   }
 
+type alias ObjectParam =
+  { class       : ClassString
+  , name        : IdString
+  , data        : UrlString
+  , type'       : String
+  , form        : Maybe IdString
+  , useMapName  : Maybe IdString
+  , height      : Int
+  , width       : Int
+  }
+
 type alias InputFieldParam a =
   { class       : ClassString
   , name        : IdString

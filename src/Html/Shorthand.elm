@@ -31,7 +31,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -63,9 +63,7 @@ The following types are all aliases for `String` and as such, only serve documen
 -- del'
 
 # Embedded content
-@docs img', imgc, iframe', iframec, embed', embedc
--- object'
--- objectc
+@docs img', imgc, iframe', iframec, embed', embedc, object'
 @docs param', video', videoc, audio', audioc
 -- source'
 -- sourcec
@@ -336,6 +334,10 @@ type alias ClassCiteTextParam = T.ClassCiteTextParam
 {-| See [AnchorParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#AnchorParam)
 -}
 type alias AnchorParam = T.AnchorParam
+
+{-| See [ObjectParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ObjectParam)
+-}
+type alias ObjectParam = T.ObjectParam
 
 {-| See [InputFieldParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFieldParam)
 -}
@@ -1036,15 +1038,21 @@ embed' typ url w h = embed [A.type' typ, A.src url, A.width w, A.height h] []
 embedc : ClassString -> String -> UrlString -> Int -> Int -> Html
 embedc c typ url w h = embed [class' c, A.type' typ, A.src url, A.width w, A.height h] []
 
---{-| [&lt;object&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object) represents an external resource , which is treated as an image, an HTML
---sub-document, or an external resource to be processed by a plug-in.
----}
--- TODO: data attribute doesn't appear to be implemented yet
---object' : ... -> List Html -> Html
---object' dat typ = object [data' dat, A.type' typ]
-
---objectc : ClassString -> ... -> List Html -> Html
---objectc c = object [class' c, data' dat, A.type' typ]
+{-| [&lt;object&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object) represents an external resource , which is treated as an image, an HTML
+sub-document, or an external resource to be processed by a plug-in.
+-}
+object' : ObjectParam -> List Html -> Html
+object' p =
+  let i' = encodeId p.name
+      filter = List.filterMap identity
+      attrs = filter
+                [ Maybe.map A.form p.form
+                , Maybe.map (A.usemap << String.cons '#' << encodeId) p.useMapName
+                ]
+  in object
+      <| [class' p.class, A.id i', A.name i', A.attribute "data" p.data, A.type' p.type']
+      ++ attrs
+      ++ [A.height p.height, A.width p.width]
 
 {-| [&lt;param&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/param) defines parameters for use by plug-ins invoked by `object` elements.
 -}
