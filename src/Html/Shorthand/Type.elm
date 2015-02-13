@@ -5,7 +5,7 @@ you aren't already importing Html.Shorthand.
 # Common types
 @docs IdString, ClassString, UrlString, TextString
 
-# Event types
+# Event / handler types
 @docs EventDecodeError, FieldUpdate
 
 # Element parameters
@@ -16,10 +16,14 @@ you aren't already importing Html.Shorthand.
 import Signal
 import Json.Decode as Json
 
+-- COMMON TYPES
+
 type alias IdString = String
 type alias ClassString = String
 type alias UrlString = String
 type alias TextString = String
+
+-- EVENT / HANDLER TYPES
 
 type alias EventDecodeError a =
   { event  : Json.Value
@@ -30,6 +34,44 @@ type alias FieldUpdate a =
   { onInput        : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   , onEnter        : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   , onKeyboardLost : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
+  }
+
+-- ELEMENT PARAMETERS
+
+type alias ClassParam =
+  { class       : ClassString
+  }
+
+type alias ClassIdParam =
+  { class       : ClassString
+  , id          : IdString
+  }
+
+type alias ClassTextParam =
+  { class       : ClassString
+  , text        : TextString
+  }
+
+type alias ClassIdTextParam =
+  { class       : ClassString
+  , id          : IdString
+  , text        : TextString
+  }
+
+type alias ClassCiteParam =
+  { class       : ClassString
+  , cite        : UrlString
+  }
+
+type alias ClassCiteTextParam =
+  { class       : ClassString
+  , cite        : UrlString
+  , text        : TextString
+  }
+
+type alias AnchorParam =
+  { class       : ClassString
+  , href        : UrlString
   }
 
 type alias InputFieldParam a =

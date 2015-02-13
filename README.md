@@ -1,79 +1,32 @@
 # Html shorthand
 
-[elm-html-shorthand][shorthand] is a modest, lightweight shorthand supplementing [Html][elm-html] with three suffix notations:
+[elm-html-shorthand][shorthand] is a modest shorthand supplementing [Html][elm-html] with two suffix notations:
 
-* An elision form...
+* An elision form where no arguments are supplied...
 
   ```haskell
-  span_     -- No attributes
-  span []   -- expands to this
+  div_ [ text "contents" ]          -- Most elements take a list of children
+  Html.div [] [ text "contents" ]   -- expands to this
+
+  h1_ "heading"                     -- Some elements take a text string directly
+  Html.h1 [] [ text "heading" ]     -- expands to this
   ```
 
 * An idiomatic form...
 
   ```haskell
-  img' "http://elm-lang.org/logo.png" "The Elm logo"             -- takes a common sense list of arguments
-  img [ src "http://elm-lang.org/logo.png", alt "The Elm logo" ] -- expands to this
+  img' {class = "", src = "http://elm-lang.org/logo.png", alt = "The Elm logo" }   -- takes a common sense list of arguments
+  Html.img [ src "http://elm-lang.org/logo.png", alt "The Elm logo" ]              -- expands to this
   ```
 
-* A classy (& idiomatic) form...
-
-  ```haskell
-  codec "lang-elm" "Signal Float"                   -- takes a css class string + common sense arguments
-  code [ class "lang-elm" ] [ text "Signal Float" ] -- expands to this
-  ```
-
-Shorthand does not attempt to create a template for every concievable use case. In fact, we encourage you to look for patterns in your own html and extract widgets! The intention here is only to shorten individual elements for extremely common cases. Another project we're working on, [elm-bootstrap-html][elm-bootstrap-html], aims to eventually provide more sophisticated templates on top of [Bootstrap][bootstrap].
+Shorthand does not attempt to create a template for every concievable use case. In fact, we encourage you to look for patterns in your own html and create your own widgets! The intention here is to make the common case easy. Another project we're working on, [elm-bootstrap-html][elm-bootstrap-html], aims to eventually provide more sophisticated templates on top of [Bootstrap][bootstrap].
 
 ## A quick comparison!
 
 In [elm-html-shorthand][shorthand]:
 
 ```haskell
-import Html
-import Html (Html, text)
-import Html.Shorthand (..)
-
-blog : Html
-blog =
-  let -- Bootstrap helpers
-      container = divc "container"
-      row = divc "row"
-      col = divc "col-md-9"
-
-      -- Blog helpers
-      comment entryNo commentNo contents =
-        articlec "comment" ("b" ++ toString entryNo ++ "-c" ++ toString commentNo)
-        [ -- TODO: header + publication date & time
-        , contents
-        ]
-      entry entryNo title contents comments =
-        articlec "blogentry" title
-        [ contents
-        , sectionc "comments"
-          (title ++ "-comments")
-          (map2 (comment entryNo) [1..] comments) -- TODO: remove lazy range
-        ]
-
-  in  -- The blog
-      sectionc "container" "blog"
-      container
-      [ row
-        [ col
-          [ entry "Elmo teaches Elm!"
-            [ {- blog entry -}
-            ]
-            [ "Elmo is my hero"
-            ]
-          , entry "Sesame street presses charges..."
-            [ {- blog entry -}
-            ]
-            [ "Well, that escalated quickly!"
-            , "I am sad"
-            ]
-          ]
-        ]
-      ]
+-- TODO
 ```
 
 In [elm-html][elm-html]:
@@ -88,7 +41,7 @@ Please note that this API is highly experimental and very likely to change! Use 
 
 ### Reduce namespace pollution
 
-Shorthand can help you deal with namespace pollution. Since the suffixed names used in `Html.Shorthand` are unlikely to clash with names in your application logic it may make sense to import `Html.Shorthand` unqualified, while using a qualified import for `Html`. 
+Shorthand can help you deal with namespace pollution. Since the suffixed names used in `Html.Shorthand` are unlikely to clash with names in your application logic it may make sense to import `Html.Shorthand` unqualified, while using a qualified import for `Html`.
 
 ```haskell
 import Html                                      -- you can use your own short u, i, b, p variable names!
@@ -108,18 +61,37 @@ h2' : TextString -> Html
 How then do I target my headings in URLs, you ask? Well, this is a job better suited to `section'` and `article'`! Notice that these *do* take ids in their idiomatic forms.
 
 ```haskell
-section' : IdString -> List Html -> Html
+section' : { class : String, id : String } -> List Html -> Html
 ```
 
 This encourages you to use &lt;`section id="..."`&gt; and &lt;`article id="..."`&gt; in order to add url-targetable ids to your page.
 
 ```haskell
-section' "ch-5"
-[ h2' "Chapter 5"
+section' {class = "", id = "ch-5"}
+[ h2_ "Chapter 5"
 ]
 ```
 
 This adherence to the HTML 5 spec is a theme we've tried to encourage in both the design of and the documentation accompanying this API.
+
+### Reactive inputs with customizable update behaviour
+
+It is actually very difficult to use html form inputs correctly, especially in a reactive setting with numeric and/or formatted input types.
+
+```haskell
+inputMaybeFloat'
+{ class       = ""
+, name        = "val"
+, placeholder = Just "Enter value"
+, value       = s.val
+, min         = Just 1
+, max         = Nothing
+, update      = fieldUpdateContinuous
+                { onInput val = UpdateVal (\r -> { r | val <- val })
+                }
+}
+```
+This does more work under the hood than you might expect. More can still be done to make form elements play well with reactivity...
 
 ## Future work
 
@@ -128,7 +100,7 @@ The approach of lightly constraining the Html API to reinforce pleasant patterns
 * **Restricted embedding**
 
     It seems clear that one should be able to restrict the hierarchy of elements by type. Perhaps this complaint will disintegrate as work proceeds on [Graphics.Element][core-element] in elm-core, subsuming the need for this package... or perhaps some other brave soul will take the time to tackle it*.
-    
+
     *Aside: One naive approach would be to try and recreate HTML's structure using Elm's tagged unions.However, the same tag cannot be reused in two different tagged union types.*
 
 * **Catalog of templates**
@@ -146,8 +118,15 @@ The approach of lightly constraining the Html API to reinforce pleasant patterns
 * **Namespace pollution + mini version!**
 
     It would be nice to explore a `-mini` versions of [this library][shorthand] as well as [elm-html][elm-html] that excludes elements like &lt;b&gt;, &lt;i&gt; and &lt;u&gt; that are rarely used correctly anyway.
-    
+
     This would further assist the battle against namespace pollution as well.
+
+* **Better reactive behaviour**
+
+    It is extremely difficult to work around buggy and inconsistent browser behaviour when it comes to text input fields.
+    The wrappers provided here does a pretty good job of working around the issues, but more can be done still to improve the user experience.
+    In particular, it would be great to have masking similar to say [this jquery inputmask plugin][jquery.inputmask] in order to prevent invalid inputs in the first place and to allow for advanced formatting for things like telephone numbers etc.
+    One major challenge at the moment is managing the keyboard cursor selection, so that the caret does not jump around due to updates to the field.
 
 ### Comparison to other libraries
 
@@ -157,12 +136,13 @@ Chris Done recently worked on a new EDSL called [Lucid][lucid] for templating HT
 [shorthand]: http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest
 [elm-bootstrap-html]: http://package.elm-lang.org/packages/circuithub/elm-bootstrap-html/latest
 [bootstrap]: http://getbootstrap.com
+[jquery.inputmask]: https://github.com/RobinHerbots/jquery.inputmask
 [lucid]: http://chrisdone.com/posts/lucid
 [core-element]: http://package.elm-lang.org/packages/elm-lang/core/latest/Graphics-Element
 
-## Contributing 
+## Contributing
 
-Feedback and contributions are very welcome. 
+Feedback and contributions are very welcome.
 
 In particular, documenting the do's and don't's and adding examples for every semantic element is very time consuming. This doesn't require any sort of in-depth knowledge of the library though, just the ability to use a search engine and some patience researching what is considered best practice. All we ask is that you try and keep it short and to the point. Please help us to tidy up and flesh out the documentation!
 
