@@ -31,7 +31,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -57,13 +57,10 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs span_, span'
 
 # Edits
-@docs ins_
--- ins'
-@docs del_
--- del'
+@docs ins_, ins', del_, del'
 
 # Embedded content
-@docs img', imgc, iframe', iframec, embed', embedc, object'
+@docs img', imgc, iframe', iframec, embed', object'
 @docs param', video', videoc, audio', audioc
 -- source'
 -- sourcec
@@ -334,6 +331,14 @@ type alias ClassCiteTextParam = T.ClassCiteTextParam
 {-| See [AnchorParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#AnchorParam)
 -}
 type alias AnchorParam = T.AnchorParam
+
+{-| See [ModParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ModParam)
+-}
+type alias ModParam = T.ModParam
+
+{-| See [EmbedParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#EmbedParam)
+-}
+type alias EmbedParam = T.EmbedParam
 
 {-| See [ObjectParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ObjectParam)
 -}
@@ -994,18 +999,16 @@ wbr' = wbr [] []
 ins_ : List Html -> Html
 ins_ = ins []
 
--- TODO: Consider the defaults for this one a bit more carefully (cite and datetime)
---ins' : ClassParam -> List Html -> Html
---ins' p = ins [class' p.class]
+ins' : ModParam -> List Html -> Html
+ins' p = ins [class' p.class, A.cite p.cite, A.datetime p.datetime]
 
 {-| [&lt;del&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/del) defines a removal from the document.
 -}
 del_ : List Html -> Html
 del_ = del []
 
--- TODO: Consider the defaults for this one a bit more carefully (cite and datetime)
---del' : ClassParam -> List Html -> Html
---del' p = del [class' p.class]
+del' : ModParam -> List Html -> Html
+del' p = del [class' p.class, A.cite p.cite, A.datetime p.datetime]
 
 
 -- EMBEDDED CONTENT
@@ -1032,11 +1035,8 @@ iframec c url w h = iframe [class' c, A.src url, A.width w, A.height h] []
 {-| [&lt;embed&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/embed) represents a integration point for an external, often non-HTML,
 application or interactive content.
 -}
-embed' : String -> UrlString -> Int -> Int -> Html
-embed' typ url w h = embed [A.type' typ, A.src url, A.width w, A.height h] []
-
-embedc : ClassString -> String -> UrlString -> Int -> Int -> Html
-embedc c typ url w h = embed [class' c, A.type' typ, A.src url, A.width w, A.height h] []
+embed' : EmbedParam -> Html
+embed' p = embed [class' p.class, id' p.id, A.src p.src, A.type' p.type', A.width p.width, A.height p.height] []
 
 {-| [&lt;object&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object) represents an external resource , which is treated as an image, an HTML
 sub-document, or an external resource to be processed by a plug-in.

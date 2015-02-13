@@ -74,6 +74,23 @@ type alias AnchorParam =
   , href        : UrlString
   }
 
+type alias ModParam =
+  { class       : ClassString
+  , cite        : String
+  , datetime    : String
+  }
+
+type alias EmbedParam =
+  { class       : ClassString
+  , id          : IdString
+  , src         : UrlString
+  , type'       : String
+  , form        : Maybe IdString
+  , useMapName  : Maybe IdString
+  , height      : Int
+  , width       : Int
+  }
+
 type alias ObjectParam =
   { class       : ClassString
   , name        : IdString
