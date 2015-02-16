@@ -5,20 +5,14 @@ module Html.Shorthand where
 The following two conventions are used for shorthands. One example is provided for each.
 
 ## Elision form
-The attributes argument of the node is elided, only a list of children or a text string needs to be supplied.
-
-Occasionally when an idiomatic form is highly desirable, the elision form is not provided.
-This is done in order to encourage more uniform use. For example:
-* An `img` tag will almost certainly benefit from having `src` and `alt` attributes.
-* Some structural elements such as `section`, `aside`, `article` and `figure` should list an `id` in order to help users target interesting portions of your website via a URL.
+Most attributes of the node is elided, only one or two arguments needs to be supplied.
 
 @docs div_
 
 ## Idiomatic form
 
-This form attempts to take a common sense list of arguments. This is a limited shorthand which
-will not satisfy every need, but takes care of the extremely common case and encourages uniform use.
-When an element is missing the elision form, an idiomatic form will always be provided.
+This form attempts to take a common sense list of arguments. This is a more expansive shorthand which
+will not satisfy every need, but takes care of the usual cases while still encouraging uniformity.
 
 @docs img'
 
@@ -28,7 +22,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs IdString, ClassString, UrlString, TextString, TextDirection
 
 # Event / handler types
-@docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
+@docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
 @docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam

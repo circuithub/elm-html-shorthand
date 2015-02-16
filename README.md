@@ -2,38 +2,55 @@
 
 [elm-html-shorthand][shorthand] is a modest shorthand supplementing [Html][elm-html] with two suffix notations:
 
-* An elision form where no arguments are supplied...
+* A shorthand / elision form where arguments are supplied directly...
 
   ```haskell
-  div_ [ text "contents" ]          -- Most elements take a list of children
-  Html.div [] [ text "contents" ]   -- expands to this
+  div_ [ text "contents" ]          -- Most elements simply take a list of children, eliding any attributes
+  Html.div [] [ text "contents" ]   -- normalizes to this
 
-  h1_ "heading"                     -- Some elements take a text string directly
-  Html.h1 [] [ text "heading" ]     -- expands to this
+  h1_ "heading"                     -- Some elements take strings arguments instead of nodes
+  Html.h1 [] [ text "heading" ]     -- normalizes to this
   ```
 
-* An idiomatic form...
+* An idiomatic form where...
 
   ```haskell
-  img' {class = "", src = "http://elm-lang.org/logo.png", alt = "The Elm logo" }   -- takes a common sense list of arguments
-  Html.img [ src "http://elm-lang.org/logo.png", alt "The Elm logo" ]              -- expands to this
+  img'                                         -- Takes a common sense list of arguments:
+    { class = ""
+    , src = "http://elm-lang.org/logo.png"     -- * probably all images should have a src attribute
+    , alt = "The Elm logo"                     -- * probably all images should have an alt attribute
+    }
+  Html.img                                     -- * normalizes to this
+    [ Html.class ""
+    , Html.src "http://elm-lang.org/logo.png"
+    , Html.alt "The Elm logo"
+    ]
+
+  inputInt' ""                                 -- Some elements are a bit special:
+    { name        = "my count"
+    , placeholder = Nothing
+    , value       = count
+    , min         = Just 0
+    , max         = Nothing
+    , update      = fieldUpdateContinuous      -- * e.g. let's update this field continuously
+                    { onInput val = Channel.send action (UpdateCount val)
+                    }
+    }
+  Html.input                                   -- * normalizes to something rather more elaborate
+    [ Html.type' "number"
+    , Html.id "my-count"
+    , Html.name "my-count"
+    , Html.valueAsInt count
+    , Html.min "0"
+    , Html.pattern        {- ... magic ... -}
+    , Html.on "input"     {- ... magic ... -}
+    , Html.on "blur"      {- ... magic ... -}
+    , Html.on "keydown"   {- ... magic ... -}
+    , Html.on "keypress"  {- ... magic ... -}
+    ]
   ```
 
 Shorthand does not attempt to create a template for every concievable use case. In fact, we encourage you to look for patterns in your own html and create your own widgets! The intention here is to make the common case easy. Another project we're working on, [elm-bootstrap-html][elm-bootstrap-html], aims to eventually provide more sophisticated templates on top of [Bootstrap][bootstrap].
-
-## A quick comparison!
-
-In [elm-html-shorthand][shorthand]:
-
-```haskell
--- TODO
-```
-
-In [elm-html][elm-html]:
-
-```haskell
--- TODO
-```
 
 Please note that this API is highly experimental and very likely to change! Use this package at your own risk.
 
@@ -45,6 +62,8 @@ Shorthand can help you deal with namespace pollution. Since the suffixed names u
 
 ```haskell
 import Html                                      -- you can use your own short u, i, b, p variable names!
+import Html.Events as Html
+import Html.Attributes as Html
 import Html.Shorthand (..)                       -- bringing u',i',b',p',em' etc...
 import Html (blockquote)                         -- if you really want something unqualified, just import it individually...
 import Html (Html, text, toElement, fromElement) -- perhaps in future Html.Shorthand will re-export these automatically
@@ -52,10 +71,10 @@ import Html (Html, text, toElement, fromElement) -- perhaps in future Html.Short
 
 ### Correct use of semantic tags
 
-Notice that the definition of `h2'` doesn't allow for an id string to be supplied to it.
+Notice that the definition of `h2_` doesn't allow for an id string to be supplied to it.
 
 ```haskell
-h2' : TextString -> Html
+h2_ : TextString -> Html
 ```
 
 How then do I target my headings in URLs, you ask? Well, this is a job better suited to `section'` and `article'`! Notice that these *do* take ids in their idiomatic forms.
@@ -68,8 +87,8 @@ This encourages you to use &lt;`section id="..."`&gt; and &lt;`article id="..."`
 
 ```haskell
 section' {class = "", id = "ch-5"}
-[ h2_ "Chapter 5"
-]
+  [ h2_ "Chapter 5"
+  ]
 ```
 
 This adherence to the HTML 5 spec is a theme we've tried to encourage in both the design of and the documentation accompanying this API.
@@ -80,18 +99,21 @@ It is actually very difficult to use html form inputs correctly, especially in a
 
 ```haskell
 inputMaybeFloat'
-{ class       = ""
-, name        = "val"
-, placeholder = Just "Enter value"
-, value       = s.val
-, min         = Just 1
-, max         = Nothing
-, update      = fieldUpdateContinuous
-                { onInput val = UpdateVal (\r -> { r | val <- val })
-                }
-}
+  { class       = ""
+  , name        = "val"
+  , placeholder = Just "Enter value"
+  , value       = Just 1
+  , min         = Just -10
+  , max         = Just 40
+  , update      = fieldUpdateFallbackFocusLost
+                  { -- Send an error message if the field doesn't parse correctly
+                    onFallback _ = Channel.send action <| TemperatureError "Expected degrees celcius"
+                  , -- Update the temperature if it parsed correctly
+                    onInput val = Channel.send action <| SetTemperature val
+                  }
+  }
 ```
-This does more work under the hood than you might expect. More can still be done to make form elements play well with reactivity...
+This does more work under the hood, though more can still be done to make form elements play well with reactivity...
 
 ## Future work
 

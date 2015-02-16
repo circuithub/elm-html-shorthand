@@ -17,7 +17,6 @@ import Json.Decode as Json
 import Signal
 import Maybe
 import Result
---import Char
 
 {-| Fires off the message when an "input" event is triggered.
 Use this with &lt;`input`&gt; and &lt;`textarea`&gt; elements.
