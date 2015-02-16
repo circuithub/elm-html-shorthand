@@ -93,7 +93,6 @@ type alias EmbedParam =
   , id          : IdString
   , src         : UrlString
   , type'       : String
-  , form        : Maybe IdString
   , useMapName  : Maybe IdString
   , height      : Int
   , width       : Int

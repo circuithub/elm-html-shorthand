@@ -1047,8 +1047,7 @@ object' p =
   let i' = encodeId p.name
       filter = List.filterMap identity
       attrs = filter
-                [ Maybe.map A.form p.form
-                , Maybe.map (A.usemap << String.cons '#' << encodeId) p.useMapName
+                [ Maybe.map (A.usemap << String.cons '#' << encodeId) p.useMapName
                 ]
   in object
       <| [class' p.class, A.id i', A.name i', A.attribute "data" p.data, A.type' p.type']

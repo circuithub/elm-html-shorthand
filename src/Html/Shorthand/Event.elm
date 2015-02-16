@@ -2,7 +2,7 @@ module Html.Shorthand.Event where
 {-| Shorthands for common Html events
 
 # Events
-@docs onEnter, onInput, onKeyboardLost, onMouseLost
+@docs onInput, onEnter, onKeyboardLost, onMouseLost
 
 # Special decoders
 @docs messageDecoder
@@ -18,7 +18,8 @@ import Signal
 import Maybe
 import Result
 
-{-| Fires off the message when an "input" event is triggered
+{-| Fires off the message when an "input" event is triggered.
+Use this with &lt;`input`&gt; and &lt;`textarea`&gt; elements.
 -}
 onInput : Json.Decoder a -> (a -> Signal.Message) -> Attribute
 onInput = on "input"
@@ -28,7 +29,7 @@ onInput = on "input"
 onEnter : Json.Decoder a -> (a -> Signal.Message) -> Attribute
 onEnter dec f =
   on "keydown"
-    (Json.customDecoder (Json.object2 (,) keyCode dec) (\(c, val) -> if c == 13 then Ok val else Err "expected key code 13"))
+    (Json.customDecoder (Json.object2 (,) keyCode dec) <| \(c, val) -> if c == 13 then Ok val else Err "expected key code 13")
     f
 
 {-| Similar to onBlur, but uses a decoder to return the internal state of an input field.
