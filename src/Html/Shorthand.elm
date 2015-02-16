@@ -34,7 +34,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs id', class'
 
 # Sections
-@docs body_, body', section', nav_, nav', article', aside'
+@docs body_, body', section_, section', nav_, nav', article_, article', aside'
 @docs h1_, h1', h2_, h2', h3_, h3', h4_, h4', h5_, h5', h6_, h6', header_, header', footer_, footer'
 @docs address_, address', main_
 
@@ -446,6 +446,9 @@ body' p = body [class' p.class]
 * [use &lt;section&gt; as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)
 
 -}
+section_ : IdString -> List Html -> Html
+section_ i = section [id' i]
+
 section' : ClassIdParam -> List Html -> Html
 section' p = section [class' p.class, id' p.id]
 
@@ -475,6 +478,9 @@ of the content.
 * [confuse &lt;article&gt; with &lt;section&gt; which need not be self-contained](http://www.brucelawson.co.uk/2010/html5-articles-and-sections-whats-the-difference/)
 
 -}
+article_ : IdString -> List Html -> Html
+article_ i = article [id' i]
+
 article' : ClassIdParam -> List Html -> Html
 article' p = article [class' p.class, id' p.id]
 

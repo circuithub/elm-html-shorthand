@@ -77,16 +77,17 @@ Notice that the definition of `h2_` doesn't allow for an id string to be supplie
 h2_ : TextString -> Html
 ```
 
-How then do I target my headings in URLs, you ask? Well, this is a job better suited to `section'` and `article'`! Notice that these *do* take ids in their idiomatic forms.
+How then do I target my headings in URLs, you ask? Well, this is a job better suited to `section'` and `article'`! Notice that these *do* take ids in both forms.
 
 ```haskell
-section' : { class : String, id : String } -> List Html -> Html
+section_ : IdString -> List Html -> Html
+section' : { class : ClassString, id : IdString } -> List Html -> Html
 ```
 
 This encourages you to use &lt;`section id="..."`&gt; and &lt;`article id="..."`&gt; in order to add url-targetable ids to your page.
 
 ```haskell
-section' {class = "", id = "ch-5"}
+section_ "ch-5"
   [ h2_ "Chapter 5"
   ]
 ```
