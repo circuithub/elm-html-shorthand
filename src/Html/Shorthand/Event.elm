@@ -17,6 +17,7 @@ import Json.Decode as Json
 import Signal
 import Maybe
 import Result
+--import Char
 
 {-| Fires off the message when an "input" event is triggered.
 Use this with &lt;`input`&gt; and &lt;`textarea`&gt; elements.
@@ -31,6 +32,34 @@ onEnter dec f =
   on "keydown"
     (Json.customDecoder (Json.object2 (,) keyCode dec) <| \(c, val) -> if c == 13 then Ok val else Err "expected key code 13")
     f
+
+-- TODO: see https://github.com/evancz/virtual-dom/pull/5
+-- TODO: use key/code/keyEvent once it is well supported in browsers.
+-- {-| An alternate version of `onKeyPress` that allows you to filter key strokes.
+-- -}
+-- filterOnKeyPress : (String -> Maybe Signal.Message) -> Attribute
+-- filterOnKeyPress f =
+--   on "keypress"
+--     (messageDecoder key <| \r ->
+--       case r of
+--         Err _ -> Nothing
+--         Ok c  -> f c
+--     )
+--     identity
+
+-- TODO: see https://github.com/evancz/virtual-dom/pull/5
+-- {-| An alternate version of `onKeyPress` that listens for printable key strokes and allows you to filter them.
+-- -}
+-- filterOnKeyPressChar : (Char -> Maybe Signal.Message) -> Attribute
+-- filterOnKeyPressChar f =
+--   -- TODO: change implementation to key/code once it is well supported in browsers.
+--   on "keypress"
+--     (messageDecoder (Json.customDecoder charCode <| Result.fromMaybe "empty character code") <| \r ->
+--       case r of
+--         Err _ -> Nothing
+--         Ok c  -> f c
+--     )
+--     identity
 
 {-| Similar to onBlur, but uses a decoder to return the internal state of an input field.
 -}

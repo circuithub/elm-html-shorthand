@@ -1324,7 +1324,11 @@ inputMaybeText' p =
 
 inputFloat' : InputFloatParam -> Html
 inputFloat' p =
-  let filter = List.filterMap identity
+  let filter       = List.filterMap identity
+      --allowedChars =  '.'
+      --                :: case p.min of
+      --                      Nothing -> ['-']
+      --                      Just x  -> if x >= 0 then [] else ['-']
   in inputField'
       { class       = p.class
       , name        = p.name
@@ -1342,6 +1346,7 @@ inputFloat' p =
                 else Ok v
       }
       <| A.valueAsFloat p.value
+      --:: filterOnKeyPressChar (\c -> if (c >= '0' && c <= '9') || c `List.member` allowedChars then Just tmpMsg else Nothing)
       :: filter
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
