@@ -24,6 +24,11 @@ Use this with &lt;`input`&gt; and &lt;`textarea`&gt; elements.
 onInput : Json.Decoder a -> (a -> Signal.Message) -> Attribute
 onInput = on "input"
 
+{-| Fires when a "change" event is triggered.
+-}
+onChange : Json.Decoder a -> (a -> Signal.Message) -> Attribute
+onChange = on "change"
+
 {-| Fires off the message when the `Enter` key is pressed (on keydown).
 -}
 onEnter : Json.Decoder a -> (a -> Signal.Message) -> Attribute
