@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -370,6 +370,13 @@ type alias InputIntParam = T.InputIntParam
 -}
 type alias InputMaybeIntParam = T.InputMaybeIntParam
 
+{-| See [SelectParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#SelectParam)
+-}
+type alias SelectParam = T.SelectParam
+
+{-| See [OptionParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#OptionParam)
+-}
+type alias OptionParam = T.OptionParam
 
 -- ENCODERS
 
@@ -1481,16 +1488,19 @@ buttonReset' t = button [A.type' "reset"] [text t]
 buttonResetc : ClassTextParam -> Html
 buttonResetc p = button [class' p.class, A.type' "reset"] [text p.text]
 
---{-| [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.
----}
---select_ : List Html -> Html
---select_ = select []
-
---select' :  -> List Html -> Html
---select' = select []
-
---select' : ClassParam -> List Html -> Html
---select' p = select [class' p.class]
+{-| [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.
+-}
+select' : SelectParam -> List Html -> Html
+select' p =
+  let i' = encodeId p.name
+  in select
+      [ class' p.class
+      , A.id i'
+      , A.name i'
+      , onChange targetValue p.update.onSelect
+      -- , on "click" targetValue p.update.onSelect
+      -- , on "keypress" targetValue p.update.onSelect
+      ]
 
 --{-| [&lt;datalist&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist) represents a set of predefined options for other controls.
 ---}
@@ -1516,17 +1526,13 @@ buttonResetc p = button [class' p.class, A.type' "reset"] [text p.text]
 --optgroup' : ClassParam -> List Html -> Html
 --optgroup' p = optgroup [class' p.class]
 
---{-| [&lt;option&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option) represents an option in a `select` element or a suggestion of a `datalist` element.
----}
--- TODO
---option_ : List Html -> Html
---option_ = option []
+{-| [&lt;option&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option) represents an option in a `select` element or a suggestion of a `datalist` element.
+-}
+option_ : TextString -> Bool -> Html
+option_ val sel = option [ A.selected sel ] [ text val ]
 
---option' :  -> List Html -> Html
---option' = option []
-
---option' : ClassParam -> List Html -> Html
---option' p = option [class' p.class]
+option' : OptionParam -> Html
+option' p = option [ A.stringProperty "label" p.label, A.value (toString p.value), A.selected p.selected ] []
 
 --{-| [&lt;textarea&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) represents a multiline text edit control.
 ---}

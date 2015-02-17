@@ -36,6 +36,10 @@ type alias FieldUpdate a =
   , onKeyboardLost : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   }
 
+type alias SelectUpdate a =
+  { onSelect       : a -> Signal.Message
+  }
+
 -- ELEMENT PARAMETERS
 
 type alias ClassParam =
@@ -173,4 +177,16 @@ type alias InputMaybeIntParam =
   , min         : Maybe Int
   , max         : Maybe Int
   , update      : FieldUpdate (Maybe Int)
+  }
+
+type alias SelectParam =
+  { class       : ClassString
+  , name        : IdString
+  , update      : SelectUpdate String
+  }
+
+type alias OptionParam =
+  { label       : String
+  , value       : String
+  , selected    : Bool
   }
