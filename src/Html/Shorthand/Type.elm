@@ -121,6 +121,11 @@ type alias FormParam =
   , update      : FormUpdate
   }
 
+type alias FieldsetParam =
+  { class       : ClassString
+  , disabled    : Bool
+  }
+
 type alias InputFieldParam a =
   { class       : ClassString
   , name        : IdString

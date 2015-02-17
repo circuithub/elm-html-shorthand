@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, FormParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -359,6 +359,10 @@ type alias ObjectParam = T.ObjectParam
 {-| See [FormParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormParam)
 -}
 type alias FormParam = T.FormParam
+
+{-| See [FieldsetParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FieldsetParam)
+-}
+type alias FieldsetParam = T.FieldsetParam
 
 {-| See [InputFieldParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFieldParam)
 -}
@@ -1273,11 +1277,11 @@ form' p =
 
 {-| [&lt;fieldset&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset) represents a set of controls.
 -}
-fieldset_ : List Html -> Html
-fieldset_ = fieldset []
+fieldset_ : Bool -> List Html -> Html
+fieldset_ disabled = fieldset [A.disabled disabled]
 
-fieldset' : ClassParam -> List Html -> Html
-fieldset' p = fieldset [class' p.class]
+fieldset' : FieldsetParam -> List Html -> Html
+fieldset' p = fieldset [class' p.class, A.disabled p.disabled]
 
 {-| [&lt;legend&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/legend) represents the caption for a `fieldset`.
 -}
