@@ -22,7 +22,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs IdString, ClassString, UrlString, TextString, TextDirection
 
 # Event / handler types
-@docs EventDecodeError, FieldUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
+@docs EventDecodeError, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
 @docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam
@@ -165,7 +165,7 @@ See also [EventDecodeError](http://package.elm-lang.org/packages/circuithub/elm-
 -}
 type alias EventDecodeError a = T.EventDecodeError a
 
-{-| Update configuration for input fields.
+{-| Update configuration for `input` fields.
 
 * *onInput* - continuously send messages on any input event (`onInput`)
 * *onEnter* - a message to send whenever the enter key is hit
@@ -179,6 +179,13 @@ See also [FieldUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-
 
 -}
 type alias FieldUpdate a = T.FieldUpdate a
+
+{-| Update configuration for a `select` element.
+
+* *onSelect* - the selected option has changed.
+
+-}
+type alias SelectUpdate a = T.SelectUpdate a
 
 {-| Default field update handlers. Use this to select only one or two handlers.
 
