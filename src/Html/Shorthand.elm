@@ -22,10 +22,10 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs IdString, ClassString, UrlString, TextString, TextDirection
 
 # Event / handler types
-@docs EventDecodeError, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
+@docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, FormParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -153,6 +153,13 @@ type alias TextString = T.TextString -- re-export
 type TextDirection = LeftToRight | RightToLeft | AutoDirection
 
 --type alias Selection = Graphics.Input.Field.Selection  -- re-export
+
+{-| Update configuration for a `form` element.
+
+* *onSubmit* - a submit action was triggered
+
+-}
+type alias FormUpdate = T.FormUpdate
 
 {-| A field error is generated when an input fails to parse its input string during an attempt to produce the output value.
 This gives the user an opportunity to specify a fallback behaviour or simply ignore the error, leaving the input in an intermediate state.
@@ -348,6 +355,10 @@ type alias EmbedParam = T.EmbedParam
 {-| See [ObjectParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ObjectParam)
 -}
 type alias ObjectParam = T.ObjectParam
+
+{-| See [FormParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormParam)
+-}
+type alias FormParam = T.FormParam
 
 {-| See [InputFieldParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFieldParam)
 -}
@@ -1251,14 +1262,14 @@ th' p = th [class' p.class]
 {-| [&lt;form&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form) represents a form , consisting of controls, that can be submitted to a
 server for processing.
 -}
-form_ : List Html -> Html
-form_ = form []
-
-form' : String -> String -> List Html -> Html
-form' a m = form [A.action a, A.method m]
-
-formc : ClassString ->  String -> String -> List Html -> Html
-formc c a m = form [class' c, A.action a, A.method m]
+form' : FormParam -> List Html -> Html
+form' p =
+  let filter = List.filterMap identity
+  in  form
+      <| class' p.class
+      :: filter
+          [ Maybe.map onSubmit p.update.onSubmit
+          ]
 
 {-| [&lt;fieldset&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset) represents a set of controls.
 -}

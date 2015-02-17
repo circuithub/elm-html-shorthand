@@ -30,6 +30,10 @@ type alias EventDecodeError a =
   , reason : String
   }
 
+type alias FormUpdate =
+  { onSubmit       : Maybe Signal.Message
+  }
+
 type alias FieldUpdate a =
   { onInput        : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   , onEnter        : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
@@ -107,10 +111,14 @@ type alias ObjectParam =
   , name        : IdString
   , data        : UrlString
   , type'       : String
-  , form        : Maybe IdString
   , useMapName  : Maybe IdString
   , height      : Int
   , width       : Int
+  }
+
+type alias FormParam =
+  { class       : ClassString
+  , update      : FormUpdate
   }
 
 type alias InputFieldParam a =
