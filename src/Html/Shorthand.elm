@@ -1400,11 +1400,7 @@ inputInt' p =
       , placeholder = p.placeholder
       , update      = p.update
       , type'       = "number"
-      , pattern     = if Maybe.withDefault -1 p.min >= 0
-                      then Just "\\d+"
-                      else if Maybe.withDefault 1 p.max <= 0
-                      then Just "-\\d+"
-                      else Just "-?\\d+"
+      , pattern     = Nothing
       , decoder     =
           case (p.min, p.max) of
             (Nothing, Nothing) -> targetValueInt
@@ -1430,11 +1426,7 @@ inputMaybeInt' p =
       , placeholder = p.placeholder
       , update      = p.update
       , type'       = "number"
-      , pattern     = if Maybe.withDefault -1 p.min >= 0
-                      then Just "\\d*"
-                      else if Maybe.withDefault 1 p.max <= 0
-                      then Just "(-\\d+)?"
-                      else Just "(-?\\d+)?"
+      , pattern     = Nothing
       , decoder     =
           case (p.min, p.max) of
             (Nothing, Nothing) -> targetValueMaybeInt
