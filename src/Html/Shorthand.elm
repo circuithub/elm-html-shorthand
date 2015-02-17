@@ -1432,7 +1432,7 @@ inputInt' p =
       :: filter
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
-          , Maybe.map (A.step << toString) p.step
+          , Maybe.map (A.stringProperty "step" << toString) p.step
           ]
 
 inputMaybeInt' : InputMaybeIntParam -> Html
@@ -1463,7 +1463,7 @@ inputMaybeInt' p =
       :: filter
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
-          , Maybe.map (A.step << toString) p.step
+          , Maybe.map (A.stringProperty "step" << toString) p.step
           ]
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
