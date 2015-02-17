@@ -146,6 +146,7 @@ type alias InputFloatParam =
   , value       : Float
   , min         : Maybe Float
   , max         : Maybe Float
+  , step        : Maybe Float
   , update      : FieldUpdate Float
   }
 
@@ -156,6 +157,7 @@ type alias InputMaybeFloatParam =
   , value       : Maybe Float
   , min         : Maybe Float
   , max         : Maybe Float
+  , step        : Maybe Float
   , update      : FieldUpdate (Maybe Float)
   }
 
@@ -166,6 +168,7 @@ type alias InputIntParam =
   , value       : Int
   , min         : Maybe Int
   , max         : Maybe Int
+  , step        : Maybe Int
   , update      : FieldUpdate Int
   }
 
@@ -176,6 +179,7 @@ type alias InputMaybeIntParam =
   , value       : Maybe Int
   , min         : Maybe Int
   , max         : Maybe Int
+  , step        : Maybe Int
   , update      : FieldUpdate (Maybe Int)
   }
 

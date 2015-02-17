@@ -1354,6 +1354,7 @@ inputFloat' p =
       }
       <| A.valueAsFloat p.value
       --:: filterOnKeyPressChar (\c -> if (c >= '0' && c <= '9') || c `List.member` allowedChars then Just tmpMsg else Nothing)
+      :: A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map toString p.step)
       :: filter
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
@@ -1384,6 +1385,7 @@ inputMaybeFloat' p =
               Nothing -> A.value ""
               Just v  -> A.valueAsFloat v
           )
+      :: A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map toString p.step)
       :: filter
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
@@ -1416,6 +1418,7 @@ inputInt' p =
       :: filter
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
+          , Maybe.map (A.step << toString) p.step
           ]
 
 inputMaybeInt' : InputMaybeIntParam -> Html
@@ -1450,6 +1453,7 @@ inputMaybeInt' p =
       :: filter
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
+          , Maybe.map (A.step << toString) p.step
           ]
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
@@ -1473,11 +1477,8 @@ buttonLinkc c t click = a [class' c, onClick click, A.href "#"] [text t]
 buttonSubmit_ : List Html -> Html
 buttonSubmit_ = button [A.type' "submit"]
 
-buttonSubmit' : TextString -> Html
-buttonSubmit' t = button [A.type' "submit"] [text t]
-
-buttonSubmitc : ClassTextParam -> Html
-buttonSubmitc p = button [class' p.class, A.type' "submit"] [text p.text]
+buttonSubmit' : ClassParam -> List Html -> Html
+buttonSubmit' p = button [class' p.class, A.type' "submit"]
 
 buttonReset_ : List Html -> Html
 buttonReset_ = button [A.type' "reset"]
