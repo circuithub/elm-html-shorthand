@@ -133,6 +133,7 @@ type alias InputFieldParam a =
   , update      : FieldUpdate a
   , type'       : String
   , pattern     : Maybe String
+  , required    : Bool
   , decoder     : Json.Decoder a
   }
 
@@ -141,6 +142,7 @@ type alias InputTextParam =
   , name        : IdString
   , placeholder : Maybe String
   , value       : String
+  , required    : Bool
   , update      : FieldUpdate String
   }
 

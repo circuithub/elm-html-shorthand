@@ -42,11 +42,11 @@
     , Html.name "my-count"
     , Html.valueAsInt count
     , Html.min "0"
-    , Html.pattern        {- ... magic ... -}
+    , Html.required True
     , Html.on "input"     {- ... magic ... -}
     , Html.on "blur"      {- ... magic ... -}
     , Html.on "keydown"   {- ... magic ... -}
-    , Html.on "keypress"  {- ... magic ... -}
+    -- , Html.on "keypress"  {- ... magic ... -} (TODO: input masking)
     ]
   ```
 

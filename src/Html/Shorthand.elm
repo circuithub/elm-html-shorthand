@@ -262,8 +262,8 @@ the strange way that browsers treat numeric inputs. This update method can be us
 
 -}
 fieldUpdateFallbackFocusLost  : { onFallback : String -> Signal.Message
-                            , onInput    : a -> Signal.Message
-                            }
+                                , onInput    : a -> Signal.Message
+                                }
                           -> FieldUpdate a
 fieldUpdateFallbackFocusLost handler =
   let doOk r =  case r of
@@ -1312,6 +1312,7 @@ inputField' p attrs =
         [ A.type' p.type'
         , A.id i'
         , A.name i'
+        , A.required p.required
         ]
         ++ filter
             [ Maybe.map class' (if p.class == "" then Nothing else Just p.class)
@@ -1332,6 +1333,7 @@ inputText' p =
     , update      = p.update
     , type'       = "text"
     , pattern     = Nothing
+    , required    = p.required
     , decoder     = targetValue
     }
     [ A.value p.value
@@ -1346,6 +1348,7 @@ inputMaybeText' p =
     , update      = p.update
     , type'       = "text"
     , pattern     = Nothing
+    , required    = False
     , decoder     = targetValueMaybe
     }
     [ A.value (Maybe.withDefault "" p.value)
@@ -1365,6 +1368,7 @@ inputFloat' p =
       , update      = p.update
       , type'       = "number"
       , pattern     = Nothing
+      , required    = True
       , decoder     =
           case (p.min, p.max) of
             (Nothing, Nothing) -> targetValueFloat
@@ -1392,6 +1396,7 @@ inputMaybeFloat' p =
       , update      = p.update
       , type'       = "number"
       , pattern     = Nothing
+      , required    = False
       , decoder     =
           case (p.min, p.max) of
             (Nothing, Nothing) -> targetValueMaybeFloat
@@ -1423,6 +1428,7 @@ inputInt' p =
       , update      = p.update
       , type'       = "number"
       , pattern     = Nothing
+      , required    = True
       , decoder     =
           case (p.min, p.max) of
             (Nothing, Nothing) -> targetValueInt
@@ -1449,6 +1455,7 @@ inputMaybeInt' p =
       , update      = p.update
       , type'       = "number"
       , pattern     = Nothing
+      , required    = False
       , decoder     =
           case (p.min, p.max) of
             (Nothing, Nothing) -> targetValueMaybeInt
