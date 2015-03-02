@@ -138,20 +138,22 @@ type alias InputFieldParam a =
   }
 
 type alias InputTextParam =
-  { class       : ClassString
-  , name        : IdString
-  , placeholder : Maybe String
-  , value       : String
-  , required    : Bool
-  , update      : FieldUpdate String
+  { class        : ClassString
+  , name         : IdString
+  , placeholder  : Maybe String
+  , value        : String
+  , required     : Bool
+  , autocomplete : Bool
+  , update       : FieldUpdate String
   }
 
 type alias InputMaybeTextParam =
-  { class       : ClassString
-  , name        : IdString
-  , placeholder : Maybe String
-  , value       : Maybe String
-  , update      : FieldUpdate (Maybe String)
+  { class        : ClassString
+  , name         : IdString
+  , placeholder  : Maybe String
+  , value        : Maybe String
+  , autocomplete : Bool
+  , update       : FieldUpdate (Maybe String)
   }
 
 type alias InputFloatParam =

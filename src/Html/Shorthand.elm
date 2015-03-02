@@ -1337,6 +1337,7 @@ inputText' p =
     , decoder     = targetValue
     }
     [ A.value p.value
+    , A.autocomplete p.autocomplete
     ]
 
 inputMaybeText' : InputMaybeTextParam -> Html
@@ -1352,6 +1353,7 @@ inputMaybeText' p =
     , decoder     = targetValueMaybe
     }
     [ A.value (Maybe.withDefault "" p.value)
+    , A.autocomplete p.autocomplete
     ]
 
 inputFloat' : InputFloatParam -> Html
