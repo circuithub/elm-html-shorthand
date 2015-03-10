@@ -118,6 +118,7 @@ type alias ObjectParam =
 
 type alias FormParam =
   { class       : ClassString
+  , novalidate  : Bool
   , update      : FormUpdate
   }
 

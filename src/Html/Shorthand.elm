@@ -1271,6 +1271,7 @@ form' p =
   let filter = List.filterMap identity
   in  form
       <| class' p.class
+      :: A.novalidate p.novalidate
       :: filter
           [ Maybe.map onSubmit p.update.onSubmit
           ]
