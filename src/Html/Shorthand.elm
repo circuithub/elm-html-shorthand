@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -399,6 +399,10 @@ type alias SelectParam = T.SelectParam
 {-| See [OptionParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#OptionParam)
 -}
 type alias OptionParam = T.OptionParam
+
+{-| See [OutputParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#OutputParam)
+-}
+type alias OutputParam = T.OutputParam
 
 {-| See [ProgressParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ProgressParam)
 -}
@@ -1593,15 +1597,10 @@ option' p = option [ A.stringProperty "label" p.label, A.value (toString p.value
 
 {-| [&lt;output&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) represents the result of a calculation.
 -}
-output' : IdString -> List IdString -> List Html -> Html
-output' name ids =
-  let name' = encodeId name
-  in output [A.id name', A.name name', A.for (String.join " " <| List.map encodeId ids)]
-
-outputc : ClassString -> IdString -> List IdString -> List Html -> Html
-outputc c name ids =
-  let name' = encodeId name
-  in output [class' c, A.id name', A.name name', A.for (String.join " " <| List.map encodeId ids)]
+output' : OutputParam -> List Html -> Html
+output' p =
+  let name' = encodeId p.name
+  in output [class' p.class, A.id name', A.name name', A.for (String.join " " <| List.map encodeId p.for)]
 
 {-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
 -}

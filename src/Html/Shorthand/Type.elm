@@ -9,7 +9,7 @@ you aren't already importing Html.Shorthand.
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate
 
 # Element parameters
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 -}
 
@@ -211,6 +211,12 @@ type alias OptionParam =
   { label       : String
   , value       : String
   , selected    : Bool
+  }
+
+type alias OutputParam =
+  { class       : ClassString
+  , name        : IdString
+  , for         : List IdString
   }
 
 type alias ProgressParam =
