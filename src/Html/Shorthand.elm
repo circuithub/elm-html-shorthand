@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, ProgressParam, MeterParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -399,6 +399,14 @@ type alias SelectParam = T.SelectParam
 {-| See [OptionParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#OptionParam)
 -}
 type alias OptionParam = T.OptionParam
+
+{-| See [ProgressParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ProgressParam)
+-}
+type alias ProgressParam = T.ProgressParam
+
+{-| See [MeterParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#MeterParam)
+-}
+type alias MeterParam = T.MeterParam
 
 -- ENCODERS
 
@@ -1597,24 +1605,26 @@ outputc c name ids =
 
 {-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
 -}
-progress' : number -> number -> String -> Html
-progress' value max t = progress [A.value (toString value), A.max (toString max)] [text t]
+progress' : ProgressParam -> String -> Html
+progress' p t = progress [A.value (toString p.value), A.max (toString p.max)] [text t]
 
-progressc : ClassString -> number -> number -> String -> Html
-progressc c value max t = progress [class' c, A.value (toString value), A.max (toString max)] [text t]
-
---{-| [&lt;meter&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter) represents a scalar measurement (or a fractional value), within a known range.
----}
--- TODO
---meter_ : List Html -> Html
---meter_ = meter []
-
---meter' :  -> List Html -> Html
---meter' = meter []
-
---meter' : ClassParam -> List Html -> Html
---meter' p = meter [class' p.class]
-
+{-| [&lt;meter&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter) represents a scalar measurement (or a fractional value), within a known range.
+-}
+meter' : MeterParam -> String -> Html
+meter' p t =
+  let filter = List.filterMap identity
+  in meter
+      (   [ A.value (toString p.value)
+          , A.min (toString min)
+          , A.max (toString p.max)
+          ]
+      ++ filter
+          [ Maybe.map (A.low << toString) p.low
+          , Maybe.map (A.high << toString) p.high
+          , Maybe.map (A.optimum << toString) p.optimum
+          ]
+      )
+      [text t]
 
 -- INTERACTIVE ELEMENTS
 

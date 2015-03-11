@@ -14,6 +14,6 @@
     "dependencies": {
         "elm-lang/core": "1.0.0 <= v < 2.0.0",
         "evancz/elm-html": "2.0.0 <= v < 3.0.0",
-        "circuithub/elm-html-extra": "1.1.0 <= v < 2.0.0"
+        "circuithub/elm-html-extra": "1.2.0 <= v < 2.0.0"
     }
 }

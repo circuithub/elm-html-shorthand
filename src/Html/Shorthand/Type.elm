@@ -6,10 +6,10 @@ you aren't already importing Html.Shorthand.
 @docs IdString, ClassString, UrlString, TextString
 
 # Event / handler types
-@docs EventDecodeError, FieldUpdate
+@docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate
 
 # Element parameters
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, ProgressParam, MeterParam
 
 -}
 
@@ -211,4 +211,20 @@ type alias OptionParam =
   { label       : String
   , value       : String
   , selected    : Bool
+  }
+
+type alias ProgressParam =
+  { class       : ClassString
+  , value       : Float
+  , max         : Float
+  }
+
+type alias MeterParam =
+  { class       : ClassString
+  , value       : Float
+  , min         : Float
+  , max         : Float
+  , low         : Maybe Float
+  , high        : Maybe Float
+  , optimum     : Maybe Float
   }
