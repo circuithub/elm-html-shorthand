@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -54,7 +54,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs ins_, ins', del_, del'
 
 # Embedded content
-@docs img', iframe', iframec, embed', object'
+@docs img', iframe', embed', object'
 @docs param', video', videoc, audio', audioc
 -- source'
 -- sourcec
@@ -347,6 +347,10 @@ type alias ModParam = T.ModParam
 {-| See [ImgParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ImgParam)
 -}
 type alias ImgParam = T.ImgParam
+
+{-| See [IframeParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#IframeParam)
+-}
+type alias IframeParam = T.IframeParam
 
 {-| See [EmbedParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#EmbedParam)
 -}
@@ -1068,11 +1072,24 @@ img' p = img [class' p.class, A.src p.src, A.width p.width, A.height p.height, A
 
 {-| [&lt;iframe&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) embedded an HTML document.
 -}
-iframe' : UrlString -> Int -> Int -> Html
-iframe' url w h = iframe [A.src url, A.width w, A.height h] []
-
-iframec : ClassString -> UrlString -> Int -> Int -> Html
-iframec c url w h = iframe [class' c, A.src url, A.width w, A.height h] []
+iframe' : IframeParam -> Html
+iframe' p =
+  let i'     = encodeId p.name
+      filter = List.filterMap identity
+  in iframe
+      (  [ class' p.class
+          , A.id i'
+          , A.name i'
+          , A.src p.src
+          , A.width p.width
+          , A.height p.height
+          , A.seamless p.seamless
+          ]
+      ++  filter
+          [ Maybe.map A.sandbox p.sandbox
+          ]
+      )
+      []
 
 {-| [&lt;embed&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/embed) represents a integration point for an external, often non-HTML,
 application or interactive content.
@@ -1599,8 +1616,8 @@ option' p = option [ A.stringProperty "label" p.label, A.value (toString p.value
 -}
 output' : OutputParam -> List Html -> Html
 output' p =
-  let name' = encodeId p.name
-  in output [class' p.class, A.id name', A.name name', A.for (String.join " " <| List.map encodeId p.for)]
+  let i' = encodeId p.name
+  in output [class' p.class, A.id i', A.name i', A.for (String.join " " <| List.map encodeId p.for)]
 
 {-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
 -}
