@@ -9,7 +9,7 @@ you aren't already importing Html.Shorthand.
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate
 
 # Element parameters
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 -}
 
@@ -38,6 +38,10 @@ type alias FieldUpdate a =
   { onInput         : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   , onEnter         : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   , onKeyboardLost  : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
+  }
+
+type alias ButtonUpdate =
+  { onClick        : Signal.Message
   }
 
 type alias SelectUpdate a =
@@ -211,6 +215,11 @@ type alias InputMaybeIntParam =
   , max             : Maybe Int
   , step            : Maybe Int
   , update          : FieldUpdate (Maybe Int)
+  }
+
+type alias ButtonParam =
+  { class           : ClassString
+  , update          : ButtonUpdate
   }
 
 type alias SelectParam =

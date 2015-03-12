@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -85,18 +85,15 @@ The following types are all aliases for `String` and as such, only serve documen
 -- radioc
 -- checkbox'
 -- checkboxc
-@docs button_, button', buttonc, buttonLink', buttonLinkc, buttonSubmit_, buttonSubmit', buttonSubmitc, buttonReset_, buttonReset', buttonResetc
--- select_
--- select'
--- selectc
+@docs button_, button', buttonLink_, buttonLink', buttonSubmit_, buttonSubmit', buttonReset_, buttonReset'
+@docs select'
 -- datalist_
 -- datalist'
 -- datalistc
 -- optgroup_
 -- optgroup'
 -- optgroupc
--- option_
--- option'
+@docs option_, option'
 -- optionc
 -- textarea_
 -- textarea'
@@ -395,6 +392,10 @@ type alias InputIntParam = T.InputIntParam
 {-| See [InputMaybeIntParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeIntParam)
 -}
 type alias InputMaybeIntParam = T.InputMaybeIntParam
+
+{-| See [ButtonParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ButtonParam)
+-}
+type alias ButtonParam = T.ButtonParam
 
 {-| See [SelectParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#SelectParam)
 -}
@@ -1511,36 +1512,47 @@ inputMaybeInt' p =
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
-button_ : List Html -> Html
-button_ = button [A.type' "button"]
+button_ : TextString -> Signal.Message -> Html
+button_ t click = button [A.type' "button", onClick click] [text t]
 
-button' : TextString -> Signal.Message -> Html
-button' t click = button [A.type' "button", onClick click] [text t]
-
-buttonc : ClassString -> TextString -> Signal.Message -> Html
-buttonc c t click = button [A.type' "button", class' c, onClick click] [text t]
+button' : ButtonParam -> List Html -> Html
+button' p =
+  button
+  [ class' p.class
+  , A.type' "button"
+  , onClick p.update.onClick
+  ]
 
 -- This is technically an anchor, but behaves more like a button
-buttonLink' : TextString -> Signal.Message -> Html
-buttonLink' t click = a [onClick click, A.href "#"] [text t]
+buttonLink_ : TextString -> Signal.Message -> Html
+buttonLink_ t click = button [A.type' "button", onClick click] [text t]
 
-buttonLinkc : ClassString -> TextString -> Signal.Message -> Html
-buttonLinkc c t click = a [class' c, onClick click, A.href "#"] [text t]
+buttonLink' : ButtonParam -> List Html -> Html
+buttonLink' p =
+  a
+  [ class' p.class
+  , A.href "#"
+  , onClick p.update.onClick
+  ]
 
-buttonSubmit_ : List Html -> Html
-buttonSubmit_ = button [A.type' "submit"]
+buttonSubmit_ : TextString -> Html
+buttonSubmit_ t = button [A.type' "submit"] [text t]
 
 buttonSubmit' : ClassParam -> List Html -> Html
-buttonSubmit' p = button [class' p.class, A.type' "submit"]
+buttonSubmit' p =
+  button
+  [ class' p.class
+  , A.type' "submit"
+  ]
 
-buttonReset_ : List Html -> Html
-buttonReset_ = button [A.type' "reset"]
+buttonReset_ : TextString -> Html
+buttonReset_ t = button [A.type' "reset"] [text t]
 
-buttonReset' : TextString -> Html
-buttonReset' t = button [A.type' "reset"] [text t]
-
-buttonResetc : ClassTextParam -> Html
-buttonResetc p = button [class' p.class, A.type' "reset"] [text p.text]
+buttonReset' : ClassParam -> List Html -> Html
+buttonReset' p = button
+  [ class' p.class
+  , A.type' "reset"
+  ]
 
 {-| [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.
 -}
