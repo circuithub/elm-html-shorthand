@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -317,21 +317,9 @@ type alias ClassParam = T.ClassParam
 -}
 type alias ClassIdParam = T.ClassIdParam
 
-{-| See [ClassTextParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ClassTextParam)
--}
-type alias ClassTextParam = T.ClassTextParam
-
-{-| See [ClassIdTextParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ClassIdTextParam)
--}
-type alias ClassIdTextParam = T.ClassIdTextParam
-
 {-| See [ClassCiteParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ClassCiteParam)
 -}
 type alias ClassCiteParam = T.ClassCiteParam
-
-{-| See [ClassCiteTextParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ClassCiteTextParam)
--}
-type alias ClassCiteTextParam = T.ClassCiteTextParam
 
 {-| See [AnchorParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#AnchorParam)
 -}
@@ -552,38 +540,38 @@ aside' p = aside [class' p.class, id' p.id]
 h1_ : TextString -> Html
 h1_ t = h1 [] [text t]
 
-h1' : ClassTextParam -> Html
-h1' p = h1 [class' p.class] [text p.text]
+h1' : ClassParam -> List Html -> Html
+h1' p = h1 [class' p.class]
 
 h2_ : TextString -> Html
 h2_ t = h2 [] [text t]
 
-h2' : ClassTextParam -> Html
-h2' p = h2 [class' p.class] [text p.text]
+h2' : ClassParam -> List Html -> Html
+h2' p = h2 [class' p.class]
 
 h3_ : TextString -> Html
 h3_ t = h3 [] [text t]
 
-h3' : ClassTextParam -> Html
-h3' p = h3 [class' p.class] [text p.text]
+h3' : ClassParam -> List Html -> Html
+h3' p = h3 [class' p.class]
 
 h4_ : TextString -> Html
 h4_ t = h4 [] [text t]
 
-h4' : ClassTextParam -> Html
-h4' p = h4 [class' p.class] [text p.text]
+h4' : ClassParam -> List Html -> Html
+h4' p = h4 [class' p.class]
 
 h5_ : TextString -> Html
 h5_ t = h5 [] [text t]
 
-h5' : ClassTextParam -> Html
-h5' p = h5 [class' p.class] [text p.text]
+h5' : ClassParam -> List Html -> Html
+h5' p = h5 [class' p.class]
 
 h6_ : TextString -> Html
 h6_ t = h6 [] [text t]
 
-h6' : ClassTextParam -> Html
-h6' p = h6 [class' p.class] [text p.text]
+h6' : ClassParam -> List Html -> Html
+h6' p = h6 [class' p.class]
 
 {-| [&lt;header&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header) defines the header of a page or section. It often contains a logo, the
 title of the web site, and a navigational table of content.
@@ -717,8 +705,8 @@ dl' p = dl [class' p.class]
 
 {-| [&lt;dt&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dt) represents a term defined by the next `dd`.
 -}
-dt' : ClassIdTextParam -> Html
-dt' p = dt [class' p.class, id' p.id] [text p.text]
+dt' : ClassIdParam -> List Html -> Html
+dt' p = dt [class' p.class, id' p.id]
 
 {-| [&lt;dd&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dd) represents the definition of the terms immediately listed before it.
 -}
@@ -780,16 +768,16 @@ a' p = a [class' p.class, A.href p.href]
 em_ : TextString -> Html
 em_ t = em [] [text t]
 
-em' : ClassTextParam -> Html
-em' p = em [class' p.class] [text p.text]
+em' : ClassParam -> List Html -> Html
+em' p = em [class' p.class]
 
 {-| [&lt;strong&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) represents especially important text.
 -}
 strong_ : TextString -> Html
 strong_ t = em [] [text t]
 
-strong' : ClassTextParam -> Html
-strong' p = strong [class' p.class] [text p.text]
+strong' : ClassParam -> List Html -> Html
+strong' p = strong [class' p.class]
 
 {-| [&lt;small&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small) represents a side comment , that is, text like a disclaimer or a
 copyright, which is not essential to the comprehension of the document.
@@ -804,8 +792,8 @@ copyright, which is not essential to the comprehension of the document.
 small_ : TextString -> Html
 small_ t = small [] [text t]
 
-small' : ClassTextParam -> Html
-small' p = small [class' p.class] [text p.text]
+small' : ClassParam -> List Html -> Html
+small' p = small [class' p.class]
 
 {-| [&lt;s&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s) represents content that is no longer accurate or relevant.
 
@@ -816,8 +804,8 @@ small' p = small [class' p.class] [text p.text]
 s_ : TextString -> Html
 s_ t = s [] [text t]
 
-s' : ClassTextParam -> Html
-s' p = s [class' p.class] [text p.text]
+s' : ClassParam -> List Html -> Html
+s' p = s [class' p.class]
 
 {-| [&lt;cite&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/cite) represents the title of a work.
 
@@ -838,8 +826,8 @@ The idiomatic form uses a cite url, but the elision is also provided.
 q_ : TextString -> Html
 q_ t = q [] [text t]
 
-q' : ClassCiteTextParam -> Html
-q' p = q [class' p.class, A.cite p.cite] [text p.text]
+q' : ClassCiteParam -> List Html -> Html
+q' p = q [class' p.class, A.cite p.cite]
 
 {-| [&lt;dfn&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn) represents a term whose definition is contained in its nearest ancestor
 content.
@@ -853,8 +841,8 @@ abbreviation can be represented in the title attribute.
 abbr_ : TextString -> Html
 abbr_ t = abbr [] [text t]
 
-abbr' : ClassTextParam -> Html
-abbr' p = abbr [class' p.class] [text p.text]
+abbr' : ClassParam -> List Html -> Html
+abbr' p = abbr [class' p.class]
 
 {-| [&lt;time&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time) represents a date and time value; the machine-readable equivalent can be
 represented in the datetime attribute.
@@ -882,8 +870,8 @@ parameter, or a mere placeholder in prose.
 var_ : TextString -> Html
 var_ t = var [] [text t]
 
-var' : ClassTextParam -> Html
-var' p = var [class' p.class] [text p.text]
+var' : ClassParam -> List Html -> Html
+var' p = var [class' p.class]
 
 {-| [&lt;samp&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp) represents the output of a program or a computer.
 -}
@@ -920,16 +908,16 @@ kbd' p = kbd [class' p.class]
 sub_ : TextString -> Html
 sub_ t = sub [] [text t]
 
-sub' : ClassTextParam -> Html
-sub' p = sub [class' p.class] [text p.text]
+sub' : ClassParam -> List Html -> Html
+sub' p = sub [class' p.class]
 
 {-| [&lt;sup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sup) represent a superscript.
 -}
 sup_ : TextString -> Html
 sup_ t = sup [] [text t]
 
-sup' : ClassTextParam -> Html
-sup' p = sup [class' p.class] [text p.text]
+sup' : ClassParam -> List Html -> Html
+sup' p = sup [class' p.class]
 
 {-| [&lt;i&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i) represents some text in an alternate voice or mood, or at least of
 different quality, such as a taxonomic designation, a technical term, an
@@ -938,8 +926,8 @@ idiomatic phrase, a thought, or a ship name.
 i_ : TextString -> Html
 i_ t = i [] [text t]
 
-i' : ClassTextParam -> Html
-i' p = i [class' p.class] [text p.text]
+i' : ClassParam -> List Html -> Html
+i' p = i [class' p.class]
 
 {-| [&lt;b&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b) represents a text which to which attention is drawn for utilitarian
 purposes. It doesn't convey extra importance and doesn't imply an alternate voice.
@@ -947,8 +935,8 @@ purposes. It doesn't convey extra importance and doesn't imply an alternate voic
 b_ : TextString -> Html
 b_ t = b [] [text t]
 
-b' : ClassTextParam -> Html
-b' p = b [class' p.class] [text p.text]
+b' : ClassParam -> List Html -> Html
+b' p = b [class' p.class]
 
 {-| [&lt;u&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/u) represents a non-textual annoatation for which the conventional
 presentation is underlining, such labeling the text as being misspelt or
@@ -957,8 +945,8 @@ labeling a proper name in Chinese text.
 u_ : TextString -> Html
 u_ t = u [] [text t]
 
-u' : ClassTextParam -> Html
-u' p = u [class' p.class] [text p.text]
+u' : ClassParam -> List Html -> Html
+u' p = u [class' p.class]
 
 {-| [&lt;mark&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/mark) represents text highlighted for reference purposes, that is for its
 relevance in another context.
@@ -985,8 +973,8 @@ ruby' p = ruby [class' p.class]
 rt_ : TextString -> Html
 rt_ t = rt [] [text t]
 
-rt' : ClassTextParam -> Html
-rt' p = rt [class' p.class] [text p.text]
+rt' : ClassParam -> List Html -> Html
+rt' p = rt [class' p.class]
 
 {-| [&lt;rp&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rp) represents parenthesis around a ruby annotation, used to display the
 annotation in an alternate way by browsers not supporting the standard display
@@ -995,8 +983,8 @@ for annotations.
 rp_ : TextString -> Html
 rp_ t = rp [] [text t]
 
-rp' : ClassTextParam -> Html
-rp' p = rp [class' p.class] [text p.text]
+rp' : ClassParam -> List Html -> Html
+rp' p = rp [class' p.class]
 
 {-| [&lt;bdi&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi) represents text that must be isolated from its surrounding for
 bidirectional text formatting. It allows embedding a span of text with a
@@ -1005,8 +993,8 @@ different, or unknown, directionality.
 bdi_ : TextString -> Html
 bdi_ t = bdi [] [text t]
 
-bdi' : ClassTextParam -> Html
-bdi' p = bdi [class' p.class] [text p.text]
+bdi' : ClassParam -> List Html -> Html
+bdi' p = bdi [class' p.class]
 
 {-| [&lt;bdo&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdo) represents the directionality of its children, in order to explicitly
 override the Unicode bidirectional algorithm.

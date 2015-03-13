@@ -9,7 +9,7 @@ you aren't already importing Html.Shorthand.
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate
 
 # Element parameters
-@docs ClassParam, ClassIdParam, ClassTextParam, ClassIdTextParam, ClassCiteParam, ClassCiteTextParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 -}
 
@@ -59,26 +59,9 @@ type alias ClassIdParam =
   , id              : IdString
   }
 
-type alias ClassTextParam =
-  { class           : ClassString
-  , text            : TextString
-  }
-
-type alias ClassIdTextParam =
-  { class           : ClassString
-  , id              : IdString
-  , text            : TextString
-  }
-
 type alias ClassCiteParam =
   { class           : ClassString
   , cite            : UrlString
-  }
-
-type alias ClassCiteTextParam =
-  { class           : ClassString
-  , cite            : UrlString
-  , text            : TextString
   }
 
 type alias AnchorParam =
