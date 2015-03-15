@@ -9,7 +9,7 @@ you aren't already importing Html.Shorthand.
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate
 
 # Element parameters
-@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, VideoParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 -}
 
@@ -115,6 +115,22 @@ type alias ObjectParam =
   , width           : Int
   }
 
+type alias VideoParam =
+  { class           : ClassString
+  , src         : Maybe UrlString
+  , width       : Int
+  , height      : Int
+  , autoplay    : Bool
+  -- , buffered : TimeRanges
+  , controls    : Bool
+  -- , crossorigin : Maybe String
+  , loop        : Bool
+  -- , muted       : Bool
+  -- , played   : TimeRanges
+  , preload     : Maybe String
+  , poster      : Maybe UrlString
+  }
+
 type alias FormParam =
   { class           : ClassString
   , novalidate      : Bool
@@ -124,6 +140,11 @@ type alias FormParam =
 type alias FieldsetParam =
   { class           : ClassString
   , disabled        : Bool
+  }
+
+type alias LabelParam =
+  { class           : ClassString
+  , for             : IdString
   }
 
 type alias InputFieldParam a =

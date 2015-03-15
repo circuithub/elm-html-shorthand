@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, VideoParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -57,26 +57,20 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs img', iframe', embed', object'
 @docs param', video', videoc, audio', audioc
 -- source'
--- sourcec
 -- track'
--- trackc
 @docs map_, area_
 -- svg_
 -- svg'
--- svgc
 -- math_
 -- math'
--- mathc
 
 # Tabular data
-@docs table_, tablec, caption_, captionc
+@docs table_, table', caption_, caption'
 -- colgroup_
 -- colgroup'
--- colgroupc
 -- col_
 -- col'
--- colc
-@docs tbody_, tbodyc, thead_, theadc, tfoot_, tfootc, tr_, trc, td_, td', tdc, th_, th', thc
+@docs tbody_, tbody', thead_, thead', tfoot_, tfoot', tr_, tr', td_, td', th_, th'
 
 # Forms
 @docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
@@ -345,6 +339,10 @@ type alias EmbedParam = T.EmbedParam
 -}
 type alias ObjectParam = T.ObjectParam
 
+{-| See [VideoParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#VideoParam)
+-}
+type alias VideoParam = T.VideoParam
+
 {-| See [FormParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormParam)
 -}
 type alias FormParam = T.FormParam
@@ -352,6 +350,10 @@ type alias FormParam = T.FormParam
 {-| See [FieldsetParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FieldsetParam)
 -}
 type alias FieldsetParam = T.FieldsetParam
+
+{-| See [LabelParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#LabelParam)
+-}
+type alias LabelParam = T.LabelParam
 
 {-| See [InputFieldParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFieldParam)
 -}
@@ -1110,11 +1112,28 @@ param' n v = param [A.name n, A.value v] []
 
 Doesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `video` for that.
 -}
-video' : UrlString -> Html
-video' url = video [A.src url] []
+video_ : UrlString -> Html
+video_ url = video [A.src url] []
 
-videoc : ClassString -> UrlString -> Html
-videoc c url = video [class' c, A.src url] []
+video' : VideoParam -> List Html -> Html
+video' p =
+  let filter = List.filterMap identity
+  in video
+      <|  [ class' p.class
+          , A.width p.width
+          , A.height p.height
+          , A.autoplay p.autoplay
+          , A.controls p.controls
+          , A.loop p.loop
+          -- , A.boolProperty "muted" p.muted
+          ]
+      ++ filter
+          [ Maybe.map A.src p.src
+          -- , Maybe.map (A.property "crossorigin") p.crossorigin
+          , Maybe.map (A.stringProperty "preload") p.preload
+          , Maybe.map A.poster p.poster
+          ]
+
 
 {-| [&lt;audio&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio) represents a sound or audio stream.
 
@@ -1307,19 +1326,19 @@ fieldset' p = fieldset [class' p.class, A.disabled p.disabled]
 legend_ : TextString -> Html
 legend_ t = legend [] [text t]
 
-legend' : ClassTextParam -> Html
-legend' p = legend [class' p.class] [text p.text]
+legend' : ClassParam -> List Html -> Html
+legend' p = legend [class' p.class]
 
 {-| [&lt;label&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) represents the caption of a form control.
 -}
-label_ : List Html -> Html
-label_ = label []
+label_ : IdString -> TextString -> Html
+label_ for t = label [A.for for] [text t]
 
-label' : IdString -> TextString -> Html
-label' for t = label [A.for for] [text t]
-
-labelc : ClassString -> IdString -> TextString -> Html
-labelc c for t = label [class' c, A.for for] [text t]
+label' : LabelParam -> List Html -> Html
+label' p = label
+  [ class' p.class
+  , A.for p.for
+  ]
 
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 -}
