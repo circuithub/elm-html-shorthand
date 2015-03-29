@@ -5,7 +5,7 @@ module Html.Shorthand where
 The following two conventions are used for shorthands. One example is provided for each.
 
 ## Elision form
-Most attributes of the node is elided, only one or two arguments needs to be supplied.
+Most attributes of the node are elided, only one or two arguments needs to be supplied.
 
 @docs div_
 
@@ -43,8 +43,8 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs figure', figcaption_, figcaption'
 @docs div_, div', a', em_, em', strong_, strong', small_, small', s_, s'
 @docs cite_, cite', q_, q', dfn', abbr_, abbr'
--- time_
--- time'
+* time_ (TODO)
+* time' (TODO)
 @docs code_, code', var_, var', samp_, samp', kbd_, kbd'
 @docs sub_, sub', sup_, sup', i_, i', b_, b', u_, u', mark_, mark'
 @docs ruby_, ruby', rt_, rt', rp_, rp', bdi_, bdi', bdo'
@@ -82,7 +82,10 @@ The following types are all aliases for `String` and as such, only serve documen
 * textarea' (TODO)
 * keygen_ (TODO)
 * keygen' (TODO)
-@docs outwing elements are not currently well supported and do not have shorthands:
+@docs output', progress', meter'
+
+# Interactive elements (Unsupported)
+The following elements are not currently well supported and do not have shorthands:
 
 * [&lt;details&gt;, &lt;summary&gt;](http://caniuse.com/#feat=details)
 * [&lt;menu&gt;, &lt;menuitem&gt;](http://caniuse.com/#feat=menu)
@@ -130,6 +133,8 @@ type TextDirection = LeftToRight | RightToLeft | AutoDirection
 
 * *onSubmit* - a submit action was triggered
 
+See also [FormUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormUpdate)
+
 -}
 type alias FormUpdate = T.FormUpdate
 
@@ -162,6 +167,8 @@ type alias FieldUpdate a = T.FieldUpdate a
 {-| Update configuration for a `select` element.
 
 * *onSelect* - the selected option has changed.
+
+See also [SelectUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#SelectUpdate)
 
 -}
 type alias SelectUpdate a = T.SelectUpdate a
