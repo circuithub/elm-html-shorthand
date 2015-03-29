@@ -19,11 +19,15 @@
     { class = ""
     , src = "http://elm-lang.org/logo.png"     -- * probably all images should have a src attribute
     , alt = "The Elm logo"                     -- * probably all images should have an alt attribute
+    , width  = 50                              -- * width and height helps the browser to predict the
+    , height = 50                              --   dimensions of unloaded media so that popping does not occur
     }
   Html.img                                     -- * normalizes to this
     [ Html.class ""
     , Html.src "http://elm-lang.org/logo.png"
     , Html.alt "The Elm logo"
+    , Html.width 50
+    , Html.height 50
     ]
 
   inputInt' ""                                 -- Some elements are a bit special:

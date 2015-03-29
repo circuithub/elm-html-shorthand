@@ -11,7 +11,7 @@ Most attributes of the node are elided, only one or two arguments needs to be su
 
 ## Idiomatic form
 
-This form attempts to take a common sense list of arguments. This is a more expansive shorthand which
+This form attempts to take a common sense record of parameters. This is a more expansive shorthand which
 will not satisfy every need, but takes care of the usual cases while still encouraging uniformity.
 
 @docs img'
@@ -54,7 +54,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs ins_, ins', del_, del'
 
 # Embedded content
-@docs img', iframe', embed', object'
+@docs img', img_, iframe', embed', object'
 @docs param', video_, video', audio_, audio'
 * source' (TODO)
 * track' (TODO)
@@ -1050,12 +1050,12 @@ del' p = del [class' p.class, A.cite p.cite, A.datetime p.datetime]
 -- EMBEDDED CONTENT
 
 {-| [&lt;img&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) represents an image.
-
-There is no `img_` function since it is expected that images will *always* have at least 'src' and 'alt' attributes.
-
 -}
 img' : ImgParam -> Html
 img' p = img [class' p.class, A.src p.src, A.width p.width, A.height p.height, A.alt p.alt] []
+
+img_ : Int -> Int -> UrlString -> String -> Html
+img_ w h s a = img [A.width w, A.height h, A.src s, A.alt a] []
 
 {-| [&lt;iframe&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) embedded an HTML document.
 -}
