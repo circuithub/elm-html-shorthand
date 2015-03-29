@@ -1,4 +1,6 @@
 module Html.Shorthand.Internal where
+{-| Internals for Html.Shorthand See [Html.Shorthand](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand)
+-}
 
 import Maybe
 import List

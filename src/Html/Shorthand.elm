@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, VideoParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -55,53 +55,34 @@ The following types are all aliases for `String` and as such, only serve documen
 
 # Embedded content
 @docs img', iframe', embed', object'
-@docs param', video', videoc, audio', audioc
--- source'
--- track'
+@docs param', video_, video', audio_, audio'
+* source' (TODO)
+* track' (TODO)
 @docs map_, area_
--- svg_
--- svg'
--- math_
--- math'
+* svg' (TODO)
+* math' (TODO)
 
 # Tabular data
 @docs table_, table', caption_, caption'
--- colgroup_
--- colgroup'
--- col_
--- col'
+* colgroup' (TODO)
+* col' (TODO)
 @docs tbody_, tbody', thead_, thead', tfoot_, tfoot', tr_, tr', td_, td', th_, th'
 
 # Forms
-@docs form_, form', formc, fieldset_, fieldsetc, legend', legendc, label_, label', labelc
+@docs form', fieldset_, fieldset, legend_, legend', label_, label'
 @docs inputField', inputText', inputMaybeText', inputFloat', inputMaybeFloat', inputInt', inputMaybeInt'
--- radio'
--- radioc
--- checkbox'
--- checkboxc
+* radio' (TODO)
+* checkbox' (TODO)
 @docs button_, button', buttonLink_, buttonLink', buttonSubmit_, buttonSubmit', buttonReset_, buttonReset'
 @docs select'
--- datalist_
--- datalist'
--- datalistc
--- optgroup_
--- optgroup'
--- optgroupc
+* datalist' (TODO)
+* optgroup' (TODO)
 @docs option_, option'
--- optionc
--- textarea_
--- textarea'
--- textareac
--- keygen_
--- keygen'
--- keygenc
-@docs output', outputc, progress', progressc
--- meter_
--- meter'
--- meterc
-
-# Interactive elements (Unsupported)
-The following elements are not currently well supported and do not have shorthands:
+* textarea_ (TODO)
+* textarea' (TODO)
+* keygen_ (TODO)
+* keygen' (TODO)
+@docs outwing elements are not currently well supported and do not have shorthands:
 
 * [&lt;details&gt;, &lt;summary&gt;](http://caniuse.com/#feat=details)
 * [&lt;menu&gt;, &lt;menuitem&gt;](http://caniuse.com/#feat=menu)
@@ -339,9 +320,17 @@ type alias EmbedParam = T.EmbedParam
 -}
 type alias ObjectParam = T.ObjectParam
 
+{-| See [MediaParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#MediaParam)
+-}
+type alias MediaParam = T.MediaParam
+
 {-| See [VideoParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#VideoParam)
 -}
 type alias VideoParam = T.VideoParam
+
+{-| See [AudioParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#AudioParam)
+-}
+type alias AudioParam = T.AudioParam
 
 {-| See [FormParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormParam)
 -}
@@ -1132,6 +1121,7 @@ video' p =
           -- , Maybe.map (A.property "crossorigin") p.crossorigin
           , Maybe.map (A.stringProperty "preload") p.preload
           , Maybe.map A.poster p.poster
+          , Maybe.map A.volume p.volume
           ]
 
 
@@ -1139,11 +1129,26 @@ video' p =
 
 Doesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `audio` for that.
 -}
-audio' : UrlString -> Html
-audio' url = audio [A.src url] []
+audio_ : UrlString -> Html
+audio_ url = audio [A.src url] []
 
-audioc : ClassString -> UrlString -> Html
-audioc c url = audio [class' c, A.src url] []
+audio' : AudioParam -> List Html -> Html
+audio' p =
+  let filter = List.filterMap identity
+  in audio
+      <|  [ class' p.class
+          , A.autoplay p.autoplay
+          , A.controls p.controls
+          , A.loop p.loop
+          -- , A.boolProperty "muted" p.muted
+          ]
+      ++ filter
+          [ Maybe.map A.src p.src
+          -- , Maybe.map (A.property "crossorigin") p.crossorigin
+          , Maybe.map (A.stringProperty "preload") p.preload
+          , Maybe.map A.poster p.poster
+          , Maybe.map A.volume p.volume
+          ]
 
 --{-| [&lt;source&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source) allows authors to specify alternative media resources for media elements
 --like `video` or `audio`.
@@ -1188,9 +1193,6 @@ area_ = area []
 --svg_ : List Html -> Html
 --svg_ = svg []
 
---svg' :  -> List Html -> Html
---svg' = svg []
-
 --svg' : ClassParam -> List Html -> Html
 --svg' p = svg [class' p.class]
 
@@ -1230,9 +1232,6 @@ caption' p = caption [class' p.class]
 -- TODO
 --colgroup_ : List Html -> Html
 --colgroup_ = colgroup []
-
---colgroup' :  -> List Html -> Html
---colgroup' = colgroup []
 
 --colgroup' : ClassParam -> List Html -> Html
 --colgroup' p = colgroup [class' p.class]
@@ -1341,6 +1340,8 @@ label' p = label
   ]
 
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
+
+In order to disable an input field, use `fieldset_ False`.
 -}
 inputField' : InputFieldParam a -> List Attribute -> Html
 inputField' p attrs =
@@ -1613,9 +1614,6 @@ option' p = option [ A.stringProperty "label" p.label, A.value (toString p.value
 --textarea_ : List Html -> Html
 --textarea_ = textarea []
 
---textarea' :  -> List Html -> Html
---textarea' = textarea []
-
 --textarea' : ClassParam -> List Html -> Html
 --textarea' p = textarea [class' p.class]
 
@@ -1624,9 +1622,6 @@ option' p = option [ A.stringProperty "label" p.label, A.value (toString p.value
 -- TODO
 --keygen_ : List Html -> Htm
 --keygen_ = keygen []
-
---keygen' :  -> List Html -> Html
---keygen' = keygen []
 
 --keygen' : ClassParam -> List Html -> Html
 --keygen' p = keygen [class' p.class]
