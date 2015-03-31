@@ -9,7 +9,7 @@ you aren't already importing Html.Shorthand.
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate
 
 # Element parameters
-@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 -}
 
@@ -236,6 +236,25 @@ type alias InputMaybeTextParam =
   , value                  : Maybe String
   , autocomplete           : Bool
   , update                 : FieldUpdate (Maybe String)
+  }
+
+type alias InputUrlParam =
+  { class                  : ClassString
+  , name                   : IdString
+  , placeholder            : Maybe String
+  , value                  : UrlString
+  , required               : Bool
+  , autocomplete           : Bool
+  , update                 : FieldUpdate UrlString
+  }
+
+type alias InputMaybeUrlParam =
+  { class                  : ClassString
+  , name                   : IdString
+  , placeholder            : Maybe String
+  , value                  : Maybe UrlString
+  , autocomplete           : Bool
+  , update                 : FieldUpdate (Maybe UrlString)
   }
 
 type alias InputFloatParam =

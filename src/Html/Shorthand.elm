@@ -25,7 +25,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -70,7 +70,7 @@ The following types are all aliases for `String` and as such, only serve documen
 
 # Forms
 @docs form', fieldset_, fieldset, legend_, legend', label_, label'
-@docs inputField', inputText', inputMaybeText', inputFloat', inputMaybeFloat', inputInt', inputMaybeInt'
+@docs inputField', inputText', inputMaybeText', inputFloat', inputMaybeFloat', inputInt', inputMaybeInt', inputUrl', inputMaybeUrl'
 * radio' (TODO)
 * checkbox' (TODO)
 @docs button_, button', buttonLink_, buttonLink', buttonSubmit_, buttonSubmit', buttonReset_, buttonReset'
@@ -378,6 +378,14 @@ type alias InputIntParam = T.InputIntParam
 {-| See [InputMaybeIntParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeIntParam)
 -}
 type alias InputMaybeIntParam = T.InputMaybeIntParam
+
+{-| See [InputUrlParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputUrlParam)
+-}
+type alias InputUrlParam = T.InputUrlParam
+
+{-| See [InputMaybeUrlParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeUrlParam)
+-}
+type alias InputMaybeUrlParam = T.InputMaybeUrlParam
 
 {-| See [ButtonParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ButtonParam)
 -}
@@ -1524,6 +1532,38 @@ inputMaybeInt' p =
           , Maybe.map (A.max << toString) p.max
           , Maybe.map (A.stringProperty "step" << toString) p.step
           ]
+
+inputUrl' : InputUrlParam -> Html
+inputUrl' p =
+  inputField'
+    { class       = p.class
+    , name        = p.name
+    , placeholder = p.placeholder
+    , update      = p.update
+    , type'       = "url"
+    , pattern     = Nothing
+    , required    = p.required
+    , decoder     = targetValue
+    }
+    [ A.value p.value
+    , A.autocomplete p.autocomplete
+    ]
+
+inputMaybeUrl' : InputMaybeUrlParam -> Html
+inputMaybeUrl' p =
+  inputField'
+    { class       = p.class
+    , name        = p.name
+    , placeholder = p.placeholder
+    , update      = p.update
+    , type'       = "url"
+    , pattern     = Nothing
+    , required    = False
+    , decoder     = targetValueMaybe
+    }
+    [ A.value (Maybe.withDefault "" p.value)
+    , A.autocomplete p.autocomplete
+    ]
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
