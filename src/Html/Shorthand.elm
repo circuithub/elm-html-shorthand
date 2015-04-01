@@ -133,6 +133,7 @@ type TextDirection = LeftToRight | RightToLeft | AutoDirection
 {-| Update configuration for a `form` element.
 
 * *onSubmit* - a submit action was triggered
+* *onEnter* - action to perform on enter key... see also [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513)
 
 See also [FormUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormUpdate)
 
@@ -1318,7 +1319,7 @@ th' p = th [class' p.class]
 {-| [&lt;form&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form) represents a form , consisting of controls, that can be submitted to a
 server for processing.
 
-In future Nothing may mask out the default submit on Enter key behaviour.
+In future `Nothing` may mask out the default submit on Enter key behaviour.
 See [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513) and [stackoverflow](http://stackoverflow.com/a/587575/167485).
 -}
 form' : FormParam -> List Html -> Html
