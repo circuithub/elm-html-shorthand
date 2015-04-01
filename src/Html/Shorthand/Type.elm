@@ -32,6 +32,7 @@ type alias EventDecodeError a =
 
 type alias FormUpdate =
   { onSubmit               : Maybe Signal.Message
+  , onEnter                : Maybe Signal.Message -- TODO: In future Nothing may mask out the default submit Enter key behaviour. See, https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513
   }
 
 type alias FieldUpdate a =

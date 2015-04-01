@@ -106,6 +106,7 @@ import Json.Decode as Json
 import Html.Shorthand.Type as T
 import Html.Shorthand.Internal as Internal
 import Html.Shorthand.Event (..)
+import Debug
 
 {-| Id parameters will automatically be encoded via `encodeId`
 -}
@@ -1316,15 +1317,31 @@ th' p = th [class' p.class]
 
 {-| [&lt;form&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form) represents a form , consisting of controls, that can be submitted to a
 server for processing.
+
+In future Nothing may mask out the default submit on Enter key behaviour.
+See [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513) and [stackoverflow](http://stackoverflow.com/a/587575/167485).
 -}
 form' : FormParam -> List Html -> Html
 form' p =
   let filter = List.filterMap identity
+      onEnter' msg = on "keypress"
+                      ( Json.customDecoder keyCode
+                        <| \c ->
+                            if c == 13
+                              then Ok ()
+                              else Err "expected key code 13"
+                      )
+                      (always msg)
   in  form
       <| class' p.class
       :: A.novalidate p.novalidate
+      -- TODO: mask enter key when no handler is given
+      -- See https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513
+      -- and http://stackoverflow.com/a/587575/167485
+      -- :: Maybe.withDefault maskEnter (Maybe.map onEnter' p.update.onEnter)
       :: filter
           [ Maybe.map onSubmit p.update.onSubmit
+          , Maybe.map onEnter' p.update.onSubmit
           ]
 
 {-| [&lt;fieldset&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset) represents a set of controls.
