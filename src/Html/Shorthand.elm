@@ -41,7 +41,7 @@ The following types are all aliases for `String` and as such, only serve documen
 # Grouping content
 @docs p_, p', pre_, pre', blockquote_, blockquote', ol_, ol', ul_, ul', li_, li', dl_, dl', dt', dd_, dd'
 @docs figure', figcaption_, figcaption'
-@docs div_, div', a', em_, em', strong_, strong', small_, small', s_, s'
+@docs div_, div', a_, a', em_, em', strong_, strong', small_, small', s_, s'
 @docs cite_, cite', q_, q', dfn', abbr_, abbr'
 * time_ (TODO)
 * time' (TODO)
@@ -767,6 +767,9 @@ div' p = div [class' p.class]
 --       </a>
 -- TODO: Also see https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types
 -- TODO: etc...
+
+a_ : UrlString -> TextString -> Html
+a_ href t = a [A.href href] [text t]
 
 a' : AnchorParam -> List Html -> Html
 a' p = a [class' p.class, A.href p.href]
