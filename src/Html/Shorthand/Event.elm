@@ -9,9 +9,9 @@ module Html.Shorthand.Event where
 
 -}
 
-import Html (Attribute)
-import Html.Events (..)
-import Html.Events.Extra (..)
+import Html exposing (Attribute)
+import Html.Events exposing (..)
+import Html.Events.Extra exposing (..)
 import Html.Shorthand.Type as T
 import Json.Decode as Json
 import Signal

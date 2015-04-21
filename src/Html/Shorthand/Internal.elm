@@ -6,10 +6,10 @@ import Maybe
 import List
 import Char
 import String
-import Html (..)
+import Html exposing (..)
 import Html.Attributes as A
-import Html.Shorthand.Type (..)
-import Html.Shorthand.Event (..)
+import Html.Shorthand.Type exposing (..)
+import Html.Shorthand.Event exposing (..)
 
 encodeId : IdString -> IdString
 encodeId =

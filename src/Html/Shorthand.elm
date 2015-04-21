@@ -92,11 +92,11 @@ The following elements are not currently well supported and do not have shorthan
 
 -}
 
-import Html (..)
+import Html exposing (..)
 import Html.Attributes as A
 import Html.Attributes.Extra as A
-import Html.Events (..)
-import Html.Events.Extra (..)
+import Html.Events exposing (..)
+import Html.Events.Extra exposing (..)
 import Signal
 import String
 import List
@@ -105,7 +105,7 @@ import Json.Decode as Json
 --import Graphics.Input.Field
 import Html.Shorthand.Type as T
 import Html.Shorthand.Internal as Internal
-import Html.Shorthand.Event (..)
+import Html.Shorthand.Event exposing (..)
 import Debug
 
 {-| Id parameters will automatically be encoded via `encodeId`
@@ -1344,7 +1344,7 @@ form' p =
       -- and http://stackoverflow.com/a/587575/167485
       -- :: Maybe.withDefault maskEnter (Maybe.map onEnter' p.update.onEnter)
       :: filter
-          [ Maybe.map onSubmit p.update.onSubmit
+          [ Maybe.map (on "submit" Json.value << always) p.update.onSubmit
           , Maybe.map onEnter' p.update.onSubmit
           ]
 
@@ -1588,27 +1588,27 @@ inputMaybeUrl' p =
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
-button_ : TextString -> Signal.Message -> Html
-button_ t click = button [A.type' "button", onClick click] [text t]
+button_ : TextString -> Signal.Address a -> a -> Html
+button_ t clickAddr click = button [A.type' "button", onClick clickAddr click] [text t]
 
 button' : ButtonParam -> List Html -> Html
 button' p =
   button
   [ class' p.class
   , A.type' "button"
-  , onClick p.update.onClick
+  , on "click" Json.value (always p.update.onClick)
   ]
 
 -- This is technically an anchor, but behaves more like a button
-buttonLink_ : TextString -> Signal.Message -> Html
-buttonLink_ t click = button [A.type' "button", onClick click] [text t]
+buttonLink_ : TextString -> Signal.Address a -> a -> Html
+buttonLink_ t clickAddr click = button [A.type' "button", onClick clickAddr click] [text t]
 
 buttonLink' : ButtonParam -> List Html -> Html
 buttonLink' p =
   a
   [ class' p.class
   , A.href "#"
-  , onClick p.update.onClick
+  , on "click" Json.value (always p.update.onClick)
   ]
 
 buttonSubmit_ : TextString -> Html
