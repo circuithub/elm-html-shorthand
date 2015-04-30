@@ -97,7 +97,7 @@ import Html.Attributes as A
 import Html.Attributes.Extra as A
 import Html.Events exposing (..)
 import Html.Events.Extra exposing (..)
-import Signal
+import Signal exposing (Address)
 import String
 import List
 import Maybe
@@ -1075,7 +1075,7 @@ img_ w h s a = img [A.width w, A.height h, A.src s, A.alt a] []
 iframe' : IframeParam -> Html
 iframe' p =
   let i'     = encodeId p.name
-      filter = List.filterMap identity
+      filterJust = List.filterMap identity
   in iframe
       (  [ class' p.class
           , A.id i'
@@ -1085,7 +1085,7 @@ iframe' p =
           , A.height p.height
           , A.seamless p.seamless
           ]
-      ++  filter
+      ++  filterJust
           [ Maybe.map A.sandbox p.sandbox
           ]
       )
@@ -1103,8 +1103,8 @@ sub-document, or an external resource to be processed by a plug-in.
 object' : ObjectParam -> List Html -> Html
 object' p =
   let i' = encodeId p.name
-      filter = List.filterMap identity
-      attrs = filter
+      filterJust = List.filterMap identity
+      attrs = filterJust
                 [ Maybe.map (A.usemap << String.cons '#' << encodeId) p.useMapName
                 ]
   in object
@@ -1126,7 +1126,7 @@ video_ url = video [A.src url] []
 
 video' : VideoParam -> List Html -> Html
 video' p =
-  let filter = List.filterMap identity
+  let filterJust = List.filterMap identity
   in video
       <|  [ class' p.class
           , A.width p.width
@@ -1136,7 +1136,7 @@ video' p =
           , A.loop p.loop
           -- , A.boolProperty "muted" p.muted
           ]
-      ++ filter
+      ++ filterJust
           [ Maybe.map A.src p.src
           -- , Maybe.map (A.property "crossorigin") p.crossorigin
           , Maybe.map (A.stringProperty "preload") p.preload
@@ -1154,7 +1154,7 @@ audio_ url = audio [A.src url] []
 
 audio' : AudioParam -> List Html -> Html
 audio' p =
-  let filter = List.filterMap identity
+  let filterJust = List.filterMap identity
   in audio
       <|  [ class' p.class
           , A.autoplay p.autoplay
@@ -1162,7 +1162,7 @@ audio' p =
           , A.loop p.loop
           -- , A.boolProperty "muted" p.muted
           ]
-      ++ filter
+      ++ filterJust
           [ Maybe.map A.src p.src
           -- , Maybe.map (A.property "crossorigin") p.crossorigin
           , Maybe.map (A.stringProperty "preload") p.preload
@@ -1327,7 +1327,7 @@ See [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual
 -}
 form' : FormParam -> List Html -> Html
 form' p =
-  let filter = List.filterMap identity
+  let filterJust = List.filterMap identity
       onEnter' msg = on "keypress"
                       ( Json.customDecoder keyCode
                         <| \c ->
@@ -1343,7 +1343,7 @@ form' p =
       -- See https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513
       -- and http://stackoverflow.com/a/587575/167485
       -- :: Maybe.withDefault maskEnter (Maybe.map onEnter' p.update.onEnter)
-      :: filter
+      :: filterJust
           [ Maybe.map (on "submit" Json.value << always) p.update.onSubmit
           , Maybe.map onEnter' p.update.onSubmit
           ]
@@ -1381,7 +1381,7 @@ In order to disable an input field, use `fieldset_ False`.
 -}
 inputField' : InputFieldParam a -> List Attribute -> Html
 inputField' p attrs =
-  let filter = List.filterMap identity
+  let filterJust = List.filterMap identity
       i' = encodeId p.name
       pattrs =
         [ A.type' p.type'
@@ -1389,7 +1389,7 @@ inputField' p attrs =
         , A.name i'
         , A.required p.required
         ]
-        ++ filter
+        ++ filterJust
             [ Maybe.map class' (if p.class == "" then Nothing else Just p.class)
             , Maybe.map (\onEvent -> onInput        (messageDecoder p.decoder onEvent) identity) p.update.onInput
             , Maybe.map (\onEvent -> onEnter        (messageDecoder p.decoder onEvent) identity) p.update.onEnter
@@ -1433,7 +1433,7 @@ inputMaybeText' p =
 
 inputFloat' : InputFloatParam -> Html
 inputFloat' p =
-  let filter       = List.filterMap identity
+  let filterJust       = List.filterMap identity
       --allowedChars =  '.'
       --                :: case p.min of
       --                      Nothing -> ['-']
@@ -1458,14 +1458,14 @@ inputFloat' p =
       <| A.valueAsFloat p.value
       --:: filterOnKeyPressChar (\c -> if (c >= '0' && c <= '9') || c `List.member` allowedChars then Just tmpMsg else Nothing)
       :: A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map toString p.step)
-      :: filter
+      :: filterJust
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
           ]
 
 inputMaybeFloat' : InputMaybeFloatParam -> Html
 inputMaybeFloat' p =
-  let filter = List.filterMap identity
+  let filterJust = List.filterMap identity
   in inputField'
       { class       = p.class
       , name        = p.name
@@ -1490,14 +1490,14 @@ inputMaybeFloat' p =
               Just v  -> A.valueAsFloat v
           )
       :: A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map toString p.step)
-      :: filter
+      :: filterJust
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
           ]
 
 inputInt' : InputIntParam -> Html
 inputInt' p =
-  let filter = List.filterMap identity
+  let filterJust = List.filterMap identity
   in inputField'
       { class       = p.class
       , name        = p.name
@@ -1516,7 +1516,7 @@ inputInt' p =
                 else Ok v
       }
       <| A.valueAsInt p.value
-      :: filter
+      :: filterJust
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
           , Maybe.map (A.stringProperty "step" << toString) p.step
@@ -1524,7 +1524,7 @@ inputInt' p =
 
 inputMaybeInt' : InputMaybeIntParam -> Html
 inputMaybeInt' p =
-  let filter = List.filterMap identity
+  let filterJust = List.filterMap identity
   in inputField'
       { class       = p.class
       , name        = p.name
@@ -1548,7 +1548,7 @@ inputMaybeInt' p =
               Nothing -> A.value ""
               Just v  -> A.valueAsInt v
           )
-      :: filter
+      :: filterJust
           [ Maybe.map (A.min << toString) p.min
           , Maybe.map (A.max << toString) p.max
           , Maybe.map (A.stringProperty "step" << toString) p.step
@@ -1588,7 +1588,7 @@ inputMaybeUrl' p =
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
-button_ : TextString -> Signal.Address a -> a -> Html
+button_ : TextString -> Address a -> a -> Html
 button_ t clickAddr click = button [A.type' "button", onClick clickAddr click] [text t]
 
 button' : ButtonParam -> List Html -> Html
@@ -1600,7 +1600,7 @@ button' p =
   ]
 
 -- This is technically an anchor, but behaves more like a button
-buttonLink_ : TextString -> Signal.Address a -> a -> Html
+buttonLink_ : TextString -> Address a -> a -> Html
 buttonLink_ t clickAddr click = button [A.type' "button", onClick clickAddr click] [text t]
 
 buttonLink' : ButtonParam -> List Html -> Html
@@ -1710,13 +1710,13 @@ progress' p t = progress [A.value (toString p.value), A.max (toString p.max)] [t
 -}
 meter' : MeterParam -> String -> Html
 meter' p t =
-  let filter = List.filterMap identity
+  let filterJust = List.filterMap identity
   in meter
       (   [ A.value (toString p.value)
           , A.min (toString min)
           , A.max (toString p.max)
           ]
-      ++ filter
+      ++ filterJust
           [ Maybe.map (A.low << toString) p.low
           , Maybe.map (A.high << toString) p.high
           , Maybe.map (A.optimum << toString) p.optimum
