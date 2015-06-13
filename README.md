@@ -4,7 +4,7 @@
 
 * A shorthand / elision form where arguments are supplied directly...
 
-  ```haskell
+  ```elm
   div_ [ text "contents" ]          -- Most elements simply take a list of children, eliding any attributes
   Html.div [] [ text "contents" ]   -- normalizes to this
 
@@ -14,7 +14,7 @@
 
 * An idiomatic form where...
 
-  ```haskell
+  ```elm
   img'                                         -- Takes a common sense list of arguments:
     { class = ""
     , src = "http://elm-lang.org/logo.png"     -- * probably all images should have a src attribute
@@ -64,7 +64,7 @@ Please note that this API is highly experimental and very likely to change! Use 
 
 Shorthand can help you deal with namespace pollution. Since the suffixed names used in `Html.Shorthand` are unlikely to clash with names in your application logic it may make sense to import `Html.Shorthand` unqualified, while using a qualified import for `Html`.
 
-```haskell
+```elm
 import Html                                      -- you can use your own short u, i, b, p variable names!
 import Html.Events as Html
 import Html.Attributes as Html
@@ -77,20 +77,20 @@ import Html (Html, text, toElement, fromElement) -- perhaps in future Html.Short
 
 Notice that the definition of `h2_` doesn't allow for an id string to be supplied to it.
 
-```haskell
+```elm
 h2_ : TextString -> Html
 ```
 
 How then do I target my headings in URLs, you ask? Well, this is a job better suited to `section'` and `article'`! Notice that these *do* take ids in both forms.
 
-```haskell
+```elm
 section_ : IdString -> List Html -> Html
 section' : { class : ClassString, id : IdString } -> List Html -> Html
 ```
 
 This encourages you to use &lt;`section id="..."`&gt; and &lt;`article id="..."`&gt; in order to add url-targetable ids to your page.
 
-```haskell
+```elm
 section_ "ch-5"
   [ h2_ "Chapter 5"
   ]
@@ -102,7 +102,7 @@ This adherence to the HTML 5 spec is a theme we've tried to encourage in both th
 
 It is actually very difficult to use html form inputs correctly, especially in a reactive setting with numeric and/or formatted input types.
 
-```haskell
+```elm
 inputMaybeFloat'
   { class       = ""
   , name        = "val"
