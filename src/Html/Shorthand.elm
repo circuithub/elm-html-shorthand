@@ -785,7 +785,7 @@ em' p = em [class' p.class]
 {-| [&lt;strong&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) represents especially important text.
 -}
 strong_ : TextString -> Html
-strong_ t = em [] [text t]
+strong_ t = strong [] [text t]
 
 strong' : ClassParam -> List Html -> Html
 strong' p = strong [class' p.class]
