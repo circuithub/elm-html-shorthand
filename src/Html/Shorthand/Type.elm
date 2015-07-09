@@ -6,7 +6,7 @@ you aren't already importing Html.Shorthand.
 @docs IdString, ClassString, UrlString, TextString
 
 # Event / handler types
-@docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate
+@docs EventDecodeError, FormUpdate, FieldUpdate, ButtonUpdate, SelectUpdate
 
 # Element parameters
 @docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
