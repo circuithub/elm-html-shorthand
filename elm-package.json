@@ -1,5 +1,5 @@
 {
-    "version": "8.0.0",
+    "version": "9.0.0",
     "summary": "An idiomatic shorthand for Html",
     "repository": "https://github.com/circuithub/elm-html-shorthand.git",
     "license": "MIT",
