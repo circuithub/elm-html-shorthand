@@ -22,10 +22,10 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs IdString, ClassString, UrlString, TextString, TextDirection
 
 # Event / handler types
-@docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
+@docs EventDecodeError, FormUpdate, FieldUpdate, CheckUpdate, ButtonUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
-@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, CheckboxParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 # Encoders
 @docs encodeId, encodeClass
@@ -72,7 +72,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs form', fieldset_, fieldset, legend_, legend', label_, label'
 @docs inputField', inputText', inputMaybeText', inputFloat', inputMaybeFloat', inputInt', inputMaybeInt', inputUrl', inputMaybeUrl'
 * radio' (TODO)
-* checkbox' (TODO)
+@docs checkbox'
 @docs button_, button', buttonLink_, buttonLink', buttonSubmit_, buttonSubmit', buttonReset_, buttonReset'
 @docs select'
 * datalist' (TODO)
@@ -388,6 +388,10 @@ type alias InputUrlParam = T.InputUrlParam
 {-| See [InputMaybeUrlParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeUrlParam)
 -}
 type alias InputMaybeUrlParam = T.InputMaybeUrlParam
+
+{-| See [CheckboxParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#CheckboxParam)
+-}
+type alias CheckboxParam a = T.CheckboxParam a
 
 {-| See [ButtonParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ButtonParam)
 -}
@@ -1585,6 +1589,9 @@ inputMaybeUrl' p =
     [ A.value (Maybe.withDefault "" p.value)
     , A.autocomplete p.autocomplete
     ]
+
+checkbox' : CheckboxParam a -> Html
+checkbox' = Debug.crash "TODO: Work in progress"
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
