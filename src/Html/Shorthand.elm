@@ -1590,8 +1590,8 @@ inputMaybeUrl' p =
     , A.autocomplete p.autocomplete
     ]
 
-checkbox' : CheckboxParam a -> Html
-checkbox' = Debug.crash "TODO: Work in progress"
+-- checkbox' : CheckboxParam a -> Html
+-- checkbox' = Debug.crash "TODO: Work in progress"
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
