@@ -97,7 +97,7 @@ import Html exposing (..)
 import Html.Attributes as A
 import Html.Attributes.Extra as A
 import Html.Events exposing (..)
-import Html.Events.Extra exposing (..)
+import Html.Events.Extra exposing (charCode,targetValueFloat,targetValueInt,targetValueMaybe,targetValueMaybeInt,targetValueMaybeFloat)
 import Signal exposing (Address)
 import String
 import List
