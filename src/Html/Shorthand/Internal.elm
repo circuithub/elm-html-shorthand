@@ -1,5 +1,7 @@
 module Html.Shorthand.Internal where
 {-| Internals for Html.Shorthand See [Html.Shorthand](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand)
+
+@docs encodeId, encodeClass, class', id'
 -}
 
 import Maybe
@@ -11,6 +13,7 @@ import Html.Attributes as A
 import Html.Shorthand.Type exposing (..)
 import Html.Shorthand.Event exposing (..)
 
+{-| -}
 encodeId : IdString -> IdString
 encodeId =
   let hu = ['-','_']
@@ -40,6 +43,7 @@ encodeId =
       >> String.join "-"
       >> startWithAlpha
 
+{-| -}
 encodeClass : ClassString -> ClassString
 encodeClass =
   let hu = ['-','_']
@@ -69,8 +73,10 @@ encodeClass =
         )
       >> String.join " "
 
+{-| -}
 id' : IdString -> Attribute
 id' = A.id << encodeId
 
+{-| -}
 class' : ClassString -> Attribute
 class' = A.class << encodeClass

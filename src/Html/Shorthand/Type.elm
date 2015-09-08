@@ -9,7 +9,7 @@ you aren't already importing Html.Shorthand.
 @docs EventDecodeError, FormUpdate, FieldUpdate, ButtonUpdate, SelectUpdate
 
 # Element parameters
-@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
+@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
 -}
 
@@ -18,64 +18,79 @@ import Json.Decode as Json
 
 -- COMMON TYPES
 
+{-| -}
 type alias IdString    = String
+{-| -}
 type alias ClassString = String
+{-| -}
 type alias UrlString   = String
+{-| -}
 type alias TextString  = String
 
 -- EVENT / HANDLER TYPES
 
+{-| -}
 type alias EventDecodeError a =
   { event                  : Json.Value
   , reason                 : String
   }
 
+{-| -}
 type alias FormUpdate =
   { onSubmit               : Maybe Signal.Message
   , onEnter                : Maybe Signal.Message -- TODO: In future Nothing may mask out the default submit Enter key behaviour. See, https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513
   }
 
+{-| -}
 type alias FieldUpdate a =
   { onInput                : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   , onEnter                : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   , onKeyboardLost         : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
   }
 
+{-| -}
 type alias ButtonUpdate =
   { onClick                : Signal.Message
   }
 
+{-| -}
 type alias SelectUpdate a =
   { onSelect               : a -> Signal.Message
   }
 
 -- ELEMENT PARAMETERS
 
+{-| -}
 type alias ClassParam =
   { class                  : ClassString
   }
 
+{-| -}
 type alias ClassIdParam =
   { class                  : ClassString
   , id                     : IdString
   }
 
+{-| -}
 type alias ClassCiteParam =
   { class                  : ClassString
   , cite                   : UrlString
   }
 
+{-| -}
 type alias AnchorParam =
   { class                  : ClassString
   , href                   : UrlString
   }
 
+{-| -}
 type alias ModParam =
   { class                  : ClassString
   , cite                   : String
   , datetime               : String
   }
 
+{-| -}
 type alias ImgParam =
   { class                  : ClassString
   , src                    : UrlString
@@ -84,6 +99,7 @@ type alias ImgParam =
   , alt                    : String
   }
 
+{-| -}
 type alias IframeParam =
   { class                  : ClassString
   , name                   : IdString
@@ -96,6 +112,7 @@ type alias IframeParam =
   -- , srcdoc              : String
   }
 
+{-| -}
 type alias EmbedParam =
   { class                  : ClassString
   , id                     : IdString
@@ -106,6 +123,7 @@ type alias EmbedParam =
   , width                  : Int
   }
 
+{-| -}
 type alias ObjectParam =
   { class                  : ClassString
   , name                   : IdString
@@ -116,6 +134,7 @@ type alias ObjectParam =
   , width                  : Int
   }
 
+{-| -}
 type alias MediaParam =
   { class                  : ClassString
   , src                    : Maybe UrlString
@@ -151,6 +170,7 @@ type alias MediaParam =
   , volume                 : Maybe Float
   }
 
+{-| -}
 type alias VideoParam =
   -- TODO                  : extend MediaParam
   { class                  : ClassString
@@ -191,24 +211,29 @@ type alias VideoParam =
   , volume                 : Maybe Float
   }
 
+{-| -}
 type alias AudioParam = MediaParam
 
+{-| -}
 type alias FormParam =
   { class                  : ClassString
   , novalidate             : Bool
   , update                 : FormUpdate
   }
 
+{-| -}
 type alias FieldsetParam =
   { class                  : ClassString
   , disabled               : Bool
   }
 
+{-| -}
 type alias LabelParam =
   { class                  : ClassString
   , for                    : IdString
   }
 
+{-| -}
 type alias InputFieldParam a =
   { class                  : ClassString
   , name                   : IdString
@@ -220,6 +245,7 @@ type alias InputFieldParam a =
   , decoder                : Json.Decoder a
   }
 
+{-| -}
 type alias InputTextParam =
   { class                  : ClassString
   , name                   : IdString
@@ -230,6 +256,7 @@ type alias InputTextParam =
   , update                 : FieldUpdate String
   }
 
+{-| -}
 type alias InputMaybeTextParam =
   { class                  : ClassString
   , name                   : IdString
@@ -239,6 +266,7 @@ type alias InputMaybeTextParam =
   , update                 : FieldUpdate (Maybe String)
   }
 
+{-| -}
 type alias InputUrlParam =
   { class                  : ClassString
   , name                   : IdString
@@ -249,6 +277,7 @@ type alias InputUrlParam =
   , update                 : FieldUpdate UrlString
   }
 
+{-| -}
 type alias InputMaybeUrlParam =
   { class                  : ClassString
   , name                   : IdString
@@ -258,6 +287,7 @@ type alias InputMaybeUrlParam =
   , update                 : FieldUpdate (Maybe UrlString)
   }
 
+{-| -}
 type alias InputFloatParam =
   { class                  : ClassString
   , name                   : IdString
@@ -269,6 +299,7 @@ type alias InputFloatParam =
   , update                 : FieldUpdate Float
   }
 
+{-| -}
 type alias InputMaybeFloatParam =
   { class                  : ClassString
   , name                   : IdString
@@ -280,6 +311,7 @@ type alias InputMaybeFloatParam =
   , update                 : FieldUpdate (Maybe Float)
   }
 
+{-| -}
 type alias InputIntParam =
   { class                  : ClassString
   , name                   : IdString
@@ -291,6 +323,7 @@ type alias InputIntParam =
   , update                 : FieldUpdate Int
   }
 
+{-| -}
 type alias InputMaybeIntParam =
   { class                  : ClassString
   , name                   : IdString
@@ -302,35 +335,41 @@ type alias InputMaybeIntParam =
   , update                 : FieldUpdate (Maybe Int)
   }
 
+{-| -}
 type alias ButtonParam =
   { class                  : ClassString
   , update                 : ButtonUpdate
   }
 
+{-| -}
 type alias SelectParam =
   { class                  : ClassString
   , name                   : IdString
   , update                 : SelectUpdate String
   }
 
+{-| -}
 type alias OptionParam =
   { label                  : String
   , value                  : String
   , selected               : Bool
   }
 
+{-| -}
 type alias OutputParam =
   { class                  : ClassString
   , name                   : IdString
   , for                    : List IdString
   }
 
+{-| -}
 type alias ProgressParam =
   { class                  : ClassString
   , value                  : Float
   , max                    : Float
   }
 
+{-| -}
 type alias MeterParam =
   { class                  : ClassString
   , value                  : Float

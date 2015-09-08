@@ -2,7 +2,7 @@ module Html.Shorthand.Event where
 {-| Shorthands for common Html events
 
 # Events
-@docs onInput, onEnter, onKeyboardLost, onMouseLost
+@docs onInput, onEnter, onChange, onKeyboardLost, onMouseLost
 
 # Special decoders
 @docs messageDecoder

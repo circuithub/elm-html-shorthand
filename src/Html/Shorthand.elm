@@ -49,6 +49,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs sub_, sub', sup_, sup', i_, i', b_, b', u_, u', mark_, mark'
 @docs ruby_, ruby', rt_, rt', rp_, rp', bdi_, bdi', bdo'
 @docs span_, span'
+@docs br', wbr'
 
 # Edits
 @docs ins_, ins', del_, del'
