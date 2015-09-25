@@ -1,6 +1,12 @@
 module Html.Shorthand where
 {-| Shorthands for common Html elements
 
+# Interactive elements (Unsupported)
+The following elements are not currently well supported and do not have shorthands:
+
+* [&lt;details&gt;, &lt;summary&gt;](http://caniuse.com/#feat=details)
+* [&lt;menu&gt;, &lt;menuitem&gt;](http://caniuse.com/#feat=menu)
+
 # Conventions
 The following two conventions are used for shorthands. One example is provided for each.
 
@@ -22,7 +28,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs IdString, ClassString, UrlString, TextString, TextDirection
 
 # Event / handler types
-@docs EventDecodeError, FormUpdate, FieldUpdate, ButtonUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
+@docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
 # Element types
 @docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
@@ -39,7 +45,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs address_, address', main_
 
 # Grouping content
-@docs p_, p', pre_, pre', blockquote_, blockquote', ol_, ol', ul_, ul', li_, li', dl_, dl', dt', dd_, dd'
+@docs p_, p', pre_, pre', blockquote_, blockquote', ol_, ol', ul_, ul', li_, li', dl_, dl', dt', dd_, dd', hr_
 @docs figure', figcaption_, figcaption'
 @docs div_, div', a_, a', em_, em', strong_, strong', small_, small', s_, s'
 @docs cite_, cite', q_, q', dfn', abbr_, abbr'
@@ -59,7 +65,6 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs param', video_, video', audio_, audio'
 * source' (TODO)
 * track' (TODO)
-@docs map_, area_
 * svg' (TODO)
 * math' (TODO)
 
@@ -70,7 +75,7 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs tbody_, tbody', thead_, thead', tfoot_, tfoot', tr_, tr', td_, td', th_, th'
 
 # Forms
-@docs form', fieldset_, fieldset, legend_, legend', label_, label'
+@docs form', fieldset_, fieldset', legend_, legend', label_, label'
 @docs inputField', inputText', inputMaybeText', inputFloat', inputMaybeFloat', inputInt', inputMaybeInt', inputUrl', inputMaybeUrl'
 * radio' (TODO)
 * checkbox' (TODO)
@@ -84,12 +89,6 @@ The following types are all aliases for `String` and as such, only serve documen
 * keygen_ (TODO)
 * keygen' (TODO)
 @docs output', progress', meter'
-
-# Interactive elements (Unsupported)
-The following elements are not currently well supported and do not have shorthands:
-
-* [&lt;details&gt;, &lt;summary&gt;](http://caniuse.com/#feat=details)
-* [&lt;menu&gt;, &lt;menuitem&gt;](http://caniuse.com/#feat=menu)
 
 -}
 
@@ -476,6 +475,7 @@ element in a document.
 body_ : List Html -> Html
 body_ = body []
 
+{-|-}
 body' : ClassParam -> List Html -> Html
 body' p = body [class' p.class]
 
@@ -492,6 +492,7 @@ body' p = body [class' p.class]
 section_ : IdString -> List Html -> Html
 section_ i = section [id' i]
 
+{-|-}
 section' : ClassIdParam -> List Html -> Html
 section' p = section [class' p.class, id' p.id]
 
@@ -507,6 +508,7 @@ section' p = section [class' p.class, id' p.id]
 nav_ : List Html -> Html
 nav_ = nav []
 
+{-|-}
 nav' : ClassParam -> List Html -> Html
 nav' p = nav [class' p.class]
 
@@ -524,6 +526,7 @@ of the content.
 article_ : IdString -> List Html -> Html
 article_ i = article [id' i]
 
+{-|-}
 article' : ClassIdParam -> List Html -> Html
 article' p = article [class' p.class, id' p.id]
 
@@ -549,36 +552,47 @@ aside' p = aside [class' p.class, id' p.id]
 h1_ : TextString -> Html
 h1_ t = h1 [] [text t]
 
+{-|-}
 h1' : ClassParam -> List Html -> Html
 h1' p = h1 [class' p.class]
 
+{-|-}
 h2_ : TextString -> Html
 h2_ t = h2 [] [text t]
 
+{-|-}
 h2' : ClassParam -> List Html -> Html
 h2' p = h2 [class' p.class]
 
+{-|-}
 h3_ : TextString -> Html
 h3_ t = h3 [] [text t]
 
+{-|-}
 h3' : ClassParam -> List Html -> Html
 h3' p = h3 [class' p.class]
 
+{-|-}
 h4_ : TextString -> Html
 h4_ t = h4 [] [text t]
 
+{-|-}
 h4' : ClassParam -> List Html -> Html
 h4' p = h4 [class' p.class]
 
+{-|-}
 h5_ : TextString -> Html
 h5_ t = h5 [] [text t]
 
+{-|-}
 h5' : ClassParam -> List Html -> Html
 h5' p = h5 [class' p.class]
 
+{-|-}
 h6_ : TextString -> Html
 h6_ t = h6 [] [text t]
 
+{-|-}
 h6' : ClassParam -> List Html -> Html
 h6' p = h6 [class' p.class]
 
@@ -592,6 +606,7 @@ title of the web site, and a navigational table of content.
 header_ : List Html -> Html
 header_ = header []
 
+{-|-}
 header' : ClassParam -> List Html -> Html
 header' p = header [class' p.class]
 
@@ -601,6 +616,7 @@ notice, some links to legal information, or addresses to give feedback.
 footer_ : List Html -> Html
 footer_ = footer []
 
+{-|-}
 footer' : ClassParam -> List Html -> Html
 footer' p = footer [class' p.class]
 
@@ -616,6 +632,7 @@ footer' p = footer [class' p.class]
 address_ : List Html -> Html
 address_ = address []
 
+{-|-}
 address' : ClassParam -> List Html -> Html
 address' p = address [class' p.class]
 
@@ -635,6 +652,7 @@ main_ = main' []
 p_ : List Html -> Html
 p_ = p []
 
+{-|-}
 p' : ClassParam -> List Html -> Html
 p' param = p [class' param.class]
 
@@ -659,6 +677,7 @@ preserved.
 pre_ : List Html -> Html
 pre_ = pre []
 
+{-|-}
 pre' : ClassParam -> List Html -> Html
 pre' p = pre [class' p.class]
 
@@ -673,6 +692,7 @@ The idiomatic form uses a cite url, but an elision form is also provided.
 blockquote_ : List Html -> Html
 blockquote_ = blockquote []
 
+{-|-}
 blockquote' : ClassCiteParam -> List Html -> Html
 blockquote' p = blockquote [class' p.class, A.cite p.cite]
 
@@ -682,6 +702,7 @@ blockquote' p = blockquote [class' p.class, A.cite p.cite]
 ol_ : List Html -> Html
 ol_ = ol []
 
+{-|-}
 ol' : ClassParam -> List Html -> Html
 ol' p = ol [class' p.class]
 
@@ -691,6 +712,7 @@ ol' p = ol [class' p.class]
 ul_ : List Html -> Html
 ul_ = ul []
 
+{-|-}
 ul' : ClassParam -> List Html -> Html
 ul' p = ul [class' p.class]
 
@@ -699,6 +721,7 @@ ul' p = ul [class' p.class]
 li_ : List Html -> Html
 li_ = li []
 
+{-|-}
 li' : ClassParam -> List Html -> Html
 li' p = li [class' p.class]
 
@@ -709,6 +732,7 @@ definitions.
 dl_ : List Html -> Html
 dl_ = dl []
 
+{-|-}
 dl' : ClassParam -> List Html -> Html
 dl' p = dl [class' p.class]
 
@@ -722,6 +746,7 @@ dt' p = dt [class' p.class, id' p.id]
 dd_ : List Html -> Html
 dd_ = dd []
 
+{-|-}
 dd' : ClassParam -> List Html -> Html
 dd' p = dd [class' p.class]
 
@@ -743,6 +768,7 @@ figure' p = figure [class' p.class, id' p.id]
 figcaption_ : List Html -> Html
 figcaption_ = figcaption []
 
+{-|-}
 figcaption' : ClassParam -> List Html -> Html
 figcaption' p = figcaption [class' p.class]
 
@@ -751,6 +777,7 @@ figcaption' p = figcaption [class' p.class]
 div_ : List Html -> Html
 div_ = div []
 
+{-|-}
 div' : ClassParam -> List Html -> Html
 div' p = div [class' p.class]
 
@@ -772,6 +799,7 @@ div' p = div [class' p.class]
 a_ : UrlString -> TextString -> Html
 a_ href t = a [A.href href] [text t]
 
+{-|-}
 a' : AnchorParam -> List Html -> Html
 a' p = a [class' p.class, A.href p.href]
 
@@ -780,6 +808,7 @@ a' p = a [class' p.class, A.href p.href]
 em_ : TextString -> Html
 em_ t = em [] [text t]
 
+{-|-}
 em' : ClassParam -> List Html -> Html
 em' p = em [class' p.class]
 
@@ -788,6 +817,7 @@ em' p = em [class' p.class]
 strong_ : TextString -> Html
 strong_ t = strong [] [text t]
 
+{-|-}
 strong' : ClassParam -> List Html -> Html
 strong' p = strong [class' p.class]
 
@@ -804,6 +834,7 @@ copyright, which is not essential to the comprehension of the document.
 small_ : TextString -> Html
 small_ t = small [] [text t]
 
+{-|-}
 small' : ClassParam -> List Html -> Html
 small' p = small [class' p.class]
 
@@ -816,6 +847,7 @@ small' p = small [class' p.class]
 s_ : TextString -> Html
 s_ t = s [] [text t]
 
+{-|-}
 s' : ClassParam -> List Html -> Html
 s' p = s [class' p.class]
 
@@ -828,6 +860,7 @@ s' p = s [class' p.class]
 cite_ : List Html -> Html
 cite_ = cite []
 
+{-|-}
 cite' : ClassParam -> List Html -> Html
 cite' p = cite [class' p.class]
 
@@ -838,6 +871,7 @@ The idiomatic form uses a cite url, but the elision is also provided.
 q_ : TextString -> Html
 q_ t = q [] [text t]
 
+{-|-}
 q' : ClassCiteParam -> List Html -> Html
 q' p = q [class' p.class, A.cite p.cite]
 
@@ -853,6 +887,7 @@ abbreviation can be represented in the title attribute.
 abbr_ : TextString -> Html
 abbr_ t = abbr [] [text t]
 
+{-|-}
 abbr' : ClassParam -> List Html -> Html
 abbr' p = abbr [class' p.class]
 
@@ -871,6 +906,7 @@ represented in the datetime attribute.
 code_ : List Html -> Html
 code_ = code []
 
+{-|-}
 code' : ClassParam -> List Html -> Html
 code' p = code [class' p.class]
 
@@ -882,6 +918,7 @@ parameter, or a mere placeholder in prose.
 var_ : TextString -> Html
 var_ t = var [] [text t]
 
+{-|-}
 var' : ClassParam -> List Html -> Html
 var' p = var [class' p.class]
 
@@ -890,6 +927,7 @@ var' p = var [class' p.class]
 samp_ : List Html -> Html
 samp_ = samp []
 
+{-|-}
 samp' : ClassParam -> List Html -> Html
 samp' p = samp [class' p.class]
 
@@ -912,6 +950,7 @@ may represent other input, like transcribed voice commands.
 kbd_ : List Html -> Html
 kbd_ = kbd []
 
+{-|-}
 kbd' : ClassParam -> List Html -> Html
 kbd' p = kbd [class' p.class]
 
@@ -920,6 +959,7 @@ kbd' p = kbd [class' p.class]
 sub_ : TextString -> Html
 sub_ t = sub [] [text t]
 
+{-|-}
 sub' : ClassParam -> List Html -> Html
 sub' p = sub [class' p.class]
 
@@ -928,6 +968,7 @@ sub' p = sub [class' p.class]
 sup_ : TextString -> Html
 sup_ t = sup [] [text t]
 
+{-|-}
 sup' : ClassParam -> List Html -> Html
 sup' p = sup [class' p.class]
 
@@ -938,6 +979,7 @@ idiomatic phrase, a thought, or a ship name.
 i_ : TextString -> Html
 i_ t = i [] [text t]
 
+{-|-}
 i' : ClassParam -> List Html -> Html
 i' p = i [class' p.class]
 
@@ -947,6 +989,7 @@ purposes. It doesn't convey extra importance and doesn't imply an alternate voic
 b_ : TextString -> Html
 b_ t = b [] [text t]
 
+{-|-}
 b' : ClassParam -> List Html -> Html
 b' p = b [class' p.class]
 
@@ -957,6 +1000,7 @@ labeling a proper name in Chinese text.
 u_ : TextString -> Html
 u_ t = u [] [text t]
 
+{-|-}
 u' : ClassParam -> List Html -> Html
 u' p = u [class' p.class]
 
@@ -966,6 +1010,7 @@ relevance in another context.
 mark_ : List Html -> Html
 mark_ = mark []
 
+{-|-}
 mark' : ClassParam -> List Html -> Html
 mark' p = mark [class' p.class]
 
@@ -977,6 +1022,7 @@ Japanese furigana.
 ruby_ : List Html -> Html
 ruby_ = ruby []
 
+{-|-}
 ruby' : ClassParam -> List Html -> Html
 ruby' p = ruby [class' p.class]
 
@@ -985,6 +1031,7 @@ ruby' p = ruby [class' p.class]
 rt_ : TextString -> Html
 rt_ t = rt [] [text t]
 
+{-|-}
 rt' : ClassParam -> List Html -> Html
 rt' p = rt [class' p.class]
 
@@ -995,6 +1042,7 @@ for annotations.
 rp_ : TextString -> Html
 rp_ t = rp [] [text t]
 
+{-|-}
 rp' : ClassParam -> List Html -> Html
 rp' p = rp [class' p.class]
 
@@ -1005,6 +1053,7 @@ different, or unknown, directionality.
 bdi_ : TextString -> Html
 bdi_ t = bdi [] [text t]
 
+{-|-}
 bdi' : ClassParam -> List Html -> Html
 bdi' p = bdi [class' p.class]
 
@@ -1027,6 +1076,7 @@ often brought by global attributes like class', lang, or dir.
 span_ : List Html -> Html
 span_ = span []
 
+{-|-}
 span' : ClassParam -> List Html -> Html
 span' p = span [class' p.class]
 
@@ -1049,6 +1099,7 @@ wbr' = wbr [] []
 ins_ : List Html -> Html
 ins_ = ins []
 
+{-|-}
 ins' : ModParam -> List Html -> Html
 ins' p = ins [class' p.class, A.cite p.cite, A.datetime p.datetime]
 
@@ -1057,6 +1108,7 @@ ins' p = ins [class' p.class, A.cite p.cite, A.datetime p.datetime]
 del_ : List Html -> Html
 del_ = del []
 
+{-|-}
 del' : ModParam -> List Html -> Html
 del' p = del [class' p.class, A.cite p.cite, A.datetime p.datetime]
 
@@ -1068,6 +1120,7 @@ del' p = del [class' p.class, A.cite p.cite, A.datetime p.datetime]
 img' : ImgParam -> Html
 img' p = img [class' p.class, A.src p.src, A.width p.width, A.height p.height, A.alt p.alt] []
 
+{-|-}
 img_ : Int -> Int -> UrlString -> String -> Html
 img_ w h s a = img [A.width w, A.height h, A.src s, A.alt a] []
 
@@ -1125,6 +1178,7 @@ Doesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `video` for that.
 video_ : UrlString -> Html
 video_ url = video [A.src url] []
 
+{-|-}
 video' : VideoParam -> List Html -> Html
 video' p =
   let filterJust = List.filterMap identity
@@ -1153,6 +1207,7 @@ Doesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `audio` for that.
 audio_ : UrlString -> Html
 audio_ url = audio [A.src url] []
 
+{-|-}
 audio' : AudioParam -> List Html -> Html
 audio' p =
   let filterJust = List.filterMap identity
@@ -1237,6 +1292,7 @@ area_ = area []
 table_ : List Html -> Html
 table_ = table []
 
+{-|-}
 table' : ClassParam -> List Html -> Html
 table' p = table [class' p.class]
 
@@ -1245,6 +1301,7 @@ table' p = table [class' p.class]
 caption_ : List Html -> Html
 caption_ = caption []
 
+{-|-}
 caption' : ClassParam -> List Html -> Html
 caption' p = caption [class' p.class]
 
@@ -1274,6 +1331,7 @@ caption' p = caption [class' p.class]
 tbody_ : List Html -> Html
 tbody_ = tbody []
 
+{-|-}
 tbody' : ClassParam -> List Html -> Html
 tbody' p = tbody [class' p.class]
 
@@ -1282,6 +1340,7 @@ tbody' p = tbody [class' p.class]
 thead_ : List Html -> Html
 thead_ = thead []
 
+{-|-}
 thead' : ClassParam -> List Html -> Html
 thead' p = thead [class' p.class]
 
@@ -1290,6 +1349,7 @@ thead' p = thead [class' p.class]
 tfoot_ : List Html -> Html
 tfoot_ = tfoot []
 
+{-|-}
 tfoot' : ClassParam -> List Html -> Html
 tfoot' p = tfoot [class' p.class]
 
@@ -1298,6 +1358,7 @@ tfoot' p = tfoot [class' p.class]
 tr_ : List Html -> Html
 tr_ = tr []
 
+{-|-}
 tr' : ClassParam -> List Html -> Html
 tr' p = tr [class' p.class]
 
@@ -1306,6 +1367,7 @@ tr' p = tr [class' p.class]
 td_ : List Html -> Html
 td_ = td []
 
+{-|-}
 td' : ClassParam -> List Html -> Html
 td' p = td [class' p.class]
 
@@ -1314,6 +1376,7 @@ td' p = td [class' p.class]
 th_ : List Html -> Html
 th_ = th []
 
+{-|-}
 th' : ClassParam -> List Html -> Html
 th' p = th [class' p.class]
 
@@ -1354,6 +1417,7 @@ form' p =
 fieldset_ : Bool -> List Html -> Html
 fieldset_ disabled = fieldset [A.disabled disabled]
 
+{-|-}
 fieldset' : FieldsetParam -> List Html -> Html
 fieldset' p = fieldset [class' p.class, A.disabled p.disabled]
 
@@ -1362,6 +1426,7 @@ fieldset' p = fieldset [class' p.class, A.disabled p.disabled]
 legend_ : TextString -> Html
 legend_ t = legend [] [text t]
 
+{-|-}
 legend' : ClassParam -> List Html -> Html
 legend' p = legend [class' p.class]
 
@@ -1370,6 +1435,7 @@ legend' p = legend [class' p.class]
 label_ : IdString -> TextString -> Html
 label_ for t = label [A.for for] [text t]
 
+{-|-}
 label' : LabelParam -> List Html -> Html
 label' p = label
   [ class' p.class
@@ -1400,6 +1466,7 @@ inputField' p attrs =
             ]
   in input (pattrs ++ attrs) []
 
+{-|-}
 inputText' : InputTextParam -> Html
 inputText' p =
   inputField'
@@ -1416,6 +1483,7 @@ inputText' p =
     , A.autocomplete p.autocomplete
     ]
 
+{-|-}
 inputMaybeText' : InputMaybeTextParam -> Html
 inputMaybeText' p =
   inputField'
@@ -1432,6 +1500,7 @@ inputMaybeText' p =
     , A.autocomplete p.autocomplete
     ]
 
+{-|-}
 inputFloat' : InputFloatParam -> Html
 inputFloat' p =
   let filterJust       = List.filterMap identity
@@ -1464,6 +1533,7 @@ inputFloat' p =
           , Maybe.map (A.max << toString) p.max
           ]
 
+{-|-}
 inputMaybeFloat' : InputMaybeFloatParam -> Html
 inputMaybeFloat' p =
   let filterJust = List.filterMap identity
@@ -1496,6 +1566,7 @@ inputMaybeFloat' p =
           , Maybe.map (A.max << toString) p.max
           ]
 
+{-|-}
 inputInt' : InputIntParam -> Html
 inputInt' p =
   let filterJust = List.filterMap identity
@@ -1523,6 +1594,7 @@ inputInt' p =
           , Maybe.map (A.stringProperty "step" << toString) p.step
           ]
 
+{-|-}
 inputMaybeInt' : InputMaybeIntParam -> Html
 inputMaybeInt' p =
   let filterJust = List.filterMap identity
@@ -1555,6 +1627,7 @@ inputMaybeInt' p =
           , Maybe.map (A.stringProperty "step" << toString) p.step
           ]
 
+{-|-}
 inputUrl' : InputUrlParam -> Html
 inputUrl' p =
   inputField'
@@ -1571,6 +1644,7 @@ inputUrl' p =
     , A.autocomplete p.autocomplete
     ]
 
+{-|-}
 inputMaybeUrl' : InputMaybeUrlParam -> Html
 inputMaybeUrl' p =
   inputField'
@@ -1592,6 +1666,7 @@ inputMaybeUrl' p =
 button_ : TextString -> Address a -> a -> Html
 button_ t clickAddr click = button [A.type' "button", onClick clickAddr click] [text t]
 
+{-|-}
 button' : ButtonParam -> List Html -> Html
 button' p =
   button
@@ -1601,9 +1676,11 @@ button' p =
   ]
 
 -- This is technically an anchor, but behaves more like a button
+{-|-}
 buttonLink_ : TextString -> Address a -> a -> Html
 buttonLink_ t clickAddr click = button [A.type' "button", onClick clickAddr click] [text t]
 
+{-|-}
 buttonLink' : ButtonParam -> List Html -> Html
 buttonLink' p =
   a
@@ -1612,9 +1689,11 @@ buttonLink' p =
   , on "click" Json.value (always p.update.onClick)
   ]
 
+{-|-}
 buttonSubmit_ : TextString -> Html
 buttonSubmit_ t = button [A.type' "submit"] [text t]
 
+{-|-}
 buttonSubmit' : ClassParam -> List Html -> Html
 buttonSubmit' p =
   button
@@ -1622,9 +1701,11 @@ buttonSubmit' p =
   , A.type' "submit"
   ]
 
+{-|-}
 buttonReset_ : TextString -> Html
 buttonReset_ t = button [A.type' "reset"] [text t]
 
+{-|-}
 buttonReset' : ClassParam -> List Html -> Html
 buttonReset' p = button
   [ class' p.class
@@ -1674,6 +1755,7 @@ select' p =
 option_ : TextString -> Bool -> Html
 option_ val sel = option [ A.selected sel ] [ text val ]
 
+{-|-}
 option' : OptionParam -> Html
 option' p = option [ A.stringProperty "label" p.label, A.value (toString p.value), A.selected p.selected ] []
 
