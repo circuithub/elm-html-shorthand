@@ -30,7 +30,7 @@ type alias TextString  = String
 -- EVENT / HANDLER TYPES
 
 {-| -}
-type alias EventDecodeError a =
+type alias EventDecodeError =
   { event                  : Json.Value
   , reason                 : String
   }
@@ -43,9 +43,9 @@ type alias FormUpdate =
 
 {-| -}
 type alias FieldUpdate a =
-  { onInput                : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
-  , onEnter                : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
-  , onKeyboardLost         : Maybe (Result (EventDecodeError a) a -> Maybe Signal.Message)
+  { onInput                : Maybe (Result EventDecodeError a -> Maybe Signal.Message)
+  , onEnter                : Maybe (Result EventDecodeError a -> Maybe Signal.Message)
+  , onKeyboardLost         : Maybe (Result EventDecodeError a -> Maybe Signal.Message)
   }
 
 {-| -}
