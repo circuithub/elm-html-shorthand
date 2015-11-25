@@ -148,7 +148,7 @@ This gives the user an opportunity to specify a fallback behaviour or simply ign
 See also [EventDecodeError](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#EventDecodeError)
 
 -}
-type EventDecodeError = T.EventDecodeError
+type alias EventDecodeError = T.EventDecodeError
 
 {-| Update configuration for `input` fields.
 
