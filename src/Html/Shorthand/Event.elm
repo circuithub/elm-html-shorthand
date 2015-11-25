@@ -11,7 +11,6 @@ module Html.Shorthand.Event where
 
 import Html exposing (Attribute)
 import Html.Events exposing (..)
-import Html.Events.Extra exposing (..)
 import Html.Shorthand.Type as T
 import Json.Decode as Json
 import Signal
@@ -96,7 +95,7 @@ It may not be desirable to split channels if the signals derived from these chan
                     ++ "(" ++ e.reason ++ ")."
 
 -}
-messageDecoder : Json.Decoder a -> (Result (T.EventDecodeError a) a -> Maybe Signal.Message) -> Json.Decoder Signal.Message
+messageDecoder : Json.Decoder a -> (Result T.EventDecodeError a -> Maybe Signal.Message) -> Json.Decoder Signal.Message
 messageDecoder dec f =
   Json.customDecoder Json.value <| \event ->
     let r  = Json.decodeValue dec event

@@ -106,7 +106,6 @@ import Json.Decode as Json
 import Html.Shorthand.Type as T
 import Html.Shorthand.Internal as Internal
 import Html.Shorthand.Event exposing (..)
-import Debug
 
 {-| Id parameters will automatically be encoded via `encodeId`
 -}
@@ -149,7 +148,7 @@ This gives the user an opportunity to specify a fallback behaviour or simply ign
 See also [EventDecodeError](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#EventDecodeError)
 
 -}
-type alias EventDecodeError a = T.EventDecodeError a
+type EventDecodeError = T.EventDecodeError
 
 {-| Update configuration for `input` fields.
 
@@ -199,7 +198,7 @@ fieldUpdateContinuous handler =
                   Ok x  -> Just (handler.onInput x)
                   Err _ -> Nothing
   in  { fieldUpdate
-      | onInput <- Just doOk
+      | onInput = Just doOk
       }
 
 {-| Use with fields that should consolidate their value when the focus moved.
@@ -212,8 +211,8 @@ fieldUpdateFocusLost handler =
                   Ok x  -> Just (handler.onInput x)
                   Err _ -> Nothing
   in  { fieldUpdate
-      | onEnter <- Just doOk
-      , onKeyboardLost <- Just doOk
+      | onEnter = Just doOk
+      , onKeyboardLost = Just doOk
       }
 
 {-| Continuously update the field, handling invalid states only when the focus is lost.
@@ -290,7 +289,7 @@ fieldUpdateFallbackContinuous handler =
                         Ok s -> Just (handler.onFallback s)
                         Err s -> Nothing
   in  { fieldUpdate
-      | onInput <- Just doOkErr
+      | onInput = Just doOkErr
       }
 
 {-| See [ClassParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ClassParam)
