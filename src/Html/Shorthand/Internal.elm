@@ -1,4 +1,4 @@
-module Html.Shorthand.Internal where
+module Html.Shorthand.Internal exposing (..)
 {-| Internals for Html.Shorthand See [Html.Shorthand](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand)
 
 @docs encodeId, encodeClass, class', id'
@@ -74,9 +74,9 @@ encodeClass =
       >> String.join " "
 
 {-| -}
-id' : IdString -> Attribute
+id' : IdString -> Attribute msg
 id' = A.id << encodeId
 
 {-| -}
-class' : ClassString -> Attribute
+class' : ClassString -> Attribute msg
 class' = A.class << encodeClass

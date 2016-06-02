@@ -1,4 +1,4 @@
-module Html.Shorthand where
+module Html.Shorthand exposing (..)
 {-| Shorthands for common Html elements
 
 # Interactive elements (Unsupported)
@@ -97,7 +97,6 @@ import Html.Attributes as A
 import Html.Attributes.Extra as A
 import Html.Events exposing (..)
 import Html.Events.Extra exposing (charCode,targetValueFloat,targetValueInt,targetValueMaybe,targetValueMaybeInt,targetValueMaybeFloat)
-import Signal exposing (Address)
 import String
 import List
 import Maybe
@@ -137,7 +136,7 @@ type TextDirection = LeftToRight | RightToLeft | AutoDirection
 See also [FormUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormUpdate)
 
 -}
-type alias FormUpdate = T.FormUpdate
+type alias FormUpdate msg = T.FormUpdate msg
 
 {-| A field error is generated when an input fails to parse its input string during an attempt to produce the output value.
 This gives the user an opportunity to specify a fallback behaviour or simply ignore the error, leaving the input in an intermediate state.
@@ -163,7 +162,7 @@ In the future, if this can be made efficient, this may also support:
 See also [FieldUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FieldUpdate)
 
 -}
-type alias FieldUpdate a = T.FieldUpdate a
+type alias FieldUpdate a msg = T.FieldUpdate a msg
 
 {-| Update configuration for a `select` element.
 
@@ -172,7 +171,7 @@ type alias FieldUpdate a = T.FieldUpdate a
 See also [SelectUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#SelectUpdate)
 
 -}
-type alias SelectUpdate a = T.SelectUpdate a
+type alias SelectUpdate a msg = T.SelectUpdate a msg
 
 {-| Default field update handlers. Use this to select only one or two handlers.
 
@@ -181,7 +180,7 @@ type alias SelectUpdate a = T.SelectUpdate a
     }
 
 -}
-fieldUpdate : FieldUpdate a
+fieldUpdate : FieldUpdate a msg
 fieldUpdate =
   { onInput        = Nothing
   , onEnter        = Nothing
@@ -190,9 +189,9 @@ fieldUpdate =
 
 {-| Good configuration for continuously updating fields that don't have any invalid states, or are restricted by a pattern.
 -}
-fieldUpdateContinuous : { onInput : a -> Signal.Message
+fieldUpdateContinuous : { onInput : a -> msg
                         }
-                      -> FieldUpdate a
+                      -> FieldUpdate a msg
 fieldUpdateContinuous handler =
   let doOk r =  case r of
                   Ok x  -> Just (handler.onInput x)
@@ -203,9 +202,9 @@ fieldUpdateContinuous handler =
 
 {-| Use with fields that should consolidate their value when the focus moved.
 -}
-fieldUpdateFocusLost : { onInput : a -> Signal.Message
+fieldUpdateFocusLost : { onInput : a -> msg
                        }
-                      -> FieldUpdate a
+                      -> FieldUpdate a msg
 fieldUpdateFocusLost handler =
   let doOk r =  case r of
                   Ok x  -> Just (handler.onInput x)
@@ -241,10 +240,10 @@ Note that this configuration does not work well with `inputFloat'`/`inputMaybeFl
 the strange way that browsers treat numeric inputs. This update method can be used to implement custom field types however.
 
 -}
-fieldUpdateFallbackFocusLost  : { onFallback : String -> Signal.Message
-                                , onInput    : a -> Signal.Message
+fieldUpdateFallbackFocusLost  : { onFallback : String -> msg
+                                , onInput    : a -> msg
                                 }
-                          -> FieldUpdate a
+                          -> FieldUpdate a msg
 fieldUpdateFallbackFocusLost handler =
   let doOk r =  case r of
                   Ok x  -> Just (handler.onInput x)
@@ -277,10 +276,10 @@ Note that this configuration does not work well with `inputFloat'`/`inputMaybeFl
 the strange way that browsers treat numeric inputs. This update method can be used to implement custom field types however.
 
 -}
-fieldUpdateFallbackContinuous : { onFallback : String -> Signal.Message
-                                , onInput    : a -> Signal.Message
+fieldUpdateFallbackContinuous : { onFallback : String -> msg
+                                , onInput    : a -> msg
                                 }
-                              -> FieldUpdate a
+                              -> FieldUpdate a msg
 fieldUpdateFallbackContinuous handler =
   let doOkErr r = case r of
                     Ok x  -> Just (handler.onInput x)
@@ -342,7 +341,7 @@ type alias AudioParam = T.AudioParam
 
 {-| See [FormParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormParam)
 -}
-type alias FormParam = T.FormParam
+type alias FormParam msg = T.FormParam msg
 
 {-| See [FieldsetParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FieldsetParam)
 -}
@@ -354,47 +353,47 @@ type alias LabelParam = T.LabelParam
 
 {-| See [InputFieldParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFieldParam)
 -}
-type alias InputFieldParam a = T.InputFieldParam a
+type alias InputFieldParam a msg = T.InputFieldParam a msg
 
 {-| See [InputTextParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputTextParam)
 -}
-type alias InputTextParam = T.InputTextParam
+type alias InputTextParam msg = T.InputTextParam msg
 
 {-| See [InputMaybeTextParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeTextParam)
 -}
-type alias InputMaybeTextParam = T.InputMaybeTextParam
+type alias InputMaybeTextParam msg = T.InputMaybeTextParam msg
 
 {-| See [InputFloatParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFloatParam)
 -}
-type alias InputFloatParam = T.InputFloatParam
+type alias InputFloatParam msg = T.InputFloatParam msg
 
 {-| See [InputMaybeFloatParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeFloatParam)
 -}
-type alias InputMaybeFloatParam = T.InputMaybeFloatParam
+type alias InputMaybeFloatParam msg = T.InputMaybeFloatParam msg
 
 {-| See [InputIntParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputIntParam)
 -}
-type alias InputIntParam = T.InputIntParam
+type alias InputIntParam msg = T.InputIntParam msg
 
 {-| See [InputMaybeIntParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeIntParam)
 -}
-type alias InputMaybeIntParam = T.InputMaybeIntParam
+type alias InputMaybeIntParam msg = T.InputMaybeIntParam msg
 
 {-| See [InputUrlParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputUrlParam)
 -}
-type alias InputUrlParam = T.InputUrlParam
+type alias InputUrlParam msg = T.InputUrlParam msg
 
 {-| See [InputMaybeUrlParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeUrlParam)
 -}
-type alias InputMaybeUrlParam = T.InputMaybeUrlParam
+type alias InputMaybeUrlParam msg = T.InputMaybeUrlParam msg
 
 {-| See [ButtonParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ButtonParam)
 -}
-type alias ButtonParam = T.ButtonParam
+type alias ButtonParam msg = T.ButtonParam msg
 
 {-| See [SelectParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#SelectParam)
 -}
-type alias SelectParam = T.SelectParam
+type alias SelectParam msg = T.SelectParam msg
 
 {-| See [OptionParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#OptionParam)
 -}
@@ -458,12 +457,12 @@ encodeClass = Internal.encodeClass
 
 {-| Encoded id attribute. Uses `encodeId` to ensure that the id is nicely normalized.
 -}
-id' : IdString -> Attribute
+id' : IdString -> Attribute msg
 id' = Internal.id'
 
 {-| Encoded class attribute. Uses `encodeClass` to ensure that the classes are nicely normalized.
 -}
-class' : ClassString -> Attribute
+class' : ClassString -> Attribute msg
 class' = Internal.class'
 
 -- SECTIONS
@@ -471,11 +470,11 @@ class' = Internal.class'
 {-| [&lt;body&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/body) represents the content of an HTML document. There is only one `body`
 element in a document.
 -}
-body_ : List Html -> Html
+body_ : List (Html msg) -> Html msg
 body_ = body []
 
 {-|-}
-body' : ClassParam -> List Html -> Html
+body' : ClassParam -> List (Html msg) -> Html msg
 body' p = body [class' p.class]
 
 {-| [&lt;section&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/section) defines a section in a document. Use sections to construct a document outline.
@@ -488,11 +487,11 @@ body' p = body [class' p.class]
 * [use &lt;section&gt; as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)
 
 -}
-section_ : IdString -> List Html -> Html
+section_ : IdString -> List (Html msg) -> Html msg
 section_ i = section [id' i]
 
 {-|-}
-section' : ClassIdParam -> List Html -> Html
+section' : ClassIdParam -> List (Html msg) -> Html msg
 section' p = section [class' p.class, id' p.id]
 
 {-| [&lt;nav&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav) defines a section that contains only navigation links.
@@ -504,11 +503,11 @@ section' p = section [class' p.class, id' p.id]
 * [wrap all lists of links in &lt;nav&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
 
 -}
-nav_ : List Html -> Html
+nav_ : List (Html msg) -> Html msg
 nav_ = nav []
 
 {-|-}
-nav' : ClassParam -> List Html -> Html
+nav' : ClassParam -> List (Html msg) -> Html msg
 nav' p = nav [class' p.class]
 
 {-| [&lt;article&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/article) defines self-contained content that could exist independently of the rest
@@ -522,17 +521,17 @@ of the content.
 * [confuse &lt;article&gt; with &lt;section&gt; which need not be self-contained](http://www.brucelawson.co.uk/2010/html5-articles-and-sections-whats-the-difference/)
 
 -}
-article_ : IdString -> List Html -> Html
+article_ : IdString -> List (Html msg) -> Html msg
 article_ i = article [id' i]
 
 {-|-}
-article' : ClassIdParam -> List Html -> Html
+article' : ClassIdParam -> List (Html msg) -> Html msg
 article' p = article [class' p.class, id' p.id]
 
 {-| [&lt;aside&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/aside) defines some content loosely related to the page content. If it is removed,
 the remaining content still makes sense.
 -}
-aside' : ClassIdParam -> List Html -> Html
+aside' : ClassIdParam -> List (Html msg) -> Html msg
 aside' p = aside [class' p.class, id' p.id]
 
 {-| [&lt;h*n*&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) provide titles for sections and subsections, describing the topic it introduces.
@@ -548,51 +547,51 @@ aside' p = aside [class' p.class, id' p.id]
 * [use &lt;h*n*&gt; for subtitles, subheadings](http://html5doctor.com/howto-subheadings/)
 
 -}
-h1_ : TextString -> Html
+h1_ : TextString -> Html msg
 h1_ t = h1 [] [text t]
 
 {-|-}
-h1' : ClassParam -> List Html -> Html
+h1' : ClassParam -> List (Html msg) -> Html msg
 h1' p = h1 [class' p.class]
 
 {-|-}
-h2_ : TextString -> Html
+h2_ : TextString -> Html msg
 h2_ t = h2 [] [text t]
 
 {-|-}
-h2' : ClassParam -> List Html -> Html
+h2' : ClassParam -> List (Html msg) -> Html msg
 h2' p = h2 [class' p.class]
 
 {-|-}
-h3_ : TextString -> Html
+h3_ : TextString -> Html msg
 h3_ t = h3 [] [text t]
 
 {-|-}
-h3' : ClassParam -> List Html -> Html
+h3' : ClassParam -> List (Html msg) -> Html msg
 h3' p = h3 [class' p.class]
 
 {-|-}
-h4_ : TextString -> Html
+h4_ : TextString -> Html msg
 h4_ t = h4 [] [text t]
 
 {-|-}
-h4' : ClassParam -> List Html -> Html
+h4' : ClassParam -> List (Html msg) -> Html msg
 h4' p = h4 [class' p.class]
 
 {-|-}
-h5_ : TextString -> Html
+h5_ : TextString -> Html msg
 h5_ t = h5 [] [text t]
 
 {-|-}
-h5' : ClassParam -> List Html -> Html
+h5' : ClassParam -> List (Html msg) -> Html msg
 h5' p = h5 [class' p.class]
 
 {-|-}
-h6_ : TextString -> Html
+h6_ : TextString -> Html msg
 h6_ t = h6 [] [text t]
 
 {-|-}
-h6' : ClassParam -> List Html -> Html
+h6' : ClassParam -> List (Html msg) -> Html msg
 h6' p = h6 [class' p.class]
 
 {-| [&lt;header&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header) defines the header of a page or section. It often contains a logo, the
@@ -602,21 +601,21 @@ title of the web site, and a navigational table of content.
 * [overuse &lt;header&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#header-hgroup)
 
 -}
-header_ : List Html -> Html
+header_ : List (Html msg) -> Html msg
 header_ = header []
 
 {-|-}
-header' : ClassParam -> List Html -> Html
+header' : ClassParam -> List (Html msg) -> Html msg
 header' p = header [class' p.class]
 
 {-| [&lt;footer&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/footer) defines the footer for a page or section. It often contains a copyright
 notice, some links to legal information, or addresses to give feedback.
 -}
-footer_ : List Html -> Html
+footer_ : List (Html msg) -> Html msg
 footer_ = footer []
 
 {-|-}
-footer' : ClassParam -> List Html -> Html
+footer' : ClassParam -> List (Html msg) -> Html msg
 footer' p = footer [class' p.class]
 
 {-| [&lt;address&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address) defines a section containing contact information.
@@ -628,11 +627,11 @@ footer' p = footer [class' p.class]
 * [represent an arbitrary, unrelated address](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address#Summary)
 
 -}
-address_ : List Html -> Html
+address_ : List (Html msg) -> Html msg
 address_ = address []
 
 {-|-}
-address' : ClassParam -> List Html -> Html
+address' : ClassParam -> List (Html msg) -> Html msg
 address' p = address [class' p.class]
 
 {-| [&lt;main&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/main) defines the main or important content in the document. There is only one
@@ -641,18 +640,18 @@ address' p = address [class' p.class]
 Note that main' is provided by [elm-html](http://package.elm-lang.org/packages/evancz/elm-html/latest/Html#main'), not by this package which only provides `main_`.
 
 -}
-main_ : List Html -> Html
+main_ : List (Html msg) -> Html msg
 main_ = main' []
 
 -- GROUPING CONTENT
 
 {-| [&lt;p&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p) defines a portion that should be displayed as a paragraph of text.
 -}
-p_ : List Html -> Html
+p_ : List (Html msg) -> Html msg
 p_ = p []
 
 {-|-}
-p' : ClassParam -> List Html -> Html
+p' : ClassParam -> List (Html msg) -> Html msg
 p' param = p [class' param.class]
 
 {-| [&lt;hr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/hr) represents a thematic break between paragraphs of a section or article or
@@ -661,7 +660,7 @@ any longer content.
 No other form is provided since hr should probably not have any classes or contents.
 
 -}
-hr_ : Html
+hr_ : Html msg
 hr_ = hr [] []
 
 {-| [&lt;pre&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/pre) indicates that its content is preformatted and that this format must be
@@ -673,11 +672,11 @@ preserved.
 * use &lt;pre&gt; as a wrapper for blocks of &lt;`samp_`&gt; output from a computer program
 
 -}
-pre_ : List Html -> Html
+pre_ : List (Html msg) -> Html msg
 pre_ = pre []
 
 {-|-}
-pre' : ClassParam -> List Html -> Html
+pre' : ClassParam -> List (Html msg) -> Html msg
 pre' p = pre [class' p.class]
 
 {-| [&lt;blockquote&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote) represents a content that is quoted from another source.
@@ -688,65 +687,65 @@ The idiomatic form uses a cite url, but an elision form is also provided.
 * use blockquote for short, inline quotations, we have &lt;`q'`&gt; for that
 
 -}
-blockquote_ : List Html -> Html
+blockquote_ : List (Html msg) -> Html msg
 blockquote_ = blockquote []
 
 {-|-}
-blockquote' : ClassCiteParam -> List Html -> Html
+blockquote' : ClassCiteParam -> List (Html msg) -> Html msg
 blockquote' p = blockquote [class' p.class, A.cite p.cite]
 
 {-| [&lt;ol&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol) defines an ordered list of items.
 -}
 -- TODO: A template version of ol'' that simply takes a list of TextString?
-ol_ : List Html -> Html
+ol_ : List (Html msg) -> Html msg
 ol_ = ol []
 
 {-|-}
-ol' : ClassParam -> List Html -> Html
+ol' : ClassParam -> List (Html msg) -> Html msg
 ol' p = ol [class' p.class]
 
 {-| [&lt;ul&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul) defines an unordered list of items.
 -}
 -- TODO: A template version of ul' that simply takes a list of TextString?
-ul_ : List Html -> Html
+ul_ : List (Html msg) -> Html msg
 ul_ = ul []
 
 {-|-}
-ul' : ClassParam -> List Html -> Html
+ul' : ClassParam -> List (Html msg) -> Html msg
 ul' p = ul [class' p.class]
 
 {-| [&lt;li&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/li) defines a item of an enumeration list.
 -}
-li_ : List Html -> Html
+li_ : List (Html msg) -> Html msg
 li_ = li []
 
 {-|-}
-li' : ClassParam -> List Html -> Html
+li' : ClassParam -> List (Html msg) -> Html msg
 li' p = li [class' p.class]
 
 {-| [&lt;dl&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl) defines a definition list, that is, a list of terms and their associated
 definitions.
 -}
 -- TODO: A template version of dl'' that take <dt> and <dd> TextString directly?
-dl_ : List Html -> Html
+dl_ : List (Html msg) -> Html msg
 dl_ = dl []
 
 {-|-}
-dl' : ClassParam -> List Html -> Html
+dl' : ClassParam -> List (Html msg) -> Html msg
 dl' p = dl [class' p.class]
 
 {-| [&lt;dt&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dt) represents a term defined by the next `dd`.
 -}
-dt' : ClassIdParam -> List Html -> Html
+dt' : ClassIdParam -> List (Html msg) -> Html msg
 dt' p = dt [class' p.class, id' p.id]
 
 {-| [&lt;dd&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dd) represents the definition of the terms immediately listed before it.
 -}
-dd_ : List Html -> Html
+dd_ : List (Html msg) -> Html msg
 dd_ = dd []
 
 {-|-}
-dd' : ClassParam -> List Html -> Html
+dd' : ClassParam -> List (Html msg) -> Html msg
 dd' p = dd [class' p.class]
 
 {-| [&lt;figure&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure) represents a figure illustrated as part of the document.
@@ -759,25 +758,25 @@ dd' p = dd [class' p.class]
 * [turn every image into a figure](http://html5doctor.com/avoiding-common-html5-mistakes/#figure)
 
 -}
-figure' : ClassIdParam -> List Html -> Html
+figure' : ClassIdParam -> List (Html msg) -> Html msg
 figure' p = figure [class' p.class, id' p.id]
 
 {-| [&lt;figcaption&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figcaption) represents the legend of a figure.
 -}
-figcaption_ : List Html -> Html
+figcaption_ : List (Html msg) -> Html msg
 figcaption_ = figcaption []
 
 {-|-}
-figcaption' : ClassParam -> List Html -> Html
+figcaption' : ClassParam -> List (Html msg) -> Html msg
 figcaption' p = figcaption [class' p.class]
 
 {-| [&lt;div&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div) represents a generic container with no special meaning.
 -}
-div_ : List Html -> Html
+div_ : List (Html msg) -> Html msg
 div_ = div []
 
 {-|-}
-div' : ClassParam -> List Html -> Html
+div' : ClassParam -> List (Html msg) -> Html msg
 div' p = div [class' p.class]
 
 
@@ -787,7 +786,7 @@ div' p = div [class' p.class]
 -}
 
 -- TODO: Possibly a download version https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attr-download
---       e.g. aDownload : FilenameString -> UrlString -> Html
+--       e.g. aDownload : FilenameString -> UrlString -> Html msg
 -- TODO: A 'blank' version may also be very helpful. E.g.
 --       <a href="http://elm-lang.org/" target="_blank">
 --         <img src="http://elm-lang.org/logo.png" alt="Elm logo" />
@@ -795,29 +794,29 @@ div' p = div [class' p.class]
 -- TODO: Also see https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types
 -- TODO: etc...
 
-a_ : UrlString -> TextString -> Html
+a_ : UrlString -> TextString -> Html msg
 a_ href t = a [A.href href] [text t]
 
 {-|-}
-a' : AnchorParam -> List Html -> Html
+a' : AnchorParam -> List (Html msg) -> Html msg
 a' p = a [class' p.class, A.href p.href]
 
 {-| [&lt;em&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em) represents emphasized text, like a stress accent.
 -}
-em_ : TextString -> Html
+em_ : TextString -> Html msg
 em_ t = em [] [text t]
 
 {-|-}
-em' : ClassParam -> List Html -> Html
+em' : ClassParam -> List (Html msg) -> Html msg
 em' p = em [class' p.class]
 
 {-| [&lt;strong&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) represents especially important text.
 -}
-strong_ : TextString -> Html
+strong_ : TextString -> Html msg
 strong_ t = strong [] [text t]
 
 {-|-}
-strong' : ClassParam -> List Html -> Html
+strong' : ClassParam -> List (Html msg) -> Html msg
 strong' p = strong [class' p.class]
 
 {-| [&lt;small&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small) represents a side comment , that is, text like a disclaimer or a
@@ -830,11 +829,11 @@ copyright, which is not essential to the comprehension of the document.
   * [use small for side-comments and small print, including copyright and legal text](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small#Summary)
 
 -}
-small_ : TextString -> Html
+small_ : TextString -> Html msg
 small_ t = small [] [text t]
 
 {-|-}
-small' : ClassParam -> List Html -> Html
+small' : ClassParam -> List (Html msg) -> Html msg
 small' p = small [class' p.class]
 
 {-| [&lt;s&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s) represents content that is no longer accurate or relevant.
@@ -843,11 +842,11 @@ small' p = small [class' p.class]
 * [use &lt;s&gt; for indicating document edits, use &lt;del&gt; or &lt;ins&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s#Summary)
 
 -}
-s_ : TextString -> Html
+s_ : TextString -> Html msg
 s_ t = s [] [text t]
 
 {-|-}
-s' : ClassParam -> List Html -> Html
+s' : ClassParam -> List (Html msg) -> Html msg
 s' p = s [class' p.class]
 
 {-| [&lt;cite&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/cite) represents the title of a work.
@@ -856,57 +855,57 @@ s' p = s [class' p.class]
 * [consider using an anchor inside of the cite to link to the origin](http://html5doctor.com/cite-and-blockquote-reloaded/)
 
 -}
-cite_ : List Html -> Html
+cite_ : List (Html msg) -> Html msg
 cite_ = cite []
 
 {-|-}
-cite' : ClassParam -> List Html -> Html
+cite' : ClassParam -> List (Html msg) -> Html msg
 cite' p = cite [class' p.class]
 
 {-| [&lt;q&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q) represents an inline quotation.
 
 The idiomatic form uses a cite url, but the elision is also provided.
 -}
-q_ : TextString -> Html
+q_ : TextString -> Html msg
 q_ t = q [] [text t]
 
 {-|-}
-q' : ClassCiteParam -> List Html -> Html
+q' : ClassCiteParam -> List (Html msg) -> Html msg
 q' p = q [class' p.class, A.cite p.cite]
 
 {-| [&lt;dfn&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn) represents a term whose definition is contained in its nearest ancestor
 content.
 -}
-dfn' : ClassIdParam -> List Html -> Html
+dfn' : ClassIdParam -> List (Html msg) -> Html msg
 dfn' p = dfn [class' p.class, id' p.id]
 
 {-| [&lt;abbr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr) represents an abbreviation or an acronym ; the expansion of the
 abbreviation can be represented in the title attribute.
 -}
-abbr_ : TextString -> Html
+abbr_ : TextString -> Html msg
 abbr_ t = abbr [] [text t]
 
 {-|-}
-abbr' : ClassParam -> List Html -> Html
+abbr' : ClassParam -> List (Html msg) -> Html msg
 abbr' p = abbr [class' p.class]
 
-{-| [&lt;time&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time) represents a date and time value; the machine-readable equivalent can be
+{- [&lt;time&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time) represents a date and time value; the machine-readable equivalent can be
 represented in the datetime attribute.
 -}
 -- TODO: String presentation doesn't appear to exist for Dates yet
---time_ : Date -> Html
+--time_ : Date -> Html msg
 --time_ d t = time [datetime d] [text t]
 
---time' : TimeParam -> Html
+--time' : TimeParam -> Html msg
 --time' p = time [class' c, datetime d] [text t]
 
 {-| [&lt;code&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code) represents computer code.
 -}
-code_ : List Html -> Html
+code_ : List (Html msg) -> Html msg
 code_ = code []
 
 {-|-}
-code' : ClassParam -> List Html -> Html
+code' : ClassParam -> List (Html msg) -> Html msg
 code' p = code [class' p.class]
 
 {-| [&lt;var&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var) represents a variable. Specific cases where it should be used include an
@@ -914,26 +913,26 @@ actual mathematical expression or programming context, an identifier
 representing a constant, a symbol identifying a physical quantity, a function
 parameter, or a mere placeholder in prose.
 -}
-var_ : TextString -> Html
+var_ : TextString -> Html msg
 var_ t = var [] [text t]
 
 {-|-}
-var' : ClassParam -> List Html -> Html
+var' : ClassParam -> List (Html msg) -> Html msg
 var' p = var [class' p.class]
 
 {-| [&lt;samp&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp) represents the output of a program or a computer.
 -}
-samp_ : List Html -> Html
+samp_ : List (Html msg) -> Html msg
 samp_ = samp []
 
 {-|-}
-samp' : ClassParam -> List Html -> Html
+samp' : ClassParam -> List (Html msg) -> Html msg
 samp' p = samp [class' p.class]
 
 {-| [&lt;kbd&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd) represents user input, often from the keyboard, but not necessarily; it
 may represent other input, like transcribed voice commands.
 
-    instructions : Html
+    instructions : Html msg
     instructions =
       p_
         [ text "Press "
@@ -946,71 +945,71 @@ may represent other input, like transcribed voice commands.
         ]
 
 -}
-kbd_ : List Html -> Html
+kbd_ : List (Html msg) -> Html msg
 kbd_ = kbd []
 
 {-|-}
-kbd' : ClassParam -> List Html -> Html
+kbd' : ClassParam -> List (Html msg) -> Html msg
 kbd' p = kbd [class' p.class]
 
 {-| [&lt;sub&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sub) represent a subscript.
 -}
-sub_ : TextString -> Html
+sub_ : TextString -> Html msg
 sub_ t = sub [] [text t]
 
 {-|-}
-sub' : ClassParam -> List Html -> Html
+sub' : ClassParam -> List (Html msg) -> Html msg
 sub' p = sub [class' p.class]
 
 {-| [&lt;sup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sup) represent a superscript.
 -}
-sup_ : TextString -> Html
+sup_ : TextString -> Html msg
 sup_ t = sup [] [text t]
 
 {-|-}
-sup' : ClassParam -> List Html -> Html
+sup' : ClassParam -> List (Html msg) -> Html msg
 sup' p = sup [class' p.class]
 
 {-| [&lt;i&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i) represents some text in an alternate voice or mood, or at least of
 different quality, such as a taxonomic designation, a technical term, an
 idiomatic phrase, a thought, or a ship name.
 -}
-i_ : TextString -> Html
+i_ : TextString -> Html msg
 i_ t = i [] [text t]
 
 {-|-}
-i' : ClassParam -> List Html -> Html
+i' : ClassParam -> List (Html msg) -> Html msg
 i' p = i [class' p.class]
 
 {-| [&lt;b&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b) represents a text which to which attention is drawn for utilitarian
 purposes. It doesn't convey extra importance and doesn't imply an alternate voice.
 -}
-b_ : TextString -> Html
+b_ : TextString -> Html msg
 b_ t = b [] [text t]
 
 {-|-}
-b' : ClassParam -> List Html -> Html
+b' : ClassParam -> List (Html msg) -> Html msg
 b' p = b [class' p.class]
 
 {-| [&lt;u&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/u) represents a non-textual annoatation for which the conventional
 presentation is underlining, such labeling the text as being misspelt or
 labeling a proper name in Chinese text.
 -}
-u_ : TextString -> Html
+u_ : TextString -> Html msg
 u_ t = u [] [text t]
 
 {-|-}
-u' : ClassParam -> List Html -> Html
+u' : ClassParam -> List (Html msg) -> Html msg
 u' p = u [class' p.class]
 
 {-| [&lt;mark&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/mark) represents text highlighted for reference purposes, that is for its
 relevance in another context.
 -}
-mark_ : List Html -> Html
+mark_ : List (Html msg) -> Html msg
 mark_ = mark []
 
 {-|-}
-mark' : ClassParam -> List Html -> Html
+mark' : ClassParam -> List (Html msg) -> Html msg
 mark' p = mark [class' p.class]
 
 {-| [&lt;ruby&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ruby) represents content to be marked with ruby annotations, short runs of text
@@ -1018,48 +1017,48 @@ presented alongside the text. This is often used in conjunction with East Asian
 language where the annotations act as a guide for pronunciation, like the
 Japanese furigana.
 -}
-ruby_ : List Html -> Html
+ruby_ : List (Html msg) -> Html msg
 ruby_ = ruby []
 
 {-|-}
-ruby' : ClassParam -> List Html -> Html
+ruby' : ClassParam -> List (Html msg) -> Html msg
 ruby' p = ruby [class' p.class]
 
 {-| [&lt;rt&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rt) represents the text of a ruby annotation .
 -}
-rt_ : TextString -> Html
+rt_ : TextString -> Html msg
 rt_ t = rt [] [text t]
 
 {-|-}
-rt' : ClassParam -> List Html -> Html
+rt' : ClassParam -> List (Html msg) -> Html msg
 rt' p = rt [class' p.class]
 
 {-| [&lt;rp&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rp) represents parenthesis around a ruby annotation, used to display the
 annotation in an alternate way by browsers not supporting the standard display
 for annotations.
 -}
-rp_ : TextString -> Html
+rp_ : TextString -> Html msg
 rp_ t = rp [] [text t]
 
 {-|-}
-rp' : ClassParam -> List Html -> Html
+rp' : ClassParam -> List (Html msg) -> Html msg
 rp' p = rp [class' p.class]
 
 {-| [&lt;bdi&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi) represents text that must be isolated from its surrounding for
 bidirectional text formatting. It allows embedding a span of text with a
 different, or unknown, directionality.
 -}
-bdi_ : TextString -> Html
+bdi_ : TextString -> Html msg
 bdi_ t = bdi [] [text t]
 
 {-|-}
-bdi' : ClassParam -> List Html -> Html
+bdi' : ClassParam -> List (Html msg) -> Html msg
 bdi' p = bdi [class' p.class]
 
 {-| [&lt;bdo&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdo) represents the directionality of its children, in order to explicitly
 override the Unicode bidirectional algorithm.
 -}
-bdo' : TextDirection -> List Html -> Html
+bdo' : TextDirection -> List (Html msg) -> Html msg
 bdo' dir =
   bdo
     [ A.dir <| case dir of
@@ -1072,22 +1071,22 @@ bdo' dir =
 text-semantic element conveys an adequate meaning, which, in this case, is
 often brought by global attributes like class', lang, or dir.
 -}
-span_ : List Html -> Html
+span_ : List (Html msg) -> Html msg
 span_ = span []
 
 {-|-}
-span' : ClassParam -> List Html -> Html
+span' : ClassParam -> List (Html msg) -> Html msg
 span' p = span [class' p.class]
 
 {-| [&lt;br&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/br) represents a line break.
 -}
-br' : Html
+br' : Html msg
 br' = br [] []
 
 {-| [&lt;wbr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/wbr) represents a line break opportunity , that is a suggested point for
 wrapping text in order to improve readability of text split on several lines.
 -}
-wbr' : Html
+wbr' : Html msg
 wbr' = wbr [] []
 
 
@@ -1095,20 +1094,20 @@ wbr' = wbr [] []
 
 {-| [&lt;ins&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ins) defines an addition to the document.
 -}
-ins_ : List Html -> Html
+ins_ : List (Html msg) -> Html msg
 ins_ = ins []
 
 {-|-}
-ins' : ModParam -> List Html -> Html
+ins' : ModParam -> List (Html msg) -> Html msg
 ins' p = ins [class' p.class, A.cite p.cite, A.datetime p.datetime]
 
 {-| [&lt;del&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/del) defines a removal from the document.
 -}
-del_ : List Html -> Html
+del_ : List (Html msg) -> Html msg
 del_ = del []
 
 {-|-}
-del' : ModParam -> List Html -> Html
+del' : ModParam -> List (Html msg) -> Html msg
 del' p = del [class' p.class, A.cite p.cite, A.datetime p.datetime]
 
 
@@ -1116,16 +1115,16 @@ del' p = del [class' p.class, A.cite p.cite, A.datetime p.datetime]
 
 {-| [&lt;img&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) represents an image.
 -}
-img' : ImgParam -> Html
+img' : ImgParam -> Html msg
 img' p = img [class' p.class, A.src p.src, A.width p.width, A.height p.height, A.alt p.alt] []
 
 {-|-}
-img_ : Int -> Int -> UrlString -> String -> Html
+img_ : Int -> Int -> UrlString -> String -> Html msg
 img_ w h s a = img [A.width w, A.height h, A.src s, A.alt a] []
 
 {-| [&lt;iframe&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) embedded an HTML document.
 -}
-iframe' : IframeParam -> Html
+iframe' : IframeParam -> Html msg
 iframe' p =
   let i'     = encodeId p.name
       filterJust = List.filterMap identity
@@ -1147,13 +1146,13 @@ iframe' p =
 {-| [&lt;embed&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/embed) represents a integration point for an external, often non-HTML,
 application or interactive content.
 -}
-embed' : EmbedParam -> Html
+embed' : EmbedParam -> Html msg
 embed' p = embed [class' p.class, id' p.id, A.src p.src, A.type' p.type', A.width p.width, A.height p.height] []
 
 {-| [&lt;object&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object) represents an external resource , which is treated as an image, an HTML
 sub-document, or an external resource to be processed by a plug-in.
 -}
-object' : ObjectParam -> List Html -> Html
+object' : ObjectParam -> List (Html msg) -> Html msg
 object' p =
   let i' = encodeId p.name
       filterJust = List.filterMap identity
@@ -1167,18 +1166,18 @@ object' p =
 
 {-| [&lt;param&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/param) defines parameters for use by plug-ins invoked by `object` elements.
 -}
-param' : String -> String -> Html
+param' : String -> String -> Html msg
 param' n v = param [A.name n, A.value v] []
 
 {-| [&lt;video&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video) represents a video, the associated audio and captions, and controls.
 
 Doesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `video` for that.
 -}
-video_ : UrlString -> Html
+video_ : UrlString -> Html msg
 video_ url = video [A.src url] []
 
 {-|-}
-video' : VideoParam -> List Html -> Html
+video' : VideoParam -> List (Html msg) -> Html msg
 video' p =
   let filterJust = List.filterMap identity
   in video
@@ -1203,11 +1202,11 @@ video' p =
 
 Doesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `audio` for that.
 -}
-audio_ : UrlString -> Html
+audio_ : UrlString -> Html msg
 audio_ url = audio [A.src url] []
 
 {-|-}
-audio' : AudioParam -> List Html -> Html
+audio' : AudioParam -> List (Html msg) -> Html msg
 audio' p =
   let filterJust = List.filterMap identity
   in audio
@@ -1229,23 +1228,23 @@ audio' p =
 --like `video` or `audio`.
 ---}
 -- TODO
---source' :  -> List Html -> Html
+--source' :  -> List (Html msg) -> Html msg
 --source' = source []
 
---source' : ClassParam -> List Html -> Html
+--source' : ClassParam -> List (Html msg) -> Html msg
 --source' p = source [class' p.class]
 
 --{-| [&lt;track&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track) allows authors to specify timed text track for media elements like `video`
 --or `audio`.
 ---}
 -- TODO
---track' :  -> List Html -> Html
+--track' :  -> List (Html msg) -> Html msg
 --track' = track []
 
---track' : ClassParam -> List Html -> Html
+--track' : ClassParam -> List (Html msg) -> Html msg
 --track' p = track [class' p.class]
 
-{-| [&lt;canvas&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas) represents a bitmap area for graphics rendering.
+{- [&lt;canvas&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas) represents a bitmap area for graphics rendering.
 
 No defaults provided since you're probably best off using Elm's `Graphics`!
 -}
@@ -1253,34 +1252,34 @@ No defaults provided since you're probably best off using Elm's `Graphics`!
 {-- TODO: elm-html hasn't exposed these functions
 --{-| In conjunction with `area`, defines an image map.
 ---}
-map_ : List Html -> Html
+map_ : List (Html msg) -> Html msg
 map_ = map []
 
 --{-| In conjunction with `map`, defines an image map.
 ---}
-area_ : List Html -> Html
+area_ : List (Html msg) -> Html msg
 area_ = area []
 --}
 
 --{-| [&lt;svg&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/svg) defines an embedded vectorial image.
 ---}
 -- TODO
---svg_ : List Html -> Html
+--svg_ : List (Html msg) -> Html msg
 --svg_ = svg []
 
---svg' : ClassParam -> List Html -> Html
+--svg' : ClassParam -> List (Html msg) -> Html msg
 --svg' p = svg [class' p.class]
 
 --{-| [&lt;math&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/math) defines a mathematical formula.
 ---}
 -- TODO
---math_ : List Html -> Html
+--math_ : List (Html msg) -> Html msg
 --math_ = math []
 
---math' :  -> List Html -> Html
+--math' :  -> List (Html msg) -> Html msg
 --math' = math []
 
---math' : ClassParam -> List Html -> Html
+--math' : ClassParam -> List (Html msg) -> Html msg
 --math' p = math [class' p.class]
 
 
@@ -1288,95 +1287,95 @@ area_ = area []
 
 {-| [&lt;table&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table) represents data with more than one dimension.
 -}
-table_ : List Html -> Html
+table_ : List (Html msg) -> Html msg
 table_ = table []
 
 {-|-}
-table' : ClassParam -> List Html -> Html
+table' : ClassParam -> List (Html msg) -> Html msg
 table' p = table [class' p.class]
 
 {-| [&lt;caption&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption) represents the title of a table.
 -}
-caption_ : List Html -> Html
+caption_ : List (Html msg) -> Html msg
 caption_ = caption []
 
 {-|-}
-caption' : ClassParam -> List Html -> Html
+caption' : ClassParam -> List (Html msg) -> Html msg
 caption' p = caption [class' p.class]
 
 --{-| [&lt;colgroup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/colgroup) represents a set of one or more columns of a table.
 ---}
 -- TODO
---colgroup_ : List Html -> Html
+--colgroup_ : List (Html msg) -> Html msg
 --colgroup_ = colgroup []
 
---colgroup' : ClassParam -> List Html -> Html
+--colgroup' : ClassParam -> List (Html msg) -> Html msg
 --colgroup' p = colgroup [class' p.class]
 
 --{-| [&lt;col&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col) represents a column of a table.
 ---}
 -- TODO
---col_ : List Html -> Html
+--col_ : List (Html msg) -> Html msg
 --col_ = col []
 
---col' :  -> List Html -> Html
+--col' :  -> List (Html msg) -> Html msg
 --col' = col []
 
---col' : ClassParam -> List Html -> Html
+--col' : ClassParam -> List (Html msg) -> Html msg
 --col' p = col [class' p.class]
 
 {-| [&lt;tbody&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody) represents the block of rows that describes the concrete data of a table.
 -}
-tbody_ : List Html -> Html
+tbody_ : List (Html msg) -> Html msg
 tbody_ = tbody []
 
 {-|-}
-tbody' : ClassParam -> List Html -> Html
+tbody' : ClassParam -> List (Html msg) -> Html msg
 tbody' p = tbody [class' p.class]
 
 {-| [&lt;thead&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead) represents the block of rows that describes the column labels of a table.
 -}
-thead_ : List Html -> Html
+thead_ : List (Html msg) -> Html msg
 thead_ = thead []
 
 {-|-}
-thead' : ClassParam -> List Html -> Html
+thead' : ClassParam -> List (Html msg) -> Html msg
 thead' p = thead [class' p.class]
 
 {-| [&lt;tfoot&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tfoot) represents the block of rows that describes the column summaries of a table.
 -}
-tfoot_ : List Html -> Html
+tfoot_ : List (Html msg) -> Html msg
 tfoot_ = tfoot []
 
 {-|-}
-tfoot' : ClassParam -> List Html -> Html
+tfoot' : ClassParam -> List (Html msg) -> Html msg
 tfoot' p = tfoot [class' p.class]
 
 {-| [&lt;tr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr) represents a row of cells in a table.
 -}
-tr_ : List Html -> Html
+tr_ : List (Html msg) -> Html msg
 tr_ = tr []
 
 {-|-}
-tr' : ClassParam -> List Html -> Html
+tr' : ClassParam -> List (Html msg) -> Html msg
 tr' p = tr [class' p.class]
 
 {-| [&lt;td&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td) represents a data cell in a table.
 -}
-td_ : List Html -> Html
+td_ : List (Html msg) -> Html msg
 td_ = td []
 
 {-|-}
-td' : ClassParam -> List Html -> Html
+td' : ClassParam -> List (Html msg) -> Html msg
 td' p = td [class' p.class]
 
 {-| [&lt;th&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th) represents a header cell in a table.
 -}
-th_ : List Html -> Html
+th_ : List (Html msg) -> Html msg
 th_ = th []
 
 {-|-}
-th' : ClassParam -> List Html -> Html
+th' : ClassParam -> List (Html msg) -> Html msg
 th' p = th [class' p.class]
 
 
@@ -1388,17 +1387,16 @@ server for processing.
 In future `Nothing` may mask out the default submit on Enter key behaviour.
 See [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513) and [stackoverflow](http://stackoverflow.com/a/587575/167485).
 -}
-form' : FormParam -> List Html -> Html
+form' : FormParam msg -> List (Html msg) -> Html msg
 form' p =
   let filterJust = List.filterMap identity
       onEnter' msg = on "keypress"
                       ( Json.customDecoder keyCode
                         <| \c ->
                             if c == 13
-                              then Ok ()
+                              then Ok msg
                               else Err "expected key code 13"
                       )
-                      (always msg)
   in  form
       <| class' p.class
       :: A.novalidate p.novalidate
@@ -1407,35 +1405,35 @@ form' p =
       -- and http://stackoverflow.com/a/587575/167485
       -- :: Maybe.withDefault maskEnter (Maybe.map onEnter' p.update.onEnter)
       :: filterJust
-          [ Maybe.map (on "submit" Json.value << always) p.update.onSubmit
+          [ Maybe.map onSubmit p.update.onSubmit
           , Maybe.map onEnter' p.update.onSubmit
           ]
 
 {-| [&lt;fieldset&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset) represents a set of controls.
 -}
-fieldset_ : Bool -> List Html -> Html
+fieldset_ : Bool -> List (Html msg) -> Html msg
 fieldset_ disabled = fieldset [A.disabled disabled]
 
 {-|-}
-fieldset' : FieldsetParam -> List Html -> Html
+fieldset' : FieldsetParam -> List (Html msg) -> Html msg
 fieldset' p = fieldset [class' p.class, A.disabled p.disabled]
 
 {-| [&lt;legend&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/legend) represents the caption for a `fieldset`.
 -}
-legend_ : TextString -> Html
+legend_ : TextString -> Html msg
 legend_ t = legend [] [text t]
 
 {-|-}
-legend' : ClassParam -> List Html -> Html
+legend' : ClassParam -> List (Html msg) -> Html msg
 legend' p = legend [class' p.class]
 
 {-| [&lt;label&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) represents the caption of a form control.
 -}
-label_ : IdString -> TextString -> Html
+label_ : IdString -> TextString -> Html msg
 label_ for t = label [A.for for] [text t]
 
 {-|-}
-label' : LabelParam -> List Html -> Html
+label' : LabelParam -> List (Html msg) -> Html msg
 label' p = label
   [ class' p.class
   , A.for p.for
@@ -1445,7 +1443,7 @@ label' p = label
 
 In order to disable an input field, use `fieldset_ False`.
 -}
-inputField' : InputFieldParam a -> List Attribute -> Html
+inputField' : InputFieldParam a msg -> List (Attribute msg) -> Html msg
 inputField' p attrs =
   let filterJust = List.filterMap identity
       i' = encodeId p.name
@@ -1457,7 +1455,7 @@ inputField' p attrs =
         ]
         ++ filterJust
             [ Maybe.map class' (if p.class == "" then Nothing else Just p.class)
-            , Maybe.map (\onEvent -> onInput        (messageDecoder p.decoder onEvent) identity) p.update.onInput
+            , Maybe.map (\onEvent -> onInput'       (messageDecoder p.decoder onEvent) identity) p.update.onInput
             , Maybe.map (\onEvent -> onEnter        (messageDecoder p.decoder onEvent) identity) p.update.onEnter
             , Maybe.map (\onEvent -> onKeyboardLost (messageDecoder p.decoder onEvent) identity) p.update.onKeyboardLost
             , Maybe.map A.placeholder p.placeholder
@@ -1466,7 +1464,7 @@ inputField' p attrs =
   in input (pattrs ++ attrs) []
 
 {-|-}
-inputText' : InputTextParam -> Html
+inputText' : InputTextParam msg -> Html msg
 inputText' p =
   inputField'
     { class       = p.class
@@ -1483,7 +1481,7 @@ inputText' p =
     ]
 
 {-|-}
-inputMaybeText' : InputMaybeTextParam -> Html
+inputMaybeText' : InputMaybeTextParam msg -> Html msg
 inputMaybeText' p =
   inputField'
     { class       = p.class
@@ -1500,7 +1498,7 @@ inputMaybeText' p =
     ]
 
 {-|-}
-inputFloat' : InputFloatParam -> Html
+inputFloat' : InputFloatParam msg -> Html msg
 inputFloat' p =
   let filterJust       = List.filterMap identity
       --allowedChars =  '.'
@@ -1533,7 +1531,7 @@ inputFloat' p =
           ]
 
 {-|-}
-inputMaybeFloat' : InputMaybeFloatParam -> Html
+inputMaybeFloat' : InputMaybeFloatParam msg -> Html msg
 inputMaybeFloat' p =
   let filterJust = List.filterMap identity
   in inputField'
@@ -1566,7 +1564,7 @@ inputMaybeFloat' p =
           ]
 
 {-|-}
-inputInt' : InputIntParam -> Html
+inputInt' : InputIntParam msg -> Html msg
 inputInt' p =
   let filterJust = List.filterMap identity
   in inputField'
@@ -1594,7 +1592,7 @@ inputInt' p =
           ]
 
 {-|-}
-inputMaybeInt' : InputMaybeIntParam -> Html
+inputMaybeInt' : InputMaybeIntParam msg -> Html msg
 inputMaybeInt' p =
   let filterJust = List.filterMap identity
   in inputField'
@@ -1627,7 +1625,7 @@ inputMaybeInt' p =
           ]
 
 {-|-}
-inputUrl' : InputUrlParam -> Html
+inputUrl' : InputUrlParam msg -> Html msg
 inputUrl' p =
   inputField'
     { class       = p.class
@@ -1644,7 +1642,7 @@ inputUrl' p =
     ]
 
 {-|-}
-inputMaybeUrl' : InputMaybeUrlParam -> Html
+inputMaybeUrl' : InputMaybeUrlParam msg -> Html msg
 inputMaybeUrl' p =
   inputField'
     { class       = p.class
@@ -1662,38 +1660,38 @@ inputMaybeUrl' p =
 
 {-| [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.
 -}
-button_ : TextString -> Address a -> a -> Html
-button_ t clickAddr click = button [A.type' "button", onClick clickAddr click] [text t]
+button_ : TextString -> msg -> Html msg
+button_ t msg = button [A.type' "button", onClick msg] [text t]
 
 {-|-}
-button' : ButtonParam -> List Html -> Html
+button' : ButtonParam msg -> List (Html msg) -> Html msg
 button' p =
   button
   [ class' p.class
   , A.type' "button"
-  , on "click" Json.value (always p.update.onClick)
+  , onClick p.update.onClick
   ]
 
 -- This is technically an anchor, but behaves more like a button
 {-|-}
-buttonLink_ : TextString -> Address a -> a -> Html
-buttonLink_ t clickAddr click = button [A.type' "button", onClick clickAddr click] [text t]
+buttonLink_ : TextString -> msg -> Html msg
+buttonLink_ t msg = a [A.href "#", onClick msg] [text t]
 
 {-|-}
-buttonLink' : ButtonParam -> List Html -> Html
+buttonLink' : ButtonParam msg -> List (Html msg) -> Html msg
 buttonLink' p =
   a
   [ class' p.class
   , A.href "#"
-  , on "click" Json.value (always p.update.onClick)
+  , onClick p.update.onClick
   ]
 
 {-|-}
-buttonSubmit_ : TextString -> Html
+buttonSubmit_ : TextString -> Html msg
 buttonSubmit_ t = button [A.type' "submit"] [text t]
 
 {-|-}
-buttonSubmit' : ClassParam -> List Html -> Html
+buttonSubmit' : ClassParam -> List (Html msg) -> Html msg
 buttonSubmit' p =
   button
   [ class' p.class
@@ -1701,11 +1699,11 @@ buttonSubmit' p =
   ]
 
 {-|-}
-buttonReset_ : TextString -> Html
+buttonReset_ : TextString -> Html msg
 buttonReset_ t = button [A.type' "reset"] [text t]
 
 {-|-}
-buttonReset' : ClassParam -> List Html -> Html
+buttonReset' : ClassParam -> List (Html msg) -> Html msg
 buttonReset' p = button
   [ class' p.class
   , A.type' "reset"
@@ -1713,7 +1711,7 @@ buttonReset' p = button
 
 {-| [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.
 -}
-select' : SelectParam -> List Html -> Html
+select' : SelectParam msg -> List (Html msg) -> Html msg
 select' p =
   let i' = encodeId p.name
   in select
@@ -1728,69 +1726,69 @@ select' p =
 --{-| [&lt;datalist&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist) represents a set of predefined options for other controls.
 ---}
 -- TODO
---datalist_ : List Html -> Html
+--datalist_ : List (Html msg) -> Html msg
 --datalist_ = datalist []
 
---datalist' :  -> List Html -> Html
+--datalist' :  -> List (Html msg) -> Html msg
 --datalist' = datalist []
 
---datalist' : ClassParam -> List Html -> Html
+--datalist' : ClassParam -> List (Html msg) -> Html msg
 --datalist' p = datalist [class' p.class]
 
 --{-| [&lt;optgroup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup) represents a set of options , logically grouped.
 ---}
 -- TODO
---optgroup_ : List Html -> Html
+--optgroup_ : List (Html msg) -> Html msg
 --optgroup_ = optgroup []
 
---optgroup' :  -> List Html -> Html
+--optgroup' :  -> List (Html msg) -> Html msg
 --optgroup' = optgroup []
 
---optgroup' : ClassParam -> List Html -> Html
+--optgroup' : ClassParam -> List (Html msg) -> Html msg
 --optgroup' p = optgroup [class' p.class]
 
 {-| [&lt;option&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option) represents an option in a `select` element or a suggestion of a `datalist` element.
 -}
-option_ : TextString -> Bool -> Html
+option_ : TextString -> Bool -> Html msg
 option_ val sel = option [ A.selected sel ] [ text val ]
 
 {-|-}
-option' : OptionParam -> Html
+option' : OptionParam -> Html msg
 option' p = option [ A.stringProperty "label" p.label, A.value (toString p.value), A.selected p.selected ] []
 
 --{-| [&lt;textarea&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) represents a multiline text edit control.
 ---}
 -- TODO
---textarea_ : List Html -> Html
+--textarea_ : List (Html msg) -> Html msg
 --textarea_ = textarea []
 
---textarea' : ClassParam -> List Html -> Html
+--textarea' : ClassParam -> List (Html msg) -> Html msg
 --textarea' p = textarea [class' p.class]
 
 --{-| [&lt;keygen&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/keygen) represents a key-pair generator control.
 ---}
 -- TODO
---keygen_ : List Html -> Htm
+--keygen_ : List (Html msg) -> Htm
 --keygen_ = keygen []
 
---keygen' : ClassParam -> List Html -> Html
+--keygen' : ClassParam -> List (Html msg) -> Html msg
 --keygen' p = keygen [class' p.class]
 
 {-| [&lt;output&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) represents the result of a calculation.
 -}
-output' : OutputParam -> List Html -> Html
+output' : OutputParam -> List (Html msg) -> Html msg
 output' p =
   let i' = encodeId p.name
   in output [class' p.class, A.id i', A.name i', A.for (String.join " " <| List.map encodeId p.for)]
 
 {-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
 -}
-progress' : ProgressParam -> String -> Html
+progress' : ProgressParam -> String -> Html msg
 progress' p t = progress [A.value (toString p.value), A.max (toString p.max)] [text t]
 
 {-| [&lt;meter&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter) represents a scalar measurement (or a fractional value), within a known range.
 -}
-meter' : MeterParam -> String -> Html
+meter' : MeterParam -> String -> Html msg
 meter' p t =
   let filterJust = List.filterMap identity
   in meter
@@ -1814,10 +1812,10 @@ meter' p t =
 --
 ---}
 -- TODO
---details_ : List Html -> Html
+--details_ : List (Html msg) -> Html msg
 --details_ = details []
 
---details' :  -> List Html -> Html
+--details' :  -> List (Html msg) -> Html msg
 --details' = details []
 
 --{-| [&lt;summary&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary) represents a summary , caption , or legend for a given `details`.
@@ -1826,10 +1824,10 @@ meter' p t =
 --
 ---}
 -- TODO
---summary_ : List Html -> Html
+--summary_ : List (Html msg) -> Html msg
 --summary_ = summary []
 
---summary' :  -> List Html -> Html
+--summary' :  -> List (Html msg) -> Html msg
 --summary' = summary []
 
 --{-| [&lt;menuitem&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/menuitem) represents a command that the user can invoke.
@@ -1838,10 +1836,10 @@ meter' p t =
 --
 ---}
 -- TODO
---menuitem_ : List Html -> Html
+--menuitem_ : List (Html msg) -> Html msg
 --menuitem_ = menuitem []
 
---menuitem' :  -> List Html -> Html
+--menuitem' :  -> List (Html msg) -> Html msg
 --menuitem' = menuitem []
 
 --{-| [&lt;menu&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/menu) represents a list of commands.
@@ -1850,11 +1848,11 @@ meter' p t =
 --
 ---}
 -- TODO
---menu_ : List Html -> Html
+--menu_ : List (Html msg) -> Html msg
 --menu_ = menu []
 
---menu' :  -> List Html -> Html
+--menu' :  -> List (Html msg) -> Html msg
 --menu' = menu []
 
---menu' : ClassParam -> List Html -> Html
+--menu' : ClassParam -> List (Html msg) -> Html msg
 --menu' p = menu [class' p.class]

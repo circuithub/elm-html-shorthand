@@ -1,8 +1,8 @@
-module Html.Shorthand.Event where
+module Html.Shorthand.Event exposing (..)
 {-| Shorthands for common Html events
 
 # Events
-@docs onInput, onEnter, onChange, onKeyboardLost, onMouseLost
+@docs onInput', onEnter, onChange, onKeyboardLost, onMouseLost
 
 # Special decoders
 @docs messageDecoder
@@ -13,28 +13,27 @@ import Html exposing (Attribute)
 import Html.Events exposing (..)
 import Html.Shorthand.Type as T
 import Json.Decode as Json
-import Signal
 import Maybe
 import Result
 
 {-| Fires off the message when an "input" event is triggered.
 Use this with &lt;`input`&gt; and &lt;`textarea`&gt; elements.
 -}
-onInput : Json.Decoder a -> (a -> Signal.Message) -> Attribute
-onInput = on "input"
+onInput' : Json.Decoder a -> (a -> msg) -> Attribute msg
+onInput' dec f = on "input" (Json.map f dec)
 
 {-| Fires when a "change" event is triggered.
 -}
-onChange : Json.Decoder a -> (a -> Signal.Message) -> Attribute
-onChange = on "change"
+onChange : Json.Decoder a -> (a -> msg) -> Attribute msg
+onChange dec f = on "change" (Json.map f dec)
 
 {-| Fires off the message when the `Enter` key is pressed (on keydown).
 -}
-onEnter : Json.Decoder a -> (a -> Signal.Message) -> Attribute
+onEnter : Json.Decoder a -> (a -> msg) -> Attribute msg
 onEnter dec f =
-  on "keydown"
-    (Json.customDecoder (Json.object2 (,) keyCode dec) <| \(c, val) -> if c == 13 then Ok val else Err "expected key code 13")
+  on "keydown" <| Json.map
     f
+    (Json.customDecoder (Json.object2 (,) keyCode dec) <| \(c, val) -> if c == 13 then Ok val else Err "expected key code 13")
 
 -- TODO: see https://github.com/evancz/virtual-dom/pull/5
 -- TODO: use key/code/keyEvent once it is well supported in browsers.
@@ -66,13 +65,13 @@ onEnter dec f =
 
 {-| Similar to onBlur, but uses a decoder to return the internal state of an input field.
 -}
-onKeyboardLost : Json.Decoder a -> (a -> Signal.Message) -> Attribute
-onKeyboardLost = on "blur"
+onKeyboardLost : Json.Decoder a -> (a -> msg) -> Attribute msg
+onKeyboardLost dec f = on "blur" (Json.map f dec)
 
 {-| Similar to onMouseLeave, but uses a decoder to return the internal state of an input field.
 -}
-onMouseLost : Json.Decoder a -> (a -> Signal.Message) -> Attribute
-onMouseLost = on "mouseleave"
+onMouseLost : Json.Decoder a -> (a -> msg) -> Attribute msg
+onMouseLost dec f = on "mouseleave" (Json.map f dec)
 
 {-| A special decoder that allows you to mix event decoding logic with message generation.
 This function takes an existing event decoder and passes the result of the parser along in order to produce an optional message directly.
@@ -95,7 +94,7 @@ It may not be desirable to split channels if the signals derived from these chan
                     ++ "(" ++ e.reason ++ ")."
 
 -}
-messageDecoder : Json.Decoder a -> (Result T.EventDecodeError a -> Maybe Signal.Message) -> Json.Decoder Signal.Message
+messageDecoder : Json.Decoder a -> (Result T.EventDecodeError a -> Maybe msg) -> Json.Decoder msg
 messageDecoder dec f =
   Json.customDecoder Json.value <| \event ->
     let r  = Json.decodeValue dec event

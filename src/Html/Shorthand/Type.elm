@@ -1,4 +1,4 @@
-module Html.Shorthand.Type where
+module Html.Shorthand.Type exposing (..)
 {-| Types used by the shorthand. All of these types are re-exported by `Html.Shorthand` so this module is only useful if
 you aren't already importing Html.Shorthand.
 
@@ -13,7 +13,6 @@ you aren't already importing Html.Shorthand.
 
 -}
 
-import Signal
 import Json.Decode as Json
 
 -- COMMON TYPES
@@ -36,26 +35,26 @@ type alias EventDecodeError =
   }
 
 {-| -}
-type alias FormUpdate =
-  { onSubmit               : Maybe Signal.Message
-  , onEnter                : Maybe Signal.Message -- TODO: In future Nothing may mask out the default submit Enter key behaviour. See, https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513
+type alias FormUpdate msg =
+  { onSubmit               : Maybe msg
+  , onEnter                : Maybe msg -- TODO: In future Nothing may mask out the default submit Enter key behaviour. See, https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513
   }
 
 {-| -}
-type alias FieldUpdate a =
-  { onInput                : Maybe (Result EventDecodeError a -> Maybe Signal.Message)
-  , onEnter                : Maybe (Result EventDecodeError a -> Maybe Signal.Message)
-  , onKeyboardLost         : Maybe (Result EventDecodeError a -> Maybe Signal.Message)
+type alias FieldUpdate a msg =
+  { onInput                : Maybe (Result EventDecodeError a -> Maybe msg)
+  , onEnter                : Maybe (Result EventDecodeError a -> Maybe msg)
+  , onKeyboardLost         : Maybe (Result EventDecodeError a -> Maybe msg)
   }
 
 {-| -}
-type alias ButtonUpdate =
-  { onClick                : Signal.Message
+type alias ButtonUpdate msg =
+  { onClick                : msg
   }
 
 {-| -}
-type alias SelectUpdate a =
-  { onSelect               : a -> Signal.Message
+type alias SelectUpdate a msg =
+  { onSelect               : a -> msg
   }
 
 -- ELEMENT PARAMETERS
@@ -215,10 +214,10 @@ type alias VideoParam =
 type alias AudioParam = MediaParam
 
 {-| -}
-type alias FormParam =
+type alias FormParam msg =
   { class                  : ClassString
   , novalidate             : Bool
-  , update                 : FormUpdate
+  , update                 : FormUpdate msg
   }
 
 {-| -}
@@ -234,11 +233,11 @@ type alias LabelParam =
   }
 
 {-| -}
-type alias InputFieldParam a =
+type alias InputFieldParam a msg =
   { class                  : ClassString
   , name                   : IdString
   , placeholder            : Maybe String
-  , update                 : FieldUpdate a
+  , update                 : FieldUpdate a msg
   , type'                  : String
   , pattern                : Maybe String
   , required               : Bool
@@ -246,49 +245,49 @@ type alias InputFieldParam a =
   }
 
 {-| -}
-type alias InputTextParam =
+type alias InputTextParam msg =
   { class                  : ClassString
   , name                   : IdString
   , placeholder            : Maybe String
   , value                  : String
   , required               : Bool
   , autocomplete           : Bool
-  , update                 : FieldUpdate String
+  , update                 : FieldUpdate String msg
   }
 
 {-| -}
-type alias InputMaybeTextParam =
+type alias InputMaybeTextParam msg =
   { class                  : ClassString
   , name                   : IdString
   , placeholder            : Maybe String
   , value                  : Maybe String
   , autocomplete           : Bool
-  , update                 : FieldUpdate (Maybe String)
+  , update                 : FieldUpdate (Maybe String) msg
   }
 
 {-| -}
-type alias InputUrlParam =
+type alias InputUrlParam msg =
   { class                  : ClassString
   , name                   : IdString
   , placeholder            : Maybe String
   , value                  : UrlString
   , required               : Bool
   , autocomplete           : Bool
-  , update                 : FieldUpdate UrlString
+  , update                 : FieldUpdate UrlString msg
   }
 
 {-| -}
-type alias InputMaybeUrlParam =
+type alias InputMaybeUrlParam msg =
   { class                  : ClassString
   , name                   : IdString
   , placeholder            : Maybe String
   , value                  : Maybe UrlString
   , autocomplete           : Bool
-  , update                 : FieldUpdate (Maybe UrlString)
+  , update                 : FieldUpdate (Maybe UrlString) msg
   }
 
 {-| -}
-type alias InputFloatParam =
+type alias InputFloatParam msg =
   { class                  : ClassString
   , name                   : IdString
   , placeholder            : Maybe String
@@ -296,11 +295,11 @@ type alias InputFloatParam =
   , min                    : Maybe Float
   , max                    : Maybe Float
   , step                   : Maybe Float
-  , update                 : FieldUpdate Float
+  , update                 : FieldUpdate Float msg
   }
 
 {-| -}
-type alias InputMaybeFloatParam =
+type alias InputMaybeFloatParam msg =
   { class                  : ClassString
   , name                   : IdString
   , placeholder            : Maybe String
@@ -308,11 +307,11 @@ type alias InputMaybeFloatParam =
   , min                    : Maybe Float
   , max                    : Maybe Float
   , step                   : Maybe Float
-  , update                 : FieldUpdate (Maybe Float)
+  , update                 : FieldUpdate (Maybe Float) msg
   }
 
 {-| -}
-type alias InputIntParam =
+type alias InputIntParam msg =
   { class                  : ClassString
   , name                   : IdString
   , placeholder            : Maybe String
@@ -320,11 +319,11 @@ type alias InputIntParam =
   , min                    : Maybe Int
   , max                    : Maybe Int
   , step                   : Maybe Int
-  , update                 : FieldUpdate Int
+  , update                 : FieldUpdate Int msg
   }
 
 {-| -}
-type alias InputMaybeIntParam =
+type alias InputMaybeIntParam msg =
   { class                  : ClassString
   , name                   : IdString
   , placeholder            : Maybe String
@@ -332,20 +331,20 @@ type alias InputMaybeIntParam =
   , min                    : Maybe Int
   , max                    : Maybe Int
   , step                   : Maybe Int
-  , update                 : FieldUpdate (Maybe Int)
+  , update                 : FieldUpdate (Maybe Int) msg
   }
 
 {-| -}
-type alias ButtonParam =
+type alias ButtonParam msg =
   { class                  : ClassString
-  , update                 : ButtonUpdate
+  , update                 : ButtonUpdate msg
   }
 
 {-| -}
-type alias SelectParam =
+type alias SelectParam msg =
   { class                  : ClassString
   , name                   : IdString
-  , update                 : SelectUpdate String
+  , update                 : SelectUpdate String msg
   }
 
 {-| -}
