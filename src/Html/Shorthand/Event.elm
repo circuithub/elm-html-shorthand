@@ -16,8 +16,7 @@ import Json.Decode as Json
 import Maybe
 import Result
 
-{-| Fires off the message when an "input" event is triggered.
-Use this with &lt;`input`&gt; and &lt;`textarea`&gt; elements.
+{-| Similar to onInput, but uses a decoder to return the internal state of an input field.
 -}
 onInput' : Json.Decoder a -> (a -> msg) -> Attribute msg
 onInput' dec f = on "input" (Json.map f dec)
@@ -79,20 +78,8 @@ This provides a mechanism for altering messages if parse errors occur in the dec
 
     messageDecoder targetValueFloat <| \r ->
       case r of
-        Ok temp -> Just <| Channel.send action (SetTemperature temp)
-        Err _   -> Just <| Channel.send action (SetError "Please enter a valid temperature")
-
-Alternatively one could also send to a different channel entirely, although this splitting should be done only after some delibiration.
-It may not be desirable to split channels if the signals derived from these channels need to be remerged in future.
-
-    messageDecoder targetValueFloat <| \r ->
-      case r of
-        Ok temp -> Just <| Channel.send action SetTemperature temp
-        Err e   -> Just <| Channel.send errorLog <|
-                    "Invalid temperature: "
-                    ++ toString (targetValue e.event)
-                    ++ "(" ++ e.reason ++ ")."
-
+        Ok temp -> Just <| SetTemperature temp
+        Err _   -> Just <| SetError "Please enter a valid temperature"
 -}
 messageDecoder : Json.Decoder a -> (Result T.EventDecodeError a -> Maybe msg) -> Json.Decoder msg
 messageDecoder dec f =

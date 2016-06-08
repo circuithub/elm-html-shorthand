@@ -176,7 +176,9 @@ type alias SelectUpdate a msg = T.SelectUpdate a msg
 {-| Default field update handlers. Use this to select only one or two handlers.
 
     { fieldUpdate
-    | onInput <- Just (\val -> Signal.send updates (MyEvent val))
+    | onInput <- Just (\r -> case r of  
+                                Ok x -> Just (SetValue x)
+                                Err _ -> Just (SetError "Input error"))
     }
 
 -}
@@ -229,9 +231,9 @@ This function takes an explicit fallback function that can usually be set to the
     inputField'
       { update = fieldUpdateFallbackFocusLost
                   { -- Reset the input to the current temperature
-                    onFallback _ = Channel.send action <| SetTemperature currentTemperature
+                    onFallback _ = SetTemperature currentTemperature
                   , -- Update the temperature if it parsed correctly
-                    onInput v = Channel.send action <| SetTemperature v
+                    onInput v = SetTemperature v
                   }
       , ...
       }
@@ -265,9 +267,9 @@ Use this configuration to generate error notifications rapidly.
     inputField'
       { update = fieldUpdateFallbackContinuous
                   { -- Show an error notification (e.g. highlight the input field)
-                    onFallback _ = Channel.send action InvalidTemperature
+                    onFallback _ = InvalidTemperature
                   , -- Update the temperature if it parsed correctly
-                    onInput v = Channel.send action <| SetTemperature v
+                    onInput v = SetTemperature v
                   }
       , ...
       }
