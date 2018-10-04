@@ -2,19 +2,26 @@ module Html.Shorthand exposing (..)
 
 {-| Shorthands for common Html elements
 
+
 # Interactive elements (Unsupported)
+
 The following elements are not currently well supported and do not have shorthands:
 
-* [&lt;details&gt;, &lt;summary&gt;](http://caniuse.com/#feat=details)
-* [&lt;menu&gt;, &lt;menuitem&gt;](http://caniuse.com/#feat=menu)
+  - [&lt;details&gt;, &lt;summary&gt;](http://caniuse.com/#feat=details)
+  - [&lt;menu&gt;, &lt;menuitem&gt;](http://caniuse.com/#feat=menu)
+
 
 # Conventions
+
 The following two conventions are used for shorthands. One example is provided for each.
 
+
 ## Elision form
+
 Most attributes of the node are elided, only one or two arguments needs to be supplied.
 
 @docs div_
+
 
 ## Idiomatic form
 
@@ -23,91 +30,115 @@ will not satisfy every need, but takes care of the usual cases while still encou
 
 @docs img_
 
+
 # Basic types
+
 The following types are all aliases for `String` and as such, only serve documentation purposes.
 
 @docs IdString, ClassString, UrlString, TextString, TextDirection
 
+
 # Event / handler types
+
 @docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous
 
+
 # Element types
+
 @docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam
 
+
 # Encoders
+
 @docs encodeId, encodeClass
 
+
 # Idiomatic attributes
+
 @docs id_, class_
 
+
 # Sections
+
 @docs body_, section_, nav_, article_, aside_
 @docs h1_, h2_, h3_, h4_, h5_, h6_, header_, footer_
 @docs address_
 
+
 # Grouping content
+
 @docs p_, pre_, blockquote_, ol_, ul_, li_, dl_, dt_, dd_, hr_
 @docs figure_, figcaption_
 @docs div_, a_, em_, strong_, small_, s_
 @docs cite_, q_, dfn_, abbr_
-* time_ (TODO)
-@docs code_, var_, samp_, kbd_
-@docs sub_, sup_, i_, b_, u_, mark_
-@docs ruby_, rt_, rp_, bdi_, bdo_
-@docs span_
-@docs br_, wbr_
+
+  - time_ (TODO)
+    @docs code_, var_, samp_, kbd_
+    @docs sub_, sup_, i_, b_, u_, mark_
+    @docs ruby_, rt_, rp_, bdi_, bdo_
+    @docs span_
+    @docs br_, wbr_
+
 
 # Edits
+
 @docs ins_, del_
 
+
 # Embedded content
+
 @docs img_, iframe_, embed_, object_
 @docs param_, video_, audio_
-* source_ (TODO)
-* track_ (TODO)
-* svg_ (TODO)
-* math_ (TODO)
+
+  - source_ (TODO)
+  - track_ (TODO)
+  - svg_ (TODO)
+  - math_ (TODO)
+
 
 # Tabular data
+
 @docs table_, caption_
-* colgroup_ (TODO)
-* col_ (TODO)
-@docs tbody_, thead_, tfoot_, tr_, td_, th_
+
+  - colgroup_ (TODO)
+  - col_ (TODO)
+    @docs tbody_, thead_, tfoot_, tr_, td_, th_
+
 
 # Forms
+
 @docs form_, fieldset_, legend_, label_
 @docs inputField_, inputText_, inputMaybeText_, inputFloat_, inputMaybeFloat_, inputInt_, inputMaybeInt_, inputUrl_, inputMaybeUrl_
-* radio_ (TODO)
-* checkbox_ (TODO)
-@docs button_, buttonLink_, buttonSubmit_, buttonReset_
-@docs select_
-* datalist_ (TODO)
-* optgroup_ (TODO)
-@docs option_
-* (TODO)
-* textarea_ (TODO)
-* (TODO)
-* keygen_ (TODO)
-@docs output_, progress_, meter_
+
+  - radio_ (TODO)
+  - checkbox_ (TODO)
+    @docs button_, buttonLink_, buttonSubmit_, buttonReset_
+    @docs select_
+  - datalist_ (TODO)
+  - optgroup_ (TODO)
+    @docs option_
+  - (TODO)
+  - textarea_ (TODO)
+  - (TODO)
+  - keygen_ (TODO)
+    @docs output_, progress_, meter_
 
 -}
+
+--import Graphics.Input.Field
 
 import Html exposing (..)
 import Html.Attributes as A
 import Html.Attributes.Extra as A
 import Html.Events exposing (..)
-import Html.Events.Extra exposing (charCode, targetValueFloat, targetValueInt, targetValueMaybe, targetValueMaybeInt, targetValueMaybeFloat)
-import String
+import Html.Events.Extra exposing (charCode, targetValueFloat, targetValueInt, targetValueMaybe, targetValueMaybeFloat, targetValueMaybeInt)
+import Html.Shorthand.Event exposing (..)
+import Html.Shorthand.Internal as Internal
+import Html.Shorthand.Type as T
+import Json.Decode as Json
 import List
 import Maybe
-import Json.Decode as Json
-
-
---import Graphics.Input.Field
-
-import Html.Shorthand.Type as T
-import Html.Shorthand.Internal as Internal
-import Html.Shorthand.Event exposing (..)
+import String
 
 
 {-| Id parameters will automatically be encoded via `encodeId`
@@ -156,8 +187,8 @@ type TextDirection
 
 {-| Update configuration for a `form` element.
 
-* *onSubmit* - a submit action was triggered
-* *onEnter* - action to perform on enter key... see also [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513)
+  - _onSubmit_ - a submit action was triggered
+  - _onEnter_ - action to perform on enter key... see also [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513)
 
 See also [FormUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormUpdate)
 
@@ -169,8 +200,8 @@ type alias FormUpdate msg =
 {-| A field error is generated when an input fails to parse its input string during an attempt to produce the output value.
 This gives the user an opportunity to specify a fallback behaviour or simply ignore the error, leaving the input in an intermediate state.
 
-* *event* - json event that generated this error
-* *reason* - error string describing the parse error
+  - _event_ - json event that generated this error
+  - _reason_ - error string describing the parse error
 
 See also [EventDecodeError](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#EventDecodeError)
 
@@ -181,13 +212,13 @@ type alias EventDecodeError =
 
 {-| Update configuration for `input` fields.
 
-* *onInput* - continuously send messages on any input event (`onInput`)
-* *onEnter* - a message to send whenever the enter key is hit
-* *onKeyboardLost* - a message to send whenever the input field loses the keyboard cursor
+  - _onInput_ - continuously send messages on any input event (`onInput`)
+  - _onEnter_ - a message to send whenever the enter key is hit
+  - _onKeyboardLost_ - a message to send whenever the input field loses the keyboard cursor
 
 In the future, if this can be made efficient, this may also support:
 
-* *onMouseMove* - a message to send whenever the mouse moves while the input field has keyboard focus
+  - _onMouseMove_ - a message to send whenever the mouse moves while the input field has keyboard focus
 
 See also [FieldUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FieldUpdate)
 
@@ -198,7 +229,7 @@ type alias FieldUpdate a msg =
 
 {-| Update configuration for a `select` element.
 
-* *onSelect* - the selected option has changed.
+  - _onSelect_ - the selected option has changed.
 
 See also [SelectUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#SelectUpdate)
 
@@ -240,9 +271,9 @@ fieldUpdateContinuous handler =
                 Err _ ->
                     Nothing
     in
-        { fieldUpdate
-            | onInput = Just doOk
-        }
+    { fieldUpdate
+        | onInput = Just doOk
+    }
 
 
 {-| Use with fields that should consolidate their value when the focus moved.
@@ -261,21 +292,22 @@ fieldUpdateFocusLost handler =
                 Err _ ->
                     Nothing
     in
-        { fieldUpdate
-            | onEnter = Just doOk
-            , onKeyboardLost = Just doOk
-        }
+    { fieldUpdate
+        | onEnter = Just doOk
+        , onKeyboardLost = Just doOk
+    }
 
 
 {-| Continuously update the field, handling invalid states only when the focus is lost.
 The input element will try to consolidate the field with its value in all of these scenarios:
 
-* During input event, if and only if the input parses correctly
-* When the return key (ENTER) is hit; resets to the last known value if it couldn't parse
-* When the keyboard cursor is moved to a different element; resets to the last known value if it couldn't parse
+  - During input event, if and only if the input parses correctly
+  - When the return key (ENTER) is hit; resets to the last known value if it couldn't parse
+  - When the keyboard cursor is moved to a different element; resets to the last known value if it couldn't parse
 
 In the future, if this can be made efficient, it will also support:
-* When the element has keyboard focus and the mouse cursor is moved ; resets to the last known value if it couldn't parse
+
+  - When the element has keyboard focus and the mouse cursor is moved ; resets to the last known value if it couldn't parse
 
 This function takes an explicit fallback function that can usually be set to the previous value in order to have the field simply reset.
 
@@ -321,10 +353,10 @@ fieldUpdateFallbackFocusLost handler =
                         Err s ->
                             Nothing
     in
-        { onInput = Just doOk
-        , onEnter = Just doErr
-        , onKeyboardLost = Just doErr
-        }
+    { onInput = Just doOk
+    , onEnter = Just doErr
+    , onKeyboardLost = Just doErr
+    }
 
 
 {-| Continuously update the field, handling invalid states on any input event.
@@ -364,9 +396,9 @@ fieldUpdateFallbackContinuous handler =
                         Err s ->
                             Nothing
     in
-        { fieldUpdate
-            | onInput = Just doOkErr
-        }
+    { fieldUpdate
+        | onInput = Just doOkErr
+    }
 
 
 {-| See [ClassParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ClassParam)
@@ -556,11 +588,11 @@ type alias MeterParam =
 {-| A simplistic way of encoding `id` attributes into a [sane format](http://stackoverflow.com/a/72577).
 This is used internally by all of the shorthands that take an `IdString`.
 
-* Everything is turned into lowercase
-* Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
-* Trim hyphens (-) and underscores (_) off the sides.
-* If the first character is a number, 'x' will be prepended.
-* Empty strings are allowed
+  - Everything is turned into lowercase
+  - Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
+  - Trim hyphens (-) and underscores (_) off the sides.
+  - If the first character is a number, 'x' will be prepended.
+  - Empty strings are allowed
 
 E.g.
 
@@ -578,11 +610,11 @@ encodeId =
 {-| A simplistic way of encoding of `class` attributes into a [sane format](http://stackoverflow.com/a/72577).
 This is used internally by all of the shorthands that take a `ClassString`.
 
-* Everything is turned into lowercase
-* Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
-* Trim hyphens (-) and underscores (_) on the sides of each class.
-* If the first character is a number, 'x' will be prepended.
-* Empty strings are allowed
+  - Everything is turned into lowercase
+  - Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
+  - Trim hyphens (-) and underscores (_) on the sides of each class.
+  - If the first character is a number, 'x' will be prepended.
+  - Empty strings are allowed
 
 E.g.
 
@@ -619,22 +651,16 @@ class_ =
 -- SECTIONS
 
 
-{-| [&lt;body&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/body) represents the content of an HTML document. There is only one `body`
-element in a document.
--}
-body_ : ClassParam -> List (Html msg) -> Html msg
-body_ p =
-    body [ class_ p.class ]
-
-
 {-| [&lt;section&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/section) defines a section in a document. Use sections to construct a document outline.
 
 **Do:**
-* [use &lt;section&gt;s to define document outlines](http://html5doctor.com/outlines/)
-* [...but use &lt;h*n*&gt;s carefully](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
+
+  - [use &lt;section&gt;s to define document outlines](http://html5doctor.com/outlines/)
+  - [...but use &lt;h_n_&gt;s carefully](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
 
 **Don't:**
-* [use &lt;section&gt; as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)
+
+  - [use &lt;section&gt; as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)
 
 -}
 section_ : ClassIdParam -> List (Html msg) -> Html msg
@@ -645,10 +671,12 @@ section_ p =
 {-| [&lt;nav&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav) defines a section that contains only navigation links.
 
 **Do:**
-* [use &lt;nav&gt; for major navigation](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
+
+  - [use &lt;nav&gt; for major navigation](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
 
 **Don't:**
-* [wrap all lists of links in &lt;nav&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
+
+  - [wrap all lists of links in &lt;nav&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)
 
 -}
 nav_ : ClassParam -> List (Html msg) -> Html msg
@@ -660,11 +688,13 @@ nav_ p =
 of the content.
 
 **Do:**
-* [use &lt;article&gt; for self-contained components with informational content](http://html5doctor.com/the-article-element/)
-* [use &lt;article&gt; for blog entries, user-submitted comments, interactive educational gadgets](http://html5doctor.com/the-article-element/)
+
+  - [use &lt;article&gt; for self-contained components with informational content](http://html5doctor.com/the-article-element/)
+  - [use &lt;article&gt; for blog entries, user-submitted comments, interactive educational gadgets](http://html5doctor.com/the-article-element/)
 
 **Don't:**
-* [confuse &lt;article&gt; with &lt;section&gt; which need not be self-contained](http://www.brucelawson.co.uk/2010/html5-articles-and-sections-whats-the-difference/)
+
+  - [confuse &lt;article&gt; with &lt;section&gt; which need not be self-contained](http://www.brucelawson.co.uk/2010/html5-articles-and-sections-whats-the-difference/)
 
 -}
 article_ : ClassIdParam -> List (Html msg) -> Html msg
@@ -680,17 +710,19 @@ aside_ p =
     aside [ class_ p.class, id_ p.id ]
 
 
-{-| [&lt;h*n*&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) provide titles for sections and subsections, describing the topic it introduces.
+{-| [&lt;h_n_&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) provide titles for sections and subsections, describing the topic it introduces.
 
 **Do:**
-* [use &lt;h*n*&gt; to define a document outline](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
-* [try to have only one first level &lt;h*n*&gt; on a page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
-* [introduce &lt;section&gt;s with headings](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
+
+  - [use &lt;h_n_&gt; to define a document outline](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)
+  - [try to have only one first level &lt;h_n_&gt; on a page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
+  - [introduce &lt;section&gt;s with headings](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
 
 **Don't:**
-* [skip &lt;h*n*&gt; levels if you can help it](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
-* [style &lt;h*n*&gt;s using html5 &lt;section&gt;s](http://www.stubbornella.org/content/2011/09/06/style-headings-using-html5-sections/)
-* [use &lt;h*n*&gt; for subtitles, subheadings](http://html5doctor.com/howto-subheadings/)
+
+  - [skip &lt;h_n_&gt; levels if you can help it](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)
+  - [style &lt;h_n_&gt;s using html5 &lt;section&gt;s](http://www.stubbornella.org/content/2011/09/06/style-headings-using-html5-sections/)
+  - [use &lt;h_n_&gt; for subtitles, subheadings](http://html5doctor.com/howto-subheadings/)
 
 -}
 h1_ : ClassParam -> List (Html msg) -> Html msg
@@ -732,7 +764,8 @@ h6_ p =
 title of the web site, and a navigational table of content.
 
 **Don't:**
-* [overuse &lt;header&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#header-hgroup)
+
+  - [overuse &lt;header&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#header-hgroup)
 
 -}
 header_ : ClassParam -> List (Html msg) -> Html msg
@@ -751,10 +784,12 @@ footer_ p =
 {-| [&lt;address&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address) defines a section containing contact information.
 
 **Do:**
-* [place inside the &lt;footer&gt; where appropriate](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address#Summary)
+
+  - [place inside the &lt;footer&gt; where appropriate](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address#Summary)
 
 **Don't:**
-* [represent an arbitrary, unrelated address](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address#Summary)
+
+  - [represent an arbitrary, unrelated address](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address#Summary)
 
 -}
 address_ : ClassParam -> List (Html msg) -> Html msg
@@ -788,9 +823,10 @@ hr_ =
 preserved.
 
 **Do:**
-* [use &lt;pre&gt; for blocks of whitespace sensitive text that must not wrap](http://stackoverflow.com/a/4611735)
-* use &lt;pre&gt; as a wrapper for blocks &lt;`code_`&gt;
-* use &lt;pre&gt; as a wrapper for blocks of &lt;`samp_`&gt; output from a computer program
+
+  - [use &lt;pre&gt; for blocks of whitespace sensitive text that must not wrap](http://stackoverflow.com/a/4611735)
+  - use &lt;pre&gt; as a wrapper for blocks &lt;`code_`&gt;
+  - use &lt;pre&gt; as a wrapper for blocks of &lt;`samp_`&gt; output from a computer program
 
 -}
 pre_ : ClassParam -> List (Html msg) -> Html msg
@@ -803,7 +839,8 @@ pre_ p =
 The idiomatic form uses a cite url, but an elision form is also provided.
 
 **Don't:**
-* use blockquote for short, inline quotations, we have &lt;`q_`&gt; for that
+
+  - use blockquote for short, inline quotations, we have &lt;`q_`&gt; for that
 
 -}
 blockquote_ : ClassCiteParam -> List (Html msg) -> Html msg
@@ -875,11 +912,13 @@ dd_ p =
 {-| [&lt;figure&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure) represents a figure illustrated as part of the document.
 
 **Do:**
-* [use figure for captioned content](http://html5doctor.com/the-figure-figcaption-elements/)
-* [use figure for things other than images: video, audio, a chart, a table etc](http://html5doctor.com/the-figure-figcaption-elements/)
+
+  - [use figure for captioned content](http://html5doctor.com/the-figure-figcaption-elements/)
+  - [use figure for things other than images: video, audio, a chart, a table etc](http://html5doctor.com/the-figure-figcaption-elements/)
 
 **Don't:**
-* [turn every image into a figure](http://html5doctor.com/avoiding-common-html5-mistakes/#figure)
+
+  - [turn every image into a figure](http://html5doctor.com/avoiding-common-html5-mistakes/#figure)
 
 -}
 figure_ : ClassIdParam -> List (Html msg) -> Html msg
@@ -943,10 +982,12 @@ strong_ p =
 copyright, which is not essential to the comprehension of the document.
 
 **Don't:**
-  * [use small for pure styling](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small#Summary)
+
+  - [use small for pure styling](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small#Summary)
 
 **Do:**
-  * [use small for side-comments and small print, including copyright and legal text](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small#Summary)
+
+  - [use small for side-comments and small print, including copyright and legal text](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small#Summary)
 
 -}
 small_ : ClassParam -> List (Html msg) -> Html msg
@@ -957,7 +998,8 @@ small_ p =
 {-| [&lt;s&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s) represents content that is no longer accurate or relevant.
 
 **Don't:**
-* [use &lt;s&gt; for indicating document edits, use &lt;del&gt; or &lt;ins&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s#Summary)
+
+  - [use &lt;s&gt; for indicating document edits, use &lt;del&gt; or &lt;ins&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s#Summary)
 
 -}
 s_ : ClassParam -> List (Html msg) -> Html msg
@@ -968,7 +1010,8 @@ s_ p =
 {-| [&lt;cite&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/cite) represents the title of a work.
 
 **Do:**
-* [consider using an anchor inside of the cite to link to the origin](http://html5doctor.com/cite-and-blockquote-reloaded/)
+
+  - [consider using an anchor inside of the cite to link to the origin](http://html5doctor.com/cite-and-blockquote-reloaded/)
 
 -}
 cite_ : ClassParam -> List (Html msg) -> Html msg
@@ -979,6 +1022,7 @@ cite_ p =
 {-| [&lt;q&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q) represents an inline quotation.
 
 The idiomatic form uses a cite url, but the elision is also provided.
+
 -}
 q_ : ClassCiteParam -> List (Html msg) -> Html msg
 q_ p =
@@ -1039,15 +1083,15 @@ may represent other input, like transcribed voice commands.
 
     instructions : Html msg
     instructions =
-      p_ { class = "" }
-        [ text "Press "
-        , kbd_ { class = "key" }
-          [ kbd_ { class = "key" } [ text "Ctrl" ]
-          , text "+"
-          , kbd_ { class = "key" } [ text "S"]
-          ]
-        , text " to save this document."
-        ]
+        p_ { class = "" }
+            [ text "Press "
+            , kbd_ { class = "key" }
+                [ kbd_ { class = "key" } [ text "Ctrl" ]
+                , text "+"
+                , kbd_ { class = "key" } [ text "S" ]
+                ]
+            , text " to save this document."
+            ]
 
 -}
 kbd_ : ClassParam -> List (Html msg) -> Html msg
@@ -1215,26 +1259,25 @@ img_ p =
 iframe_ : IframeParam -> Html msg
 iframe_ p =
     let
-        i_ =
+        i__ =
             encodeId p.name
 
         filterJust =
             List.filterMap identity
     in
-        iframe
-            ([ class_ p.class
-             , A.id i_
-             , A.name i_
-             , A.src p.src
-             , A.width p.width
-             , A.height p.height
-             , A.seamless p.seamless
-             ]
-                ++ filterJust
-                    [ Maybe.map A.sandbox p.sandbox
-                    ]
-            )
-            []
+    iframe
+        ([ class_ p.class
+         , A.id i__
+         , A.name i__
+         , A.src p.src
+         , A.width p.width
+         , A.height p.height
+         ]
+            ++ filterJust
+                [ Maybe.map A.sandbox p.sandbox
+                ]
+        )
+        []
 
 
 {-| [&lt;embed&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/embed) represents a integration point for an external, often non-HTML,
@@ -1251,7 +1294,7 @@ sub-document, or an external resource to be processed by a plug-in.
 object_ : ObjectParam -> List (Html msg) -> Html msg
 object_ p =
     let
-        i_ =
+        i__ =
             encodeId p.name
 
         filterJust =
@@ -1262,10 +1305,10 @@ object_ p =
                 [ Maybe.map (A.usemap << String.cons '#' << encodeId) p.useMapName
                 ]
     in
-        object <|
-            [ class_ p.class, A.id i_, A.name i_, A.attribute "data" p.data, A.type_ p.type_ ]
-                ++ attrs
-                ++ [ A.height p.height, A.width p.width ]
+    object <|
+        [ class_ p.class, A.id i__, A.name i__, A.attribute "data" p.data, A.type_ p.type_ ]
+            ++ attrs
+            ++ [ A.height p.height, A.width p.width ]
 
 
 {-| [&lt;param&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/param) defines parameters for use by plug-ins invoked by `object` elements.
@@ -1278,6 +1321,7 @@ param_ n v =
 {-| [&lt;video&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video) represents a video, the associated audio and captions, and controls.
 
 Doesn_t allow for &lt;track&gt;s &lt;source&gt;s, please use `video` for that.
+
 -}
 video_ : VideoParam -> List (Html msg) -> Html msg
 video_ p =
@@ -1285,27 +1329,30 @@ video_ p =
         filterJust =
             List.filterMap identity
     in
-        video <|
-            [ class_ p.class
-            , A.width p.width
-            , A.height p.height
-            , A.autoplay p.autoplay
-            , A.controls p.controls
-            , A.loop p.loop
-              -- , A.boolProperty "muted" p.muted
-            ]
-                ++ filterJust
-                    [ Maybe.map A.src p.src
-                      -- , Maybe.map (A.property "crossorigin") p.crossorigin
-                    , Maybe.map (A.stringProperty "preload") p.preload
-                    , Maybe.map A.poster p.poster
-                    , Maybe.map A.volume p.volume
-                    ]
+    video <|
+        [ class_ p.class
+        , A.width p.width
+        , A.height p.height
+        , A.autoplay p.autoplay
+        , A.controls p.controls
+        , A.loop p.loop
+
+        -- , A.boolProperty "muted" p.muted
+        ]
+            ++ filterJust
+                [ Maybe.map A.src p.src
+
+                -- , Maybe.map (A.property "crossorigin") p.crossorigin
+                , Maybe.map (A.stringProperty "preload") p.preload
+                , Maybe.map A.poster p.poster
+                , Maybe.map A.volume p.volume
+                ]
 
 
 {-| [&lt;audio&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio) represents a sound or audio stream.
 
 Doesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `audio` for that.
+
 -}
 audio_ : AudioParam -> List (Html msg) -> Html msg
 audio_ p =
@@ -1313,20 +1360,22 @@ audio_ p =
         filterJust =
             List.filterMap identity
     in
-        audio <|
-            [ class_ p.class
-            , A.autoplay p.autoplay
-            , A.controls p.controls
-            , A.loop p.loop
-              -- , A.boolProperty "muted" p.muted
-            ]
-                ++ filterJust
-                    [ Maybe.map A.src p.src
-                      -- , Maybe.map (A.property "crossorigin") p.crossorigin
-                    , Maybe.map (A.stringProperty "preload") p.preload
-                    , Maybe.map A.poster p.poster
-                    , Maybe.map A.volume p.volume
-                    ]
+    audio <|
+        [ class_ p.class
+        , A.autoplay p.autoplay
+        , A.controls p.controls
+        , A.loop p.loop
+
+        -- , A.boolProperty "muted" p.muted
+        ]
+            ++ filterJust
+                [ Maybe.map A.src p.src
+
+                -- , Maybe.map (A.property "crossorigin") p.crossorigin
+                , Maybe.map (A.stringProperty "preload") p.preload
+                , Maybe.map A.poster p.poster
+                , Maybe.map A.volume p.volume
+                ]
 
 
 
@@ -1452,6 +1501,7 @@ server for processing.
 
 In future `Nothing` may mask out the default submit on Enter key behaviour.
 See [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513) and [stackoverflow](http://stackoverflow.com/a/587575/167485).
+
 -}
 form_ : FormParam msg -> List (Html msg) -> Html msg
 form_ p =
@@ -1469,18 +1519,17 @@ form_ p =
                             Err "expected key code 13"
                 )
     in
-        form <|
-            class_ p.class
-                :: A.novalidate p.novalidate
-                -- TODO: mask enter key when no handler is given
-                -- See https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513
-                -- and http://stackoverflow.com/a/587575/167485
-                -- :: Maybe.withDefault maskEnter (Maybe.map onEnter_ p.update.onEnter)
-                ::
-                    filterJust
-                        [ Maybe.map onSubmit p.update.onSubmit
-                        , Maybe.map onEnter_ p.update.onSubmit
-                        ]
+    form <|
+        class_ p.class
+            :: A.novalidate p.novalidate
+            -- TODO: mask enter key when no handler is given
+            -- See https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513
+            -- and http://stackoverflow.com/a/587575/167485
+            -- :: Maybe.withDefault maskEnter (Maybe.map onEnter_ p.update.onEnter)
+            :: filterJust
+                [ Maybe.map onSubmit p.update.onSubmit
+                , Maybe.map onEnter_ p.update.onSubmit
+                ]
 
 
 {-| [&lt;fieldset&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset) represents a set of controls.
@@ -1510,6 +1559,7 @@ label_ p =
 {-| [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.
 
 In order to disable an input field, use `fieldset_ False`.
+
 -}
 inputField_ : InputFieldParam a msg -> List (Attribute msg) -> Html msg
 inputField_ p attrs =
@@ -1517,13 +1567,13 @@ inputField_ p attrs =
         filterJust =
             List.filterMap identity
 
-        i_ =
+        i__ =
             encodeId p.name
 
         pattrs =
             [ A.type_ p.type_
-            , A.id i_
-            , A.name i_
+            , A.id i__
+            , A.name i__
             , A.required p.required
             ]
                 ++ filterJust
@@ -1540,7 +1590,7 @@ inputField_ p attrs =
                     , Maybe.map A.pattern p.pattern
                     ]
     in
-        input (pattrs ++ attrs) []
+    input (pattrs ++ attrs) []
 
 
 {-| -}
@@ -1591,36 +1641,35 @@ inputFloat_ p =
         --                      Nothing -> ['-']
         --                      Just x  -> if x >= 0 then [] else ['-']
     in
-        inputField_
-            { class = p.class
-            , name = p.name
-            , placeholder = p.placeholder
-            , update = p.update
-            , type_ = "number"
-            , pattern = Nothing
-            , required = True
-            , decoder =
-                case ( p.min, p.max ) of
-                    ( Nothing, Nothing ) ->
-                        targetValueFloat
+    inputField_
+        { class = p.class
+        , name = p.name
+        , placeholder = p.placeholder
+        , update = p.update
+        , type_ = "number"
+        , pattern = Nothing
+        , required = True
+        , decoder =
+            case ( p.min, p.max ) of
+                ( Nothing, Nothing ) ->
+                    targetValueFloat
 
-                    _ ->
-                        customDecoder targetValueFloat <|
-                            \v ->
-                                if v < Maybe.withDefault (-1 / 0) p.min || v > Maybe.withDefault (1 / 0) p.max then
-                                    Err "out of bounds"
-                                else
-                                    Ok v
-            }
-        <|
-            A.valueAsFloat p.value
-                --:: filterOnKeyPressChar (\c -> if (c >= '0' && c <= '9') || c `List.member` allowedChars then Just tmpMsg else Nothing)
-                ::
-                    A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map toString p.step)
-                :: filterJust
-                    [ Maybe.map (A.min << toString) p.min
-                    , Maybe.map (A.max << toString) p.max
-                    ]
+                _ ->
+                    customDecoder targetValueFloat <|
+                        \v ->
+                            if v < Maybe.withDefault (-1 / 0) p.min || v > Maybe.withDefault (1 / 0) p.max then
+                                Err "out of bounds"
+                            else
+                                Ok v
+        }
+    <|
+        A.valueAsFloat p.value
+            --:: filterOnKeyPressChar (\c -> if (c >= '0' && c <= '9') || c `List.member` allowedChars then Just tmpMsg else Nothing)
+            :: A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map String.fromFloat p.step)
+            :: filterJust
+                [ Maybe.map (A.min << String.fromFloat) p.min
+                , Maybe.map (A.max << String.fromFloat) p.max
+                ]
 
 
 {-| -}
@@ -1630,45 +1679,45 @@ inputMaybeFloat_ p =
         filterJust =
             List.filterMap identity
     in
-        inputField_
-            { class = p.class
-            , name = p.name
-            , placeholder = p.placeholder
-            , update = p.update
-            , type_ = "number"
-            , pattern = Nothing
-            , required = False
-            , decoder =
-                case ( p.min, p.max ) of
-                    ( Nothing, Nothing ) ->
-                        targetValueMaybeFloat
+    inputField_
+        { class = p.class
+        , name = p.name
+        , placeholder = p.placeholder
+        , update = p.update
+        , type_ = "number"
+        , pattern = Nothing
+        , required = False
+        , decoder =
+            case ( p.min, p.max ) of
+                ( Nothing, Nothing ) ->
+                    targetValueMaybeFloat
 
-                    _ ->
-                        customDecoder targetValueMaybeFloat <|
-                            \mv ->
-                                case mv of
-                                    Nothing ->
-                                        Ok Nothing
+                _ ->
+                    customDecoder targetValueMaybeFloat <|
+                        \mv ->
+                            case mv of
+                                Nothing ->
+                                    Ok Nothing
 
-                                    Just v ->
-                                        if v < Maybe.withDefault (-1 / 0) p.min || v > Maybe.withDefault (1 / 0) p.max then
-                                            Err "out of bounds"
-                                        else
-                                            Ok mv
-            }
-        <|
-            (case p.value of
-                Nothing ->
-                    A.value ""
+                                Just v ->
+                                    if v < Maybe.withDefault (-1 / 0) p.min || v > Maybe.withDefault (1 / 0) p.max then
+                                        Err "out of bounds"
+                                    else
+                                        Ok mv
+        }
+    <|
+        (case p.value of
+            Nothing ->
+                A.value ""
 
-                Just v ->
-                    A.valueAsFloat v
-            )
-                :: A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map toString p.step)
-                :: filterJust
-                    [ Maybe.map (A.min << toString) p.min
-                    , Maybe.map (A.max << toString) p.max
-                    ]
+            Just v ->
+                A.valueAsFloat v
+        )
+            :: A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map String.fromFloat p.step)
+            :: filterJust
+                [ Maybe.map (A.min << String.fromFloat) p.min
+                , Maybe.map (A.max << String.fromFloat) p.max
+                ]
 
 
 {-| -}
@@ -1678,34 +1727,34 @@ inputInt_ p =
         filterJust =
             List.filterMap identity
     in
-        inputField_
-            { class = p.class
-            , name = p.name
-            , placeholder = p.placeholder
-            , update = p.update
-            , type_ = "number"
-            , pattern = Nothing
-            , required = True
-            , decoder =
-                case ( p.min, p.max ) of
-                    ( Nothing, Nothing ) ->
-                        targetValueInt
+    inputField_
+        { class = p.class
+        , name = p.name
+        , placeholder = p.placeholder
+        , update = p.update
+        , type_ = "number"
+        , pattern = Nothing
+        , required = True
+        , decoder =
+            case ( p.min, p.max ) of
+                ( Nothing, Nothing ) ->
+                    targetValueInt
 
-                    _ ->
-                        customDecoder targetValueInt <|
-                            \v ->
-                                if v < Maybe.withDefault (floor <| -1 / 0) p.min || v > Maybe.withDefault (ceiling <| 1 / 0) p.max then
-                                    Err "out of bounds"
-                                else
-                                    Ok v
-            }
-        <|
-            A.valueAsInt p.value
-                :: filterJust
-                    [ Maybe.map (A.min << toString) p.min
-                    , Maybe.map (A.max << toString) p.max
-                    , Maybe.map (A.stringProperty "step" << toString) p.step
-                    ]
+                _ ->
+                    customDecoder targetValueInt <|
+                        \v ->
+                            if v < Maybe.withDefault (floor <| -1 / 0) p.min || v > Maybe.withDefault (ceiling <| 1 / 0) p.max then
+                                Err "out of bounds"
+                            else
+                                Ok v
+        }
+    <|
+        A.valueAsInt p.value
+            :: filterJust
+                [ Maybe.map (A.min << String.fromInt) p.min
+                , Maybe.map (A.max << String.fromInt) p.max
+                , Maybe.map (A.stringProperty "step" << String.fromInt) p.step
+                ]
 
 
 {-| -}
@@ -1715,45 +1764,45 @@ inputMaybeInt_ p =
         filterJust =
             List.filterMap identity
     in
-        inputField_
-            { class = p.class
-            , name = p.name
-            , placeholder = p.placeholder
-            , update = p.update
-            , type_ = "number"
-            , pattern = Nothing
-            , required = False
-            , decoder =
-                case ( p.min, p.max ) of
-                    ( Nothing, Nothing ) ->
-                        targetValueMaybeInt
+    inputField_
+        { class = p.class
+        , name = p.name
+        , placeholder = p.placeholder
+        , update = p.update
+        , type_ = "number"
+        , pattern = Nothing
+        , required = False
+        , decoder =
+            case ( p.min, p.max ) of
+                ( Nothing, Nothing ) ->
+                    targetValueMaybeInt
 
-                    _ ->
-                        customDecoder targetValueMaybeInt <|
-                            \mv ->
-                                case mv of
-                                    Nothing ->
-                                        Ok Nothing
+                _ ->
+                    customDecoder targetValueMaybeInt <|
+                        \mv ->
+                            case mv of
+                                Nothing ->
+                                    Ok Nothing
 
-                                    Just v ->
-                                        if v < Maybe.withDefault (floor <| -1 / 0) p.min || v > Maybe.withDefault (ceiling <| 1 / 0) p.max then
-                                            Err "out of bounds"
-                                        else
-                                            Ok mv
-            }
-        <|
-            (case p.value of
-                Nothing ->
-                    A.value ""
+                                Just v ->
+                                    if v < Maybe.withDefault (floor <| -1 / 0) p.min || v > Maybe.withDefault (ceiling <| 1 / 0) p.max then
+                                        Err "out of bounds"
+                                    else
+                                        Ok mv
+        }
+    <|
+        (case p.value of
+            Nothing ->
+                A.value ""
 
-                Just v ->
-                    A.valueAsInt v
-            )
-                :: filterJust
-                    [ Maybe.map (A.min << toString) p.min
-                    , Maybe.map (A.max << toString) p.max
-                    , Maybe.map (A.stringProperty "step" << toString) p.step
-                    ]
+            Just v ->
+                A.valueAsInt v
+        )
+            :: filterJust
+                [ Maybe.map (A.min << String.fromInt) p.min
+                , Maybe.map (A.max << String.fromInt) p.max
+                , Maybe.map (A.stringProperty "step" << String.fromInt) p.step
+                ]
 
 
 {-| -}
@@ -1840,17 +1889,18 @@ buttonReset_ p =
 select_ : SelectParam msg -> List (Html msg) -> Html msg
 select_ p =
     let
-        i_ =
+        i__ =
             encodeId p.name
     in
-        select
-            [ class_ p.class
-            , A.id i_
-            , A.name i_
-            , onChange targetValue p.update.onSelect
-              -- , on "click" targetValue p.update.onSelect
-              -- , on "keypress" targetValue p.update.onSelect
-            ]
+    select
+        [ class_ p.class
+        , A.id i__
+        , A.name i__
+        , onChange targetValue p.update.onSelect
+
+        -- , on "click" targetValue p.update.onSelect
+        -- , on "keypress" targetValue p.update.onSelect
+        ]
 
 
 
@@ -1891,17 +1941,17 @@ option_ p =
 output_ : OutputParam -> List (Html msg) -> Html msg
 output_ p =
     let
-        i_ =
+        i__ =
             encodeId p.name
     in
-        output [ class_ p.class, A.id i_, A.name i_, A.for (String.join " " <| List.map encodeId p.for) ]
+    output [ class_ p.class, A.id i__, A.name i__, A.for (String.join " " <| List.map encodeId p.for) ]
 
 
 {-| [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.
 -}
 progress_ : ProgressParam -> String -> Html msg
 progress_ p t =
-    progress [ A.value (toString p.value), A.max (toString p.max) ] [ text t ]
+    progress [ A.value (String.fromFloat p.value), A.max (String.fromFloat p.max) ] [ text t ]
 
 
 {-| [&lt;meter&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter) represents a scalar measurement (or a fractional value), within a known range.
@@ -1912,18 +1962,18 @@ meter_ p t =
         filterJust =
             List.filterMap identity
     in
-        meter
-            ([ A.value (toString p.value)
-             , A.min (toString min)
-             , A.max (toString p.max)
-             ]
-                ++ filterJust
-                    [ Maybe.map (A.low << toString) p.low
-                    , Maybe.map (A.high << toString) p.high
-                    , Maybe.map (A.optimum << toString) p.optimum
-                    ]
-            )
-            [ text t ]
+    meter
+        ([ A.value (String.fromFloat p.value)
+         , A.min (String.fromFloat p.min)
+         , A.max (String.fromFloat p.max)
+         ]
+            ++ filterJust
+                [ Maybe.map (A.low << String.fromFloat) p.low
+                , Maybe.map (A.high << String.fromFloat) p.high
+                , Maybe.map (A.optimum << String.fromFloat) p.optimum
+                ]
+        )
+        [ text t ]
 
 
 
