@@ -2,10 +2,14 @@ module Html.Shorthand.Event exposing (..)
 
 {-| Shorthands for common Html events
 
+
 # Events
+
 @docs customDecoder, onInput_, onEnter, onChange, onKeyboardLost, onMouseLost
 
+
 # Special decoders
+
 @docs messageDecoder
 
 -}
@@ -22,14 +26,17 @@ import Result
 -}
 customDecoder : Json.Decoder a -> (a -> Result String b) -> Json.Decoder b
 customDecoder decoder f =
-    decoder |> Json.andThen
-        (\s ->
-            case f s of
-                Ok v ->
-                    Json.succeed v
-                Err e ->
-                    Json.fail e
-        )
+    decoder
+        |> Json.andThen
+            (\s ->
+                case f s of
+                    Ok v ->
+                        Json.succeed v
+
+                    Err e ->
+                        Json.fail e
+            )
+
 
 {-| Similar to onInput, but uses a decoder to return the internal state of an input field.
 -}
@@ -52,7 +59,7 @@ onEnter dec f =
     on "keydown" <|
         Json.map
             f
-            (customDecoder (Json.map2 (,) keyCode dec) <|
+            (customDecoder (Json.map2 (\a b -> ( a, b )) keyCode dec) <|
                 \( c, val ) ->
                     if c == 13 then
                         Ok val
@@ -112,16 +119,21 @@ This provides a mechanism for altering messages if parse errors occur in the dec
       case r of
         Ok temp -> Just <| SetTemperature temp
         Err _   -> Just <| SetError "Please enter a valid temperature"
+
 -}
 messageDecoder : Json.Decoder a -> (Result T.EventDecodeError a -> Maybe msg) -> Json.Decoder msg
-messageDecoder dec f =
+messageDecoder dec =
     let
         formatError : (error -> error_) -> Result error a -> Result error_ a
         formatError f result =
-          case result of
-            Ok  v -> Ok v
-            Err e -> Err (f e)
+            case result of
+                Ok v ->
+                    Ok v
+
+                Err e ->
+                    Err (f e)
     in
+    \f ->
         customDecoder Json.value <|
             \event ->
                 let
@@ -129,14 +141,14 @@ messageDecoder dec f =
                         Json.decodeValue dec event
 
                     r_ =
-                        formatError (T.EventDecodeError event) r
+                        formatError (Json.errorToString >> T.EventDecodeError event) r
                 in
-                    case ( f r_, r ) of
-                        ( Nothing, Err e ) ->
-                            Err e
+                case ( f r_, r ) of
+                    ( Nothing, Err e ) ->
+                        Err (Json.errorToString e)
 
-                        ( Nothing, Ok _ ) ->
-                            Err "no message in response to event"
+                    ( Nothing, Ok _ ) ->
+                        Err "no message in response to event"
 
-                        ( Just msg, _ ) ->
-                            Ok msg
+                    ( Just msg, _ ) ->
+                        Ok msg
