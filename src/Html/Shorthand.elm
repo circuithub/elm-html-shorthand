@@ -72,7 +72,8 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs div_, a_, em_, strong_, small_, s_
 @docs cite_, q_, dfn_, abbr_
 
-  - time_ (TODO)
+  - time\_ (TODO)
+
     @docs code_, var_, samp_, kbd_
     @docs sub_, sup_, i_, b_, u_, mark_
     @docs ruby_, rt_, rp_, bdi_, bdo_
@@ -90,18 +91,20 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs img_, iframe_, embed_, object_
 @docs param_, video_, audio_
 
-  - source_ (TODO)
-  - track_ (TODO)
-  - svg_ (TODO)
-  - math_ (TODO)
+  - source\_ (TODO)
+  - track\_ (TODO)
+  - svg\_ (TODO)
+  - math\_ (TODO)
 
 
 # Tabular data
 
 @docs table_, caption_
 
-  - colgroup_ (TODO)
-  - col_ (TODO)
+  - colgroup\_ (TODO)
+
+  - col\_ (TODO)
+
     @docs tbody_, thead_, tfoot_, tr_, td_, th_
 
 
@@ -110,17 +113,27 @@ The following types are all aliases for `String` and as such, only serve documen
 @docs form_, fieldset_, legend_, label_
 @docs inputField_, inputText_, inputMaybeText_, inputFloat_, inputMaybeFloat_, inputInt_, inputMaybeInt_, inputUrl_, inputMaybeUrl_
 
-  - radio_ (TODO)
-  - checkbox_ (TODO)
+  - radio\_ (TODO)
+
+  - checkbox\_ (TODO)
+
     @docs button_, buttonLink_, buttonSubmit_, buttonReset_
     @docs select_
-  - datalist_ (TODO)
-  - optgroup_ (TODO)
+
+  - datalist\_ (TODO)
+
+  - optgroup\_ (TODO)
+
     @docs option_
+
   - (TODO)
-  - textarea_ (TODO)
+
+  - textarea\_ (TODO)
+
   - (TODO)
-  - keygen_ (TODO)
+
+  - keygen\_ (TODO)
+
     @docs output_, progress_, meter_
 
 -}
@@ -129,7 +142,7 @@ The following types are all aliases for `String` and as such, only serve documen
 
 import Html exposing (..)
 import Html.Attributes as A
-import Html.Attributes.Extra as A
+import Html.Attributes.Extra as AE
 import Html.Events exposing (..)
 import Html.Events.Extra exposing (charCode, targetValueFloat, targetValueInt, targetValueMaybe, targetValueMaybeFloat, targetValueMaybeInt)
 import Html.Shorthand.Event exposing (..)
@@ -255,7 +268,7 @@ fieldUpdate =
     }
 
 
-{-| Good configuration for continuously updating fields that don_t have any invalid states, or are restricted by a pattern.
+{-| Good configuration for continuously updating fields that don\_t have any invalid states, or are restricted by a pattern.
 -}
 fieldUpdateContinuous :
     { onInput : a -> msg
@@ -589,16 +602,19 @@ type alias MeterParam =
 This is used internally by all of the shorthands that take an `IdString`.
 
   - Everything is turned into lowercase
-  - Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
-  - Trim hyphens (-) and underscores (_) off the sides.
+  - Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (\_) are passed through the filter.
+  - Trim hyphens (-) and underscores (\_) off the sides.
   - If the first character is a number, 'x' will be prepended.
   - Empty strings are allowed
 
 E.g.
 
     encodeId "Elmo teaches Elm!" == "elmo-teaches-elm"
+
     encodeId "99 bottles of beer, 98 bottles..." == "x99-bottles-of-beer-98-bottles"
+
     encodeId "_internal- -<-identifier->-" == "internal-identifier"
+
     encodeId " \t \n" == ""
 
 -}
@@ -611,16 +627,19 @@ encodeId =
 This is used internally by all of the shorthands that take a `ClassString`.
 
   - Everything is turned into lowercase
-  - Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.
-  - Trim hyphens (-) and underscores (_) on the sides of each class.
+  - Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (\_) are passed through the filter.
+  - Trim hyphens (-) and underscores (\_) on the sides of each class.
   - If the first character is a number, 'x' will be prepended.
   - Empty strings are allowed
 
 E.g.
 
     encodeClass "Color.encoding: BLUE-GREEN" == "colorencoding blue-green"
+
     encodeClass "99-bottles... 98-bottles" == "x99-bottles x98-bottles"
+
     encodeClass "_internal-class-" == "internal-class"
+
     encodeClass " \t \n" == ""
 
 -}
@@ -1203,7 +1222,7 @@ bdo_ dir =
 
 {-| [&lt;span&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/span) represents text with no specific meaning. This has to be used when no other
 text-semantic element conveys an adequate meaning, which, in this case, is
-often brought by global attributes like class_, lang, or dir.
+often brought by global attributes like class\_, lang, or dir.
 -}
 span_ : ClassParam -> List (Html msg) -> Html msg
 span_ p =
@@ -1320,7 +1339,7 @@ param_ n v =
 
 {-| [&lt;video&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video) represents a video, the associated audio and captions, and controls.
 
-Doesn_t allow for &lt;track&gt;s &lt;source&gt;s, please use `video` for that.
+Doesn\_t allow for &lt;track&gt;s &lt;source&gt;s, please use `video` for that.
 
 -}
 video_ : VideoParam -> List (Html msg) -> Html msg
@@ -1343,9 +1362,9 @@ video_ p =
                 [ Maybe.map A.src p.src
 
                 -- , Maybe.map (A.property "crossorigin") p.crossorigin
-                , Maybe.map (A.stringProperty "preload") p.preload
+                , Maybe.map (AE.stringProperty "preload") p.preload
                 , Maybe.map A.poster p.poster
-                , Maybe.map A.volume p.volume
+                , Maybe.map AE.volume p.volume
                 ]
 
 
@@ -1372,9 +1391,9 @@ audio_ p =
                 [ Maybe.map A.src p.src
 
                 -- , Maybe.map (A.property "crossorigin") p.crossorigin
-                , Maybe.map (A.stringProperty "preload") p.preload
+                , Maybe.map (AE.stringProperty "preload") p.preload
                 , Maybe.map A.poster p.poster
-                , Maybe.map A.volume p.volume
+                , Maybe.map AE.volume p.volume
                 ]
 
 
@@ -1515,6 +1534,7 @@ form_ p =
                     \c ->
                         if c == 13 then
                             Ok msg
+
                         else
                             Err "expected key code 13"
                 )
@@ -1580,6 +1600,7 @@ inputField_ p attrs =
                     [ Maybe.map class_
                         (if p.class == "" then
                             Nothing
+
                          else
                             Just p.class
                         )
@@ -1659,13 +1680,14 @@ inputFloat_ p =
                         \v ->
                             if v < Maybe.withDefault (-1 / 0) p.min || v > Maybe.withDefault (1 / 0) p.max then
                                 Err "out of bounds"
+
                             else
                                 Ok v
         }
     <|
-        A.valueAsFloat p.value
+        AE.valueAsFloat p.value
             --:: filterOnKeyPressChar (\c -> if (c >= '0' && c <= '9') || c `List.member` allowedChars then Just tmpMsg else Nothing)
-            :: A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map String.fromFloat p.step)
+            :: AE.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map String.fromFloat p.step)
             :: filterJust
                 [ Maybe.map (A.min << String.fromFloat) p.min
                 , Maybe.map (A.max << String.fromFloat) p.max
@@ -1702,6 +1724,7 @@ inputMaybeFloat_ p =
                                 Just v ->
                                     if v < Maybe.withDefault (-1 / 0) p.min || v > Maybe.withDefault (1 / 0) p.max then
                                         Err "out of bounds"
+
                                     else
                                         Ok mv
         }
@@ -1711,9 +1734,9 @@ inputMaybeFloat_ p =
                 A.value ""
 
             Just v ->
-                A.valueAsFloat v
+                AE.valueAsFloat v
         )
-            :: A.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map String.fromFloat p.step)
+            :: AE.stringProperty "step" (Maybe.withDefault "any" <| Maybe.map String.fromFloat p.step)
             :: filterJust
                 [ Maybe.map (A.min << String.fromFloat) p.min
                 , Maybe.map (A.max << String.fromFloat) p.max
@@ -1745,15 +1768,16 @@ inputInt_ p =
                         \v ->
                             if v < Maybe.withDefault (floor <| -1 / 0) p.min || v > Maybe.withDefault (ceiling <| 1 / 0) p.max then
                                 Err "out of bounds"
+
                             else
                                 Ok v
         }
     <|
-        A.valueAsInt p.value
+        AE.valueAsInt p.value
             :: filterJust
                 [ Maybe.map (A.min << String.fromInt) p.min
                 , Maybe.map (A.max << String.fromInt) p.max
-                , Maybe.map (A.stringProperty "step" << String.fromInt) p.step
+                , Maybe.map (AE.stringProperty "step" << String.fromInt) p.step
                 ]
 
 
@@ -1787,6 +1811,7 @@ inputMaybeInt_ p =
                                 Just v ->
                                     if v < Maybe.withDefault (floor <| -1 / 0) p.min || v > Maybe.withDefault (ceiling <| 1 / 0) p.max then
                                         Err "out of bounds"
+
                                     else
                                         Ok mv
         }
@@ -1796,12 +1821,12 @@ inputMaybeInt_ p =
                 A.value ""
 
             Just v ->
-                A.valueAsInt v
+                AE.valueAsInt v
         )
             :: filterJust
                 [ Maybe.map (A.min << String.fromInt) p.min
                 , Maybe.map (A.max << String.fromInt) p.max
-                , Maybe.map (A.stringProperty "step" << String.fromInt) p.step
+                , Maybe.map (AE.stringProperty "step" << String.fromInt) p.step
                 ]
 
 
@@ -1922,7 +1947,7 @@ select_ p =
 -}
 option_ : OptionParam -> Html msg
 option_ p =
-    option [ A.stringProperty "label" p.label, A.value p.value, A.selected p.selected ] []
+    option [ AE.stringProperty "label" p.label, A.value p.value, A.selected p.selected ] []
 
 
 
@@ -1968,9 +1993,9 @@ meter_ p t =
          , A.max (String.fromFloat p.max)
          ]
             ++ filterJust
-                [ Maybe.map (A.low << String.fromFloat) p.low
-                , Maybe.map (A.high << String.fromFloat) p.high
-                , Maybe.map (A.optimum << String.fromFloat) p.optimum
+                [ Maybe.map (AE.low << String.fromFloat) p.low
+                , Maybe.map (AE.high << String.fromFloat) p.high
+                , Maybe.map (AE.optimum << String.fromFloat) p.optimum
                 ]
         )
         [ text t ]
